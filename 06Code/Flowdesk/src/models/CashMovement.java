@@ -4,6 +4,10 @@ import enums.MovementType;
 import enums.PaymentMethod;
 import utils.Date;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class CashMovement {
     private String movementId;
     private MovementType type;
@@ -11,8 +15,8 @@ public class CashMovement {
     private Date date;
     private String reason;
     private PaymentMethod paymentMethod;
-    private CashRegister cashRegister;
-    private Payment payment;
+
+    private static List<CashMovement> listaMovimientos = new ArrayList<>();
 
     public CashMovement(String movementId, MovementType type, double amount, Date date, String reason, PaymentMethod paymentMethod) {
         this.movementId = movementId;
@@ -23,122 +27,55 @@ public class CashMovement {
         this.paymentMethod = paymentMethod;
     }
 
-    public void registerMovement() {
+    public void registerMovement(CashRegister caja) {
+        listaMovimientos.add(this);
+        
+        if (this.type == MovementType.INCOME) {
+            caja.addIncome(this.amount);
+        } else {
+            caja.addExpense(this.amount);
+        }
     }
 
-    public CashMovement search(String id) {
-        return null;
+    public static void registrarDesdeConsola(Scanner scanner, CashRegister caja) {
+        System.out.println("\n--- REGISTRAR MOVIMIENTO DE CAJA ---");
+        
+        System.out.print("ID del Movimiento: ");
+        String id = scanner.nextLine();
+        
+        System.out.print("Tipo (1. INGRESO / 2. EGRESO): ");
+        int tipoOpcion = Integer.parseInt(scanner.nextLine());
+        MovementType tipo = (tipoOpcion == 1) ? MovementType.INCOME : MovementType.EXPENSE;
+        
+        System.out.print("Monto: $");
+        double monto = Double.parseDouble(scanner.nextLine());
+        
+        System.out.print("Razon/Descripcion: ");
+        String razon = scanner.nextLine();
+        
+        System.out.print("Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ");
+        int metOpcion = Integer.parseInt(scanner.nextLine());
+        PaymentMethod metodo = (metOpcion == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
+
+        Date fechaActual = new Date(24, 10, 2026); 
+
+        CashMovement nuevoMov = new CashMovement(id, tipo, monto, fechaActual, razon, metodo);
+        nuevoMov.registerMovement(caja); 
+
+        System.out.println("¡Movimiento registrado exitosamente!");
     }
 
-    /**
-     * @return the movementId
-     */
-    public String getMovementId() {
-        return movementId;
-    }
-
-    /**
-     * @param movementId the movementId to set
-     */
-    public void setMovementId(String movementId) {
-        this.movementId = movementId;
-    }
-
-    /**
-     * @return the type
-     */
-    public MovementType getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(MovementType type) {
-        this.type = type;
-    }
-
-    /**
-     * @return the amount
-     */
-    public double getAmount() {
-        return amount;
-    }
-
-    /**
-     * @param amount the amount to set
-     */
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    /**
-     * @return the date
-     */
-    public Date getDate() {
-        return date;
-    }
-
-    /**
-     * @param date the date to set
-     */
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    /**
-     * @return the reason
-     */
-    public String getReason() {
-        return reason;
-    }
-
-    /**
-     * @param reason the reason to set
-     */
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    /**
-     * @return the paymentMethod
-     */
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    /**
-     * @param paymentMethod the paymentMethod to set
-     */
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    /**
-     * @return the cashRegister
-     */
-    public CashRegister getCashRegister() {
-        return cashRegister;
-    }
-
-    /**
-     * @param cashRegister the cashRegister to set
-     */
-    public void setCashRegister(CashRegister cashRegister) {
-        this.cashRegister = cashRegister;
-    }
-
-    /**
-     * @return the payment
-     */
-    public Payment getPayment() {
-        return payment;
-    }
-
-    /**
-     * @param payment the payment to set
-     */
-    public void setPayment(Payment payment) {
-        this.payment = payment;
+    public static void listarDesdeConsola() {
+        System.out.println("\n--- HISTORIAL DE MOVIMIENTOS ---");
+        if (listaMovimientos.isEmpty()) {
+            System.out.println("No hay movimientos registrados.");
+        } else {
+            for (CashMovement m : listaMovimientos) {
+                String signo = (m.type == MovementType.INCOME) ? "+" : "-";
+                System.out.println("- [" + m.movementId + "] " + m.date.toString() + 
+                                   " | " + m.type + " | " + signo + "$" + m.amount + 
+                                   " | " + m.reason + " (" + m.paymentMethod + ")");
+            }
+        }
     }
 }

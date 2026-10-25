@@ -12,14 +12,14 @@ public class WorkOrder {
     private double total;
     private double balance;
     private OrderStatus status;
-
+    
     private Customer customer;
     private List<OrderDetail> details;
     private List<Payment> payments;
     private User user;
 
     private static List<WorkOrder> listaOrdenes = new ArrayList<>();
-    private static int contadorOrdenes = 1;
+    private static int contadorOrdenes = 1; 
 
     public WorkOrder(String orderId, Date date, OrderStatus status) {
         this.orderId = orderId;
@@ -41,7 +41,7 @@ public class WorkOrder {
 
     public static void registrarDesdeConsola(Scanner scanner, User empleado) {
         System.out.println("\n--- CREAR NUEVA ORDEN DE TRABAJO ---");
-
+        
         String nuevoId = String.format("WO-%03d", contadorOrdenes++);
         System.out.println("Numero de Orden generado: " + nuevoId);
 
@@ -74,27 +74,24 @@ public class WorkOrder {
             OrderDetail detalle = null;
 
             if (opcion == 1) {
-                // --- LÓGICA PARA PRODUCTO ---
                 if (Product.getAll().isEmpty()) { System.out.println("No hay productos."); continue; }
                 Product.listarDesdeConsola();
                 System.out.print("Ingrese ID del Producto: ");
                 String prodId = scanner.nextLine();
-
+                
                 for (Product p : Product.getAll()) {
                     if (p.getProductId().equals(prodId)) {
                         System.out.print("Cantidad: ");
                         int cant = Integer.parseInt(scanner.nextLine());
-
-                        // NO preguntamos precio, lo tomamos directamente del objeto Product
-                        double precio = p.getPrice();
-
+                        
+                        double precio = p.getPrice(); 
+                        
                         detalle = new OrderDetail("D" + contadorDetalles++, p.getName(), cant, p.getDescription(), precio);
                         detalle.setProduct(p);
                         break;
                     }
                 }
             } else if (opcion == 2) {
-                // --- LÓGICA PARA SERVICIO ---
                 if (Service.getAll().isEmpty()) { System.out.println("No hay servicios."); continue; }
                 Service.listarDesdeConsola();
                 System.out.print("Ingrese ID del Servicio: ");
@@ -104,11 +101,10 @@ public class WorkOrder {
                     if (s.getServiceId().equals(servId)) {
                         System.out.print("Cantidad (Horas/Veces): ");
                         int cant = Integer.parseInt(scanner.nextLine());
-
-                        // AQUI SÍ PREGUNTAMOS EL PRECIO UNITARIO
+                        
                         System.out.print("Precio Unitario a cobrar: $");
                         double precio = Double.parseDouble(scanner.nextLine());
-
+                        
                         detalle = new OrderDetail("D" + contadorDetalles++, s.getName(), cant, s.getDescription(), precio);
                         detalle.setService(s);
                         break;
@@ -126,7 +122,7 @@ public class WorkOrder {
 
         nuevaOrden.calcularTotales();
         nuevaOrden.create();
-
+        
         System.out.println("\n¡Orden " + nuevaOrden.orderId + " creada exitosamente!");
         System.out.println("Total a pagar: $" + nuevaOrden.total);
     }
@@ -147,14 +143,74 @@ public class WorkOrder {
             System.out.println("No hay ordenes registradas.");
         } else {
             for (WorkOrder wo : listaOrdenes) {
-                System.out.println("- [" + wo.orderId + "] Fecha: " + wo.date.toString() +
-                                   " | Cliente: " + wo.customer.getName() +
-                                   " | Estado: " + wo.status +
-                                   " | Total: $" + wo.total +
+                System.out.println("- [" + wo.orderId + "] Fecha: " + wo.date.toString() + 
+                                   " | Cliente: " + wo.customer.getName() + 
+                                   " | Estado: " + wo.status + 
+                                   " | Total: $" + wo.total + 
                                    " | Saldo: $" + wo.balance);
             }
         }
     }
+    
+    public void changeStatus(OrderStatus nuevoEstado) {
+        this.status = nuevoEstado;
+    }
+        
+    public static void actualizarEstadoDesdeConsola(Scanner scanner) {
+        System.out.println("\n--- ACTUALIZAR ESTADO DE ORDEN ---");
+        
+        if (listaOrdenes.isEmpty()) {
+            System.out.println("No hay ordenes registradas para actualizar.");
+            return;
+        }
+
+        System.out.print("Ingrese el numero de orden (ej. WO-001): ");
+        String idBuscar = scanner.nextLine();
+
+        WorkOrder ordenEncontrada = null;
+        for (WorkOrder wo : listaOrdenes) {
+            if (wo.getOrderId().equalsIgnoreCase(idBuscar)) {
+                ordenEncontrada = wo;
+                break;
+            }
+        }
+
+        if (ordenEncontrada == null) {
+            System.out.println("Error: Orden no encontrada.");
+            return;
+        }
+
+        System.out.println("Orden encontrada. Cliente: " + ordenEncontrada.getCustomer().getName());
+        System.out.println("Estado actual: " + ordenEncontrada.getStatus());
+        
+        System.out.println("\nSeleccione el nuevo estado:");
+        System.out.println("1. WAITING (En espera)");
+        System.out.println("2. APPROVED (Aprobado)");
+        System.out.println("3. IN_PROGRESS (En progreso)");
+        System.out.println("4. COMPLETED (Completado)");
+        System.out.println("5. DELIVERED (Entregado)");
+        System.out.print("Opcion: ");
+
+        int opcion = Integer.parseInt(scanner.nextLine());
+        OrderStatus nuevoEstado = null;
+
+        switch (opcion) {
+            case 1 -> nuevoEstado = OrderStatus.WAITING;
+            case 2 -> nuevoEstado = OrderStatus.APPROVED;
+            case 3 -> nuevoEstado = OrderStatus.IN_PROGRESS;
+            case 4 -> nuevoEstado = OrderStatus.COMPLETED;
+            case 5 -> nuevoEstado = OrderStatus.DELIVERED;
+            default -> {
+                System.out.println("Opcion no valida. No se actualizo el estado.");
+                return;
+            }
+        }
+
+        ordenEncontrada.changeStatus(nuevoEstado);
+        System.out.println("¡Estado actualizado exitosamente a: " + ordenEncontrada.getStatus() + "!");
+    }
+    
+    
 
     public String getOrderId() { return orderId; }
     public double getTotal() { return total; }
@@ -162,64 +218,4 @@ public class WorkOrder {
     public OrderStatus getStatus() { return status; }
     public Customer getCustomer() { return customer; }
     public List<OrderDetail> getDetails() { return details; }
-
-
-    public void changeStatus(OrderStatus newStatus) {
-    }
-
-    public double calculateTotal() {
-        return 0.0;
-    }
-
-    public double calculateBalance() {
-        return 0.0;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public void setDetails(List<OrderDetail> details) {
-        this.details = details;
-    }
-
-    public List<Payment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
