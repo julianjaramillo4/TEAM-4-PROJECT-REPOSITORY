@@ -1,13 +1,13 @@
 package models;
 
-import javax.management.relation.Role;
+import enums.Role;
 
 public class User {
-
     private String userId;
     private String username;
     private String protectedPassword;
     private Role role;
+
 
     public User(String userId, String username, String protectedPassword, Role role) {
         this.userId = userId;
@@ -87,4 +87,6 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+
 }
