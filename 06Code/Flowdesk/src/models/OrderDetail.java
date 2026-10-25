@@ -24,7 +24,7 @@ public class OrderDetail {
     }
 
     public double calculateSubtotal() {
-        return 0.0;
+        return quantity * unitPrice;
     }
 
     /**
