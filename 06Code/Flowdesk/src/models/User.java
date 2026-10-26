@@ -1,4 +1,3 @@
-
 package models;
 
 import enums.Role;
@@ -13,8 +12,9 @@ public class User {
     private String protectedPassword;
     private Role role;
 
-
     private static List<User> listaUsuarios = new ArrayList<>();
+
+    public User() { }
 
     public User(String userId, String username, String protectedPassword, Role role) {
         this.userId = userId;
@@ -29,24 +29,12 @@ public class User {
 
     public static void setAll(List<User> nuevaLista) {
         listaUsuarios = nuevaLista;
-    
-    public User() { }
-
-    public static List<User> getAll() {
-        return listaUsuarios;
-    }
-
-    public static void setAll(List<User> nuevaLista) {
-        listaUsuarios = nuevaLista;
     }
 
     public static User gestionarAcceso(Role rolSeleccionado, Scanner scanner) {
         User usuarioExistente = buscarPorRol(rolSeleccionado);
 
         if (usuarioExistente == null) {
-            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA "
-                    + rolSeleccionado + " ---");
-
             System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + rolSeleccionado + " ---");
             System.out.print("Cree un nuevo Usuario: ");
             String nuevoUser = scanner.nextLine();
@@ -67,9 +55,7 @@ public class User {
             return nuevo;
             
         } else {
-            System.out.println("\n--- INICIO DE SESION: "
-                    + rolSeleccionado + " ---");
-
+            System.out.println("\n--- INICIO DE SESION: " + rolSeleccionado + " ---");
             System.out.print("Usuario: ");
             String userInput = scanner.nextLine();
 
@@ -79,8 +65,6 @@ public class User {
             if (usuarioExistente.validateCredentials(userInput, passInput)) {
                 return usuarioExistente;
             } else {
-                System.out.println("Acceso denegado. Credenciales incorrectas.");
-                return null;
                 System.out.println("Acceso denegado. Credenciales incorrectas.\n");
                 return null; 
             }
@@ -97,18 +81,15 @@ public class User {
     }
 
     public boolean validateCredentials(String user, String pass) {
-        return this.username.equals(user)
-                && this.protectedPassword.equals(pass);
+        return this.username.equals(user) && this.protectedPassword.equals(pass);
     }
 
     public void login() {
-        System.out.println("Bienvenido/a, " + this.username
-                + " (" + this.role + ")");
+        System.out.println("Bienvenido/a, " + this.username + " (" + this.role + ")");
     }
 
     public void logout() {
-        System.out.println("Sesion cerrada correctamente para "
-                + this.username);
+        System.out.println("Sesion cerrada correctamente para " + this.username);
     }
 
     public String getUserId() {
@@ -152,10 +133,4 @@ public class User {
                 + ", role=" + role
                 + '}';
     }
-}
-
-    public String getUserId() { return userId; }
-    public String getUsername() { return username; }
-    public String getProtectedPassword() { return protectedPassword; }
-    public Role getRole() { return role; }
 }
