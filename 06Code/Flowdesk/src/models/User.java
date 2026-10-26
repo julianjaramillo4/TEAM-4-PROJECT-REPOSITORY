@@ -13,6 +13,7 @@ public class User {
     private String protectedPassword;
     private Role role;
 
+
     private static List<User> listaUsuarios = new ArrayList<>();
 
     public User(String userId, String username, String protectedPassword, Role role) {
@@ -21,6 +22,15 @@ public class User {
         this.protectedPassword = protectedPassword;
         this.role = role;
     }
+
+    public static List<User> getAll() {
+        return listaUsuarios;
+    }
+
+    public static void setAll(List<User> nuevaLista) {
+        listaUsuarios = nuevaLista;
+    
+    public User() { }
 
     public static List<User> getAll() {
         return listaUsuarios;
@@ -37,6 +47,7 @@ public class User {
             System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA "
                     + rolSeleccionado + " ---");
 
+            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + rolSeleccionado + " ---");
             System.out.print("Cree un nuevo Usuario: ");
             String nuevoUser = scanner.nextLine();
 
@@ -54,7 +65,7 @@ public class User {
 
             System.out.println("Cuenta creada con exito!");
             return nuevo;
-
+            
         } else {
             System.out.println("\n--- INICIO DE SESION: "
                     + rolSeleccionado + " ---");
@@ -70,6 +81,8 @@ public class User {
             } else {
                 System.out.println("Acceso denegado. Credenciales incorrectas.");
                 return null;
+                System.out.println("Acceso denegado. Credenciales incorrectas.\n");
+                return null; 
             }
         }
     }
@@ -139,4 +152,10 @@ public class User {
                 + ", role=" + role
                 + '}';
     }
+}
+
+    public String getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public String getProtectedPassword() { return protectedPassword; }
+    public Role getRole() { return role; }
 }

@@ -20,8 +20,15 @@ public class Customer {
         this.idNumber = idNumber;
         this.address = address;
     }
+
     public void register() {
         listaClientes.add(this);
+    }
+    
+    public Customer() { } 
+
+    public static void setAll(List<Customer> nuevaLista) {
+        listaClientes = nuevaLista;
     }
 
     public static Customer search(String criterio) {
@@ -36,6 +43,7 @@ public class Customer {
     public static List<Customer> getAll() {
         return listaClientes;
     }
+
     public static void menuGestion(Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -84,7 +92,7 @@ public class Customer {
         String direccion = scanner.nextLine();
 
         Customer nuevoCliente = new Customer(id, nombre, tel, cedula, direccion);
-        nuevoCliente.register();
+        nuevoCliente.register(); 
         System.out.println("¡Cliente registrado con exito!");
     }
 
@@ -93,7 +101,7 @@ public class Customer {
         System.out.print("Ingrese el ID o la Cedula del cliente: ");
         String criterio = scanner.nextLine();
 
-        Customer encontrado = search(criterio);
+        Customer encontrado = search(criterio); 
 
         if (encontrado != null) {
             System.out.println("\n--- CLIENTE ENCONTRADO ---");

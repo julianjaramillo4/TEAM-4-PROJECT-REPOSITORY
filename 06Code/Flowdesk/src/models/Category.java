@@ -17,6 +17,12 @@ public class Category {
         this.description = description;
     }
 
+    public Category() { } 
+
+    public static void setAll(List<Category> nuevaLista) {
+        listaCategorias = nuevaLista;
+    }
+    
     public void create() {
         listaCategorias.add(this);
     }
@@ -48,29 +54,9 @@ public class Category {
     public String getCategoryId() { return categoryId; }
     public String getName() { return name; }
     public String getDescription() { return description; }
-
+    
     @Override
     public String toString() {
         return "[" + categoryId + "] " + name;
-    }
-
-
-    public void updateCategory() {
-    }
-
-    public List<Product> listProducts() {
-        return null;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

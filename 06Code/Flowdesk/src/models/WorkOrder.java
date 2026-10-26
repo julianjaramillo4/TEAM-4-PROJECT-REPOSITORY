@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class WorkOrder {
 
     private String orderId;
@@ -21,6 +22,9 @@ public class WorkOrder {
     private User user;
 
     private static List<WorkOrder> listaOrdenes = new ArrayList<>();
+    private static int contadorOrdenes = 1; 
+    
+    public utils.Date getDate() { return date; }
     private static int contadorOrdenes = 1;
 
     public WorkOrder(String orderId, Date date, OrderStatus status) {
@@ -32,6 +36,15 @@ public class WorkOrder {
         this.total = 0;
         this.balance = 0;
     }
+    
+    public WorkOrder() { } 
+
+    public static void setAll(List<WorkOrder> nuevaLista) {
+        listaOrdenes = nuevaLista;
+        if (nuevaLista != null && !nuevaLista.isEmpty()) {
+            contadorOrdenes = nuevaLista.size() + 1;
+        }
+    }    
 
     public void create() {
         listaOrdenes.add(this);
@@ -39,6 +52,19 @@ public class WorkOrder {
 
     public static List<WorkOrder> getAll() {
         return listaOrdenes;
+    }
+
+    public void addPayment(Payment pago) {
+        this.payments.add(pago);
+        this.balance = this.total - calcularTotalPagado();
+    }
+
+    public double calcularTotalPagado() {
+        double pagado = 0;
+        for (Payment p : payments) {
+            pagado += p.getAmount();
+        }
+        return pagado;
     }
 
     public static void setAll(List<WorkOrder> nuevaLista) {
@@ -156,6 +182,10 @@ public class WorkOrder {
                     if (p.getProductId().equals(prodId)) {
 
                         System.out.print("Cantidad: ");
+                        int cant = Integer.parseInt(scanner.nextLine());
+                        double precio = p.getPrice(); 
+                        
+                        detalle = new OrderDetail("D" + contadorDetalles++, p.getName(), cant, p.getDescription(), precio);
                         int cant = Integer.parseInt(
                                 scanner.nextLine()
                         );
@@ -192,6 +222,11 @@ public class WorkOrder {
                     if (s.getServiceId().equals(servId)) {
 
                         System.out.print("Cantidad (Horas/Veces): ");
+                        int cant = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Precio Unitario a cobrar: $"); 
+                        double precio = Double.parseDouble(scanner.nextLine());
+                        
+                        detalle = new OrderDetail("D" + contadorDetalles++, s.getName(), cant, s.getDescription(), precio);
                         int cant = Integer.parseInt(
                                 scanner.nextLine()
                         );
@@ -229,6 +264,17 @@ public class WorkOrder {
 
         nuevaOrden.calcularTotales();
         nuevaOrden.create();
+        
+        System.out.println("\n¡Orden " + nuevaOrden.orderId + " creada exitosamente!");
+        System.out.println("Total a pagar: $" + nuevaOrden.total);
+    }
+
+    public void calcularTotales() {
+        this.total = 0;
+        for (OrderDetail d : this.details) {
+            this.total += d.calculateSubtotal();
+        }
+        this.balance = this.total - calcularTotalPagado(); 
 
         System.out.println(
                 "\nOrden " + nuevaOrden.orderId
@@ -265,9 +311,12 @@ public class WorkOrder {
         }
     }
 
+
     public void changeStatus(OrderStatus nuevoEstado) {
         this.status = nuevoEstado;
     }
+
+    public static void actualizarEstadoDesdeConsola(Scanner scanner) {
 
     public static void actualizarEstadoDesdeConsola(
             Scanner scanner) {
@@ -335,6 +384,8 @@ public class WorkOrder {
         }
 
         ordenEncontrada.changeStatus(nuevoEstado);
+        System.out.println("¡Estado actualizado exitosamente a: " + ordenEncontrada.getStatus() + "!");
+    }
 
         System.out.println(
                 "Estado actualizado a: "
@@ -342,6 +393,13 @@ public class WorkOrder {
         );
     }
 
+    public String getOrderId() { return orderId; }
+    public double getTotal() { return total; }
+    public double getBalance() { return balance; }
+    public OrderStatus getStatus() { return status; }
+    public Customer getCustomer() { return customer; }
+    public List<OrderDetail> getDetails() { return details; }
+    public List<Payment> getPayments() { return payments; }
     public String getOrderId() {
         return orderId;
     }

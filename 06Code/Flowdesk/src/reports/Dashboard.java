@@ -2,6 +2,7 @@ package reports;
 
 import enums.OrderStatus;
 import models.WorkOrder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,41 +10,70 @@ public class Dashboard {
     private List<WorkOrder> orders;
     private Map<OrderStatus, Integer> quantityByStatus;
 
-    public void showSummary() {
+    public Dashboard() {
+        this.quantityByStatus = new HashMap<>();
     }
 
-    public List<WorkOrder> filterOrders(OrderStatus status) {
-        return null;
-    }
-
-    public void showPendingOrders() {
-    }
-
-    /**
-     * @return the orders
-     */
-    public List<WorkOrder> getOrders() {
-        return orders;
-    }
-
-    /**
-     * @param orders the orders to set
-     */
     public void setOrders(List<WorkOrder> orders) {
         this.orders = orders;
     }
 
-    /**
-     * @return the quantityByStatus
-     */
-    public Map<OrderStatus, Integer> getQuantityByStatus() {
-        return quantityByStatus;
+    public void mostrarDashboard() {
+        System.out.println("\n\n>>> CARGANDO DASHBOARD <<<");
+        
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("[!] ERROR: La lista de ordenes esta vacia.");
+            System.out.println("[!] Asegurate de crear una orden primero.");
+            return;
+        }
+
+        quantityByStatus.clear();
+        for (OrderStatus status : OrderStatus.values()) {
+            quantityByStatus.put(status, 0);
+        }
+
+        for (WorkOrder order : orders) {
+            OrderStatus status = order.getStatus();
+            quantityByStatus.put(status, quantityByStatus.get(status) + 1);
+        }
+
+        System.out.println("\n=============================================");
+        System.out.println("         DASHBOARD - ESTADO DE ORDENES       ");
+        System.out.println("=============================================");
+        System.out.println("Total de ordenes en el sistema: " + orders.size());
+        System.out.println("---------------------------------------------");
+        
+        for (Map.Entry<OrderStatus, Integer> entry : quantityByStatus.entrySet()) {
+            System.out.println(" - " + entry.getKey() + ": " + entry.getValue() + " orden(es)");
+        }
+        System.out.println("=============================================");
+
+        // 2. ORDENES PENDIENTES
+        System.out.println("\n--- ORDENES PENDIENTES (WAITING / IN_PROGRESS) ---");
+        boolean hayPendientes = false;
+        for (WorkOrder wo : orders) {
+            if (wo.getStatus() == OrderStatus.WAITING || wo.getStatus() == OrderStatus.IN_PROGRESS) {
+                System.out.println("- [" + wo.getOrderId() + "] Cliente: " + wo.getCustomer().getName() + " | Estado: " + wo.getStatus());
+                hayPendientes = true;
+            }
+        }
+        if (!hayPendientes) {
+            System.out.println("No hay ordenes pendientes. ¡Todo al dia!");
+        }
+
+        System.out.println("\n--- HISTORIAL COMPLETO DE ORDENES ---");
+        for (WorkOrder wo : orders) {
+            System.out.println("- [" + wo.getOrderId() + "] Fecha: " + wo.getDate().toString() + 
+                               " | Cliente: " + wo.getCustomer().getName() + 
+                               " | Estado: " + wo.getStatus() + 
+                               " | Total: $" + wo.getTotal() + 
+                               " | Saldo: $" + wo.getBalance());
+        }
+        
+        System.out.println("=============================================");
+        System.out.println("\n>>> FIN DEL DASHBOARD <<<\n");
     }
 
-    /**
-     * @param quantityByStatus the quantityByStatus to set
-     */
-    public void setQuantityByStatus(Map<OrderStatus, Integer> quantityByStatus) {
-        this.quantityByStatus = quantityByStatus;
-    }
+    public List<WorkOrder> getOrders() { return orders; }
+    public Map<OrderStatus, Integer> getQuantityByStatus() { return quantityByStatus; }
 }

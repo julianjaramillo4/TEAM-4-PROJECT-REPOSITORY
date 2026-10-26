@@ -30,6 +30,7 @@ public class CashMovement {
     public void registerMovement(CashRegister caja) {
         listaMovimientos.add(this);
         
+        // Actualizamos la caja según el tipo
         if (this.type == MovementType.INCOME) {
             caja.addIncome(this.amount);
         } else {
@@ -56,6 +57,7 @@ public class CashMovement {
         System.out.print("Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ");
         int metOpcion = Integer.parseInt(scanner.nextLine());
         PaymentMethod metodo = (metOpcion == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
+
 
         Date fechaActual = new Date(24, 10, 2026); 
 

@@ -9,6 +9,11 @@ public class CashRegister {
         this.expenses = 0;
     }
 
+    public CashRegister(double income, double expenses) {
+        this.income = income;
+        this.expenses = expenses;
+    }
+
     public void addIncome(double amount) {
         this.income += amount;
     }
@@ -36,4 +41,10 @@ public class CashRegister {
         System.out.println("Balance Actual:   $" + calculateBalance());
         System.out.println("----------------------");
     }
+
+    public double getIncome() { return income; }
+    public void setIncome(double income) { this.income = income; }
+    
+    public double getExpenses() { return expenses; }
+    public void setExpenses(double expenses) { this.expenses = expenses; }
 }
