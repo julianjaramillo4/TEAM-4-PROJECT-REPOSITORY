@@ -16,7 +16,7 @@ public class WorkOrder {
     
     private Customer customer;
     private List<OrderDetail> details;
-    private List<Payment> payments; // Lista para guardar los pagos de la orden
+    private List<Payment> payments;
     private User user;
 
     private static List<WorkOrder> listaOrdenes = new ArrayList<>();
@@ -38,7 +38,6 @@ public class WorkOrder {
 
     public static void setAll(List<WorkOrder> nuevaLista) {
         listaOrdenes = nuevaLista;
-        // Es buena idea que el contador de IDs no vuelva a empezar en 1 al cargar datos
         if (nuevaLista != null && !nuevaLista.isEmpty()) {
             contadorOrdenes = nuevaLista.size() + 1;
         }
@@ -52,7 +51,6 @@ public class WorkOrder {
         return listaOrdenes;
     }
 
-    // Método para recibir un pago y actualizar el saldo
     public void addPayment(Payment pago) {
         this.payments.add(pago);
         this.balance = this.total - calcularTotalPagado();
@@ -110,7 +108,7 @@ public class WorkOrder {
                     if (p.getProductId().equals(prodId)) {
                         System.out.print("Cantidad: ");
                         int cant = Integer.parseInt(scanner.nextLine());
-                        double precio = p.getPrice(); // Usa el precio guardado
+                        double precio = p.getPrice(); 
                         
                         detalle = new OrderDetail("D" + contadorDetalles++, p.getName(), cant, p.getDescription(), precio);
                         detalle.setProduct(p);
@@ -127,7 +125,7 @@ public class WorkOrder {
                     if (s.getServiceId().equals(servId)) {
                         System.out.print("Cantidad (Horas/Veces): ");
                         int cant = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Precio Unitario a cobrar: $"); // Pregunta el precio
+                        System.out.print("Precio Unitario a cobrar: $"); 
                         double precio = Double.parseDouble(scanner.nextLine());
                         
                         detalle = new OrderDetail("D" + contadorDetalles++, s.getName(), cant, s.getDescription(), precio);

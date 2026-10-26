@@ -20,9 +20,6 @@ public class Report {
         this.reportType = reportType;
     }
 
-    // =========================================================
-    // LÓGICA PARA GENERAR REPORTES (US005)
-    // =========================================================
     public static void generarDesdeConsola(Scanner scanner, CashRegister caja) {
         System.out.println("\n--- GENERAR REPORTE ---");
         System.out.println("Seleccione el tipo de reporte:");
@@ -44,7 +41,6 @@ public class Report {
             }
         }
 
-        // Imprimimos el encabezado del reporte
         System.out.println("\n=============================================");
         System.out.println("        REPORTE " + tipo + " DE FLOWDESK      ");
         System.out.println("=============================================");

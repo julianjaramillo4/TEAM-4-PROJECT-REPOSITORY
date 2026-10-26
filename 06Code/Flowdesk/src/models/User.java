@@ -11,7 +11,6 @@ public class User {
     private String protectedPassword;
     private Role role;
 
-    // La lista de usuarios ahora vive AQUÍ dentro
     private static List<User> listaUsuarios = new ArrayList<>();
 
     public User(String userId, String username, String protectedPassword, Role role) {
@@ -21,9 +20,8 @@ public class User {
         this.role = role;
     }
     
-    public User() { } // Constructor vacío
+    public User() { }
 
-    // Como tu listaUsuarios es privada, agregamos el getAll
     public static List<User> getAll() {
         return listaUsuarios;
     }
@@ -32,15 +30,10 @@ public class User {
         listaUsuarios = nuevaLista;
     }
 
-    // =======================================================
-    // MÉTODO PRINCIPAL QUE LLAMARÁ EL MAIN
-    // =======================================================
     public static User gestionarAcceso(Role rolSeleccionado, Scanner scanner) {
-        // 1. Buscar si ya existe alguien con ese rol
         User usuarioExistente = buscarPorRol(rolSeleccionado);
 
         if (usuarioExistente == null) {
-            // --- PRIMER INGRESO: REGISTRO ---
             System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + rolSeleccionado + " ---");
             System.out.print("Cree un nuevo Usuario: ");
             String nuevoUser = scanner.nextLine();
@@ -53,7 +46,6 @@ public class User {
             return nuevo;
             
         } else {
-            // --- YA EXISTE: VALIDACIÓN ---
             System.out.println("\n--- INICIO DE SESION: " + rolSeleccionado + " ---");
             System.out.print("Usuario: ");
             String userInput = scanner.nextLine();
@@ -64,14 +56,11 @@ public class User {
                 return usuarioExistente;
             } else {
                 System.out.println("Acceso denegado. Credenciales incorrectas.\n");
-                return null; // Retorna null si falla
+                return null; 
             }
         }
     }
 
-    // =======================================================
-    // MÉTODOS DE APOYO INTERNOS
-    // =======================================================
     private static User buscarPorRol(Role rol) {
         for (User u : listaUsuarios) {
             if (u.getRole() == rol) return u;
@@ -91,7 +80,6 @@ public class User {
         System.out.println("Sesión cerrada correctamente para " + this.username);
     }
 
-    // Getters
     public String getUserId() { return userId; }
     public String getUsername() { return username; }
     public String getProtectedPassword() { return protectedPassword; }

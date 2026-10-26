@@ -8,7 +8,7 @@ public class Product {
     private String productId;
     private String name;
     private String description;
-    private double price; // <-- AGREGADO
+    private double price; 
     private Category category;
 
     private static List<Product> listaProductos = new ArrayList<>();
@@ -17,7 +17,7 @@ public class Product {
         this.productId = productId;
         this.name = name;
         this.description = description;
-        this.price = price; // <-- AGREGADO
+        this.price = price; 
         this.category = category;
     }
     
@@ -47,8 +47,8 @@ public class Product {
         String nombre = scanner.nextLine();
         System.out.print("Descripcion: ");
         String desc = scanner.nextLine();
-        System.out.print("Precio: "); // <-- AGREGADO
-        double precio = Double.parseDouble(scanner.nextLine()); // <-- AGREGADO
+        System.out.print("Precio: "); 
+        double precio = Double.parseDouble(scanner.nextLine()); 
         
         System.out.println("Seleccione Categoria:");
         for (Category c : Category.getAll()) System.out.println(c.toString());
@@ -56,7 +56,7 @@ public class Product {
         Category cat = Category.search(scanner.nextLine());
 
         if (cat != null) {
-            Product p = new Product(id, nombre, desc, precio, cat); // <-- AGREGADO
+            Product p = new Product(id, nombre, desc, precio, cat); 
             p.register();
             System.out.println("Producto registrado.");
         } else {
@@ -70,7 +70,7 @@ public class Product {
             System.out.println("No hay productos registrados.");
         } else {
             for (Product p : listaProductos) {
-                System.out.println("- [" + p.getProductId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName()); // <-- AGREGADO
+                System.out.println("- [" + p.getProductId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName()); 
             }
         }
     }
@@ -79,6 +79,6 @@ public class Product {
     public String getProductId() { return productId; }
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public double getPrice() { return price; } // <-- AGREGADO
+    public double getPrice() { return price; } 
     public Category getCategory() { return category; }
 }

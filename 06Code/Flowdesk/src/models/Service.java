@@ -35,7 +35,6 @@ public class Service {
         return listaServicios;
     }
 
-    // Método para crear servicio desde consola
     public static void registrarDesdeConsola(Scanner scanner) {
         if (Category.getAll().isEmpty()) {
             System.out.println("Primero debe crear al menos una categoria.");
@@ -65,7 +64,6 @@ public class Service {
         }
     }
     
-    // Método para imprimir la lista de servicios
     public static void listarDesdeConsola() {
         System.out.println("\n--- SERVICIOS ---");
         if (listaServicios.isEmpty()) {
@@ -77,7 +75,6 @@ public class Service {
         }
     }
 
-    // Getters
     public String getServiceId() { return serviceId; }
     public String getName() { return name; }
     public String getDescription() { return description; }

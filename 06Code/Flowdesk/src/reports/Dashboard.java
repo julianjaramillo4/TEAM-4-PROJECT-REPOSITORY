@@ -27,7 +27,6 @@ public class Dashboard {
             return;
         }
 
-        // 1. CONTEO POR ESTADOS
         quantityByStatus.clear();
         for (OrderStatus status : OrderStatus.values()) {
             quantityByStatus.put(status, 0);
@@ -62,7 +61,6 @@ public class Dashboard {
             System.out.println("No hay ordenes pendientes. ¡Todo al dia!");
         }
 
-        // 3. LISTADO COMPLETO DE ORDENES (Lo que antes hacía el Listar Ordenes)
         System.out.println("\n--- HISTORIAL COMPLETO DE ORDENES ---");
         for (WorkOrder wo : orders) {
             System.out.println("- [" + wo.getOrderId() + "] Fecha: " + wo.getDate().toString() + 

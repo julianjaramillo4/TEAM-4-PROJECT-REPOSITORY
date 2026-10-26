@@ -38,7 +38,6 @@ public class Category {
         return null;
     }
 
-    // Método para crear categoría desde consola
     public static void registrarDesdeConsola(Scanner scanner) {
         System.out.print("ID Categoria: ");
         String id = scanner.nextLine();
@@ -52,7 +51,6 @@ public class Category {
         System.out.println("Categoria creada exitosamente.");
     }
 
-    // Getters
     public String getCategoryId() { return categoryId; }
     public String getName() { return name; }
     public String getDescription() { return description; }

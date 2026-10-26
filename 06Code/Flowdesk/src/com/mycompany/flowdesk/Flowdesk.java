@@ -12,25 +12,20 @@ import models.WorkOrder;
 import models.Payment;
 import reports.Dashboard;
 import reports.Report;
-import data.DataManager; // <-- IMPORTANTE: Importar DataManager
+import data.DataManager; 
 import java.util.Scanner;
 
-public class FlowDesk {
+public class Flowdesk {
 
     static Scanner scanner = new Scanner(System.in);
     static CashRegister caja; // <-- Ya no se inicializa aquí
     static Dashboard dashboard = new Dashboard();
 
     public static void main(String[] args) {
-        // =======================================================
-        // 1. CARGAR DATOS AL INICIAR
-        // =======================================================
-        DataManager.cargarTodo();           // Carga clientes, productos, órdenes, etc.
-        caja = DataManager.cargarCaja();    // Carga el estado de la caja
 
-        // =======================================================
-        // 2. GUARDAR DATOS AUTOMÁTICAMENTE AL CERRAR
-        // =======================================================
+        DataManager.cargarTodo();          
+        caja = DataManager.cargarCaja();   
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("\n[Guardando datos en el disco...]");
             DataManager.guardarTodo();
@@ -54,7 +49,7 @@ public class FlowDesk {
 
             if (opcionRol == 4) {
                 System.out.println("Saliendo del programa...");
-                break; // El Shutdown Hook se encargará de guardar
+                break; 
             }
 
             Role rolSeleccionado = null;
@@ -77,9 +72,6 @@ public class FlowDesk {
         }
     }
 
-    // =========================================================
-    // MENÚ ESPECÍFICO PARA CADA ROL
-    // =========================================================
     static void menuRol(User usuario) {
         boolean cerrarSesion = false;
 
@@ -89,7 +81,7 @@ public class FlowDesk {
             System.out.println("=============================================");
             
             if (null == usuario.getRole()) {
-                System.out.println("1. Generar Reporte (US005)");
+                System.out.println("1. Generar Reporte");
                 System.out.println("2. Ver Estado de Caja");
                 System.out.println("3. Cerrar Sesion");
                 System.out.println("4. Salir del programa");
@@ -108,8 +100,7 @@ public class FlowDesk {
                     default -> System.out.println("Opcion no valida.");
                 }
             } 
-            // 2. MENÚ DEL CAJERO
-            else // 1. MENÚ DEL EMPLEADO
+            else 
             switch (usuario.getRole()) {
                 case EMPLOYEE ->                     {
                         System.out.println("1. Gestionar Clientes");
@@ -140,7 +131,7 @@ public class FlowDesk {
                         }                          }
                 case CASHIER ->                     {
                         System.out.println("1. Registrar Movimiento de Caja Manual");
-                        System.out.println("2. Registrar Pago de Orden (US009)");
+                        System.out.println("2. Registrar Pago de Orden");
                         System.out.println("3. Ver Estado de Caja");
                         System.out.println("4. Historial de Movimientos");
                         System.out.println("5. Cerrar Sesion");
@@ -161,7 +152,7 @@ public class FlowDesk {
                             default -> System.out.println("Opcion no valida.");
                         }                          }
                 default ->                     {
-                        System.out.println("1. Generar Reporte (US005)");
+                        System.out.println("1. Generar Reporte");
                         System.out.println("2. Ver Estado de Caja");
                         System.out.println("3. Cerrar Sesion");
                         System.out.println("4. Salir del programa");
@@ -182,9 +173,6 @@ public class FlowDesk {
         }
     }
 
-    // =========================================================
-    // ENRUTADOR PARA GESTIÓN DE CATÁLOGO (US004)
-    // =========================================================
     static void menuCatalogo(Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -210,9 +198,6 @@ public class FlowDesk {
         }
     }
 
-    // =========================================================
-    // MÉTODOS AUXILIARES
-    // =========================================================
     static int leerEntero() {
         try {
             return Integer.parseInt(scanner.nextLine());

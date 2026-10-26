@@ -14,7 +14,6 @@ public class DataManager {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final String CARPETA = "datos_flowdesk/";
 
-    // Inicializa la carpeta si no existe
     public static void init() {
         File dir = new File(CARPETA);
         if (!dir.exists()) {
@@ -22,7 +21,6 @@ public class DataManager {
         }
     }
 
-    // Método genérico para guardar cualquier lista en un archivo
     public static <T> void guardarLista(List<T> lista, String nombreArchivo) {
         init();
         try (Writer writer = new FileWriter(CARPETA + nombreArchivo + ".json")) {
@@ -32,7 +30,6 @@ public class DataManager {
         }
     }
 
-    // Método genérico para cargar una lista desde un archivo
     public static <T> List<T> cargarLista(String nombreArchivo, Type tipoLista) {
         init();
         File archivo = new File(CARPETA + nombreArchivo + ".json");
@@ -48,9 +45,6 @@ public class DataManager {
         }
     }
 
-    // ==========================================
-    // MÉTODOS PARA GUARDAR TODO
-    // ==========================================
     public static void guardarTodo() {
         guardarLista(Customer.getAll(), "clientes");
         guardarLista(Category.getAll(), "categorias");
@@ -60,9 +54,6 @@ public class DataManager {
         guardarLista(User.getAll(), "usuarios");
     }
 
-    // ==========================================
-    // MÉTODOS PARA CARGAR TODO
-    // ==========================================
     public static void cargarTodo() {
         Type tipoClientes = new TypeToken<ArrayList<Customer>>(){}.getType();
         Customer.setAll(cargarLista("clientes", tipoClientes));
@@ -83,9 +74,6 @@ public class DataManager {
         User.setAll(cargarLista("usuarios", tipoUsuarios));
     }
 
-    // ==========================================
-    // MÉTODOS EXCLUSIVOS PARA LA CAJA
-    // ==========================================
     public static void guardarCaja(CashRegister caja) {
         init();
         try (Writer writer = new FileWriter(CARPETA + "caja.json")) {
@@ -99,7 +87,7 @@ public class DataManager {
         init();
         File archivo = new File(CARPETA + "caja.json");
         if (!archivo.exists()) {
-            return new CashRegister(); // Si es la primera vez, crea una caja vacía
+            return new CashRegister(); 
         }
         try (Reader reader = new FileReader(archivo)) {
             CashRegister caja = gson.fromJson(reader, CashRegister.class);

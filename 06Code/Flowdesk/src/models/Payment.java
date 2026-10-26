@@ -24,7 +24,6 @@ public class Payment {
         workOrder.addPayment(this);
     }
 
-    // Recibimos la Caja (CashRegister) como parámetro
     public static void registrarDesdeConsola(Scanner scanner, CashRegister caja) {
         System.out.println("\n--- REGISTRAR PAGO ---");
         
@@ -72,11 +71,9 @@ public class Payment {
 
         String nuevoIdPago = "P-" + System.currentTimeMillis() % 10000;
         
-        // 1. Creamos y registramos el pago en la orden
         Payment nuevoPago = new Payment(nuevoIdPago, monto, new Date(24, 10, 2026), metodo, orden);
         nuevoPago.registerPayment();
 
-        // 2. AUTOMÁTICAMENTE creamos un movimiento de caja por este ingreso
         String idMovimiento = "MOV-" + nuevoIdPago;
         CashMovement movimientoCaja = new CashMovement(
             idMovimiento, 
@@ -86,7 +83,6 @@ public class Payment {
             "Pago Orden " + orden.getOrderId(), 
             metodo
         );
-        // Lo guardamos en el historial y actualizamos los ingresos de la caja
         movimientoCaja.registerMovement(caja); 
 
         System.out.println("\n¡Pago registrado exitosamente!");
