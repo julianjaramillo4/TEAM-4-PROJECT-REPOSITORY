@@ -70,4 +70,33 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <target name="-ensure-junit-console">
+        <mkdir dir="lib"/>
+        <get src="https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.3/junit-platform-console-standalone-1.10.3.jar"
+             dest="lib/junit-platform-console-standalone-1.10.3.jar"
+             skipexisting="true" usetimestamp="false" verbose="true"/>
+    </target>
+
+    <target name="-run-junit5" depends="-ensure-junit-console">
+        <path id="flowdesk.junit5.path">
+            <pathelement location="${build.classes.dir}"/>
+            <pathelement location="${build.test.classes.dir}"/>
+            <pathelement location="lib/gson-2.14.0.jar"/>
+        </path>
+        <pathconvert property="flowdesk.junit5.classpath" refid="flowdesk.junit5.path"/>
+        <java jar="lib/junit-platform-console-standalone-1.10.3.jar" fork="true" failonerror="true">
+            <arg value="execute"/>
+            <arg value="--disable-banner"/>
+            <arg value="--class-path"/>
+            <arg value="${flowdesk.junit5.classpath}"/>
+            <arg value="--select-class"/>
+            <arg value="com.mycompany.flowdesk.LanchimbaTest"/>
+            <arg value="--details"/>
+            <arg value="tree"/>
+        </java>
+    </target>
+
+    <target name="test" depends="compile-test,-run-junit5" description="Run JUnit 5 tests with Ant"/>
+    <target name="test-single" depends="compile-test-single,-run-junit5" description="Run LanchimbaTest with Ant"/>
 </project>

@@ -11,7 +11,7 @@ import models.CashMovement;
 import models.WorkOrder;
 import java.util.Scanner;
 
-public class FlowDesk {
+public class Flowdesk {
 
     static Scanner scanner = new Scanner(System.in);
     static CashRegister caja = new CashRegister();
