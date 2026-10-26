@@ -10,8 +10,9 @@ public class User {
     private String username;
     private String protectedPassword;
     private Role role;
-    private static List<User> listaUsuarios = new ArrayList<>();
 
+    // La lista de usuarios ahora vive AQUÍ dentro
+    private static List<User> listaUsuarios = new ArrayList<>();
 
     public User(String userId, String username, String protectedPassword, Role role) {
         this.userId = userId;
@@ -19,12 +20,21 @@ public class User {
         this.protectedPassword = protectedPassword;
         this.role = role;
     }
+    
+    public User() { } // Constructor vacío
 
-    @Override
-    public String toString() {
-        return "User{" + "userId=" + getUserId() + ", username=" + getUsername() + ", protectedPassword=" + getProtectedPassword() + ", role=" + getRole() + '}';
+    // Como tu listaUsuarios es privada, agregamos el getAll
+    public static List<User> getAll() {
+        return listaUsuarios;
     }
 
+    public static void setAll(List<User> nuevaLista) {
+        listaUsuarios = nuevaLista;
+    }
+
+    // =======================================================
+    // MÉTODO PRINCIPAL QUE LLAMARÁ EL MAIN
+    // =======================================================
     public static User gestionarAcceso(Role rolSeleccionado, Scanner scanner) {
         // 1. Buscar si ya existe alguien con ese rol
         User usuarioExistente = buscarPorRol(rolSeleccionado);
@@ -41,8 +51,9 @@ public class User {
             listaUsuarios.add(nuevo);
             System.out.println("¡Cuenta creada con exito!");
             return nuevo;
-
+            
         } else {
+            // --- YA EXISTE: VALIDACIÓN ---
             System.out.println("\n--- INICIO DE SESION: " + rolSeleccionado + " ---");
             System.out.print("Usuario: ");
             String userInput = scanner.nextLine();
@@ -58,6 +69,9 @@ public class User {
         }
     }
 
+    // =======================================================
+    // MÉTODOS DE APOYO INTERNOS
+    // =======================================================
     private static User buscarPorRol(Role rol) {
         for (User u : listaUsuarios) {
             if (u.getRole() == rol) return u;
@@ -77,61 +91,9 @@ public class User {
         System.out.println("Sesión cerrada correctamente para " + this.username);
     }
 
-    /**
-     * @return the userId
-     */
-    public String getUserId() {
-        return userId;
-    }
-
-    /**
-     * @param userId the userId to set
-     */
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
-     * @return the protectedPassword
-     */
-    public String getProtectedPassword() {
-        return protectedPassword;
-    }
-
-    /**
-     * @param protectedPassword the protectedPassword to set
-     */
-    public void setProtectedPassword(String protectedPassword) {
-        this.protectedPassword = protectedPassword;
-    }
-
-    /**
-     * @return the role
-     */
-    public Role getRole() {
-        return role;
-    }
-
-    /**
-     * @param role the role to set
-     */
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-
+    // Getters
+    public String getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public String getProtectedPassword() { return protectedPassword; }
+    public Role getRole() { return role; }
 }

@@ -11,16 +11,33 @@ import models.CashMovement;
 import models.WorkOrder;
 import models.Payment;
 import reports.Dashboard;
-import reports.Report; // <-- IMPORTANTE: Importar Report
+import reports.Report;
+import data.DataManager; // <-- IMPORTANTE: Importar DataManager
 import java.util.Scanner;
 
-public class Flowdesk {
+public class FlowDesk {
 
     static Scanner scanner = new Scanner(System.in);
-    static CashRegister caja = new CashRegister();
+    static CashRegister caja; // <-- Ya no se inicializa aquí
     static Dashboard dashboard = new Dashboard();
 
     public static void main(String[] args) {
+        // =======================================================
+        // 1. CARGAR DATOS AL INICIAR
+        // =======================================================
+        DataManager.cargarTodo();           // Carga clientes, productos, órdenes, etc.
+        caja = DataManager.cargarCaja();    // Carga el estado de la caja
+
+        // =======================================================
+        // 2. GUARDAR DATOS AUTOMÁTICAMENTE AL CERRAR
+        // =======================================================
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("\n[Guardando datos en el disco...]");
+            DataManager.guardarTodo();
+            DataManager.guardarCaja(caja);
+            System.out.println("[Datos guardados exitosamente.]");
+        }));
+
         boolean salirPrograma = false;
 
         while (!salirPrograma) {
@@ -37,7 +54,7 @@ public class Flowdesk {
 
             if (opcionRol == 4) {
                 System.out.println("Saliendo del programa...");
-                break;
+                break; // El Shutdown Hook se encargará de guardar
             }
 
             Role rolSeleccionado = null;
@@ -83,12 +100,10 @@ public class Flowdesk {
                     case 1 -> Report.generarDesdeConsola(scanner, caja);
                     case 2 -> caja.imprimirEstado();
                     case 3 -> {
-                        usuario.logout();
-                        cerrarSesion = true;
+                        usuario.logout(); cerrarSesion = true;
                     }
                     case 4 -> {
-                        usuario.logout();
-                        System.exit(0);
+                        usuario.logout(); System.exit(0);
                     }
                     default -> System.out.println("Opcion no valida.");
                 }
@@ -114,13 +129,13 @@ public class Flowdesk {
                             case 5 -> {
                                 dashboard.setOrders(WorkOrder.getAll());
                                 dashboard.mostrarDashboard();
-                    }
+                            }
                             case 6 -> {
                                 usuario.logout(); cerrarSesion = true;
-                    }
+                            }
                             case 7 -> {
                                 usuario.logout(); System.exit(0);
-                    }
+                            }
                             default -> System.out.println("Opcion no valida.");
                         }                          }
                 case CASHIER ->                     {
@@ -139,10 +154,10 @@ public class Flowdesk {
                             case 4 -> CashMovement.listarDesdeConsola();
                             case 5 -> {
                                 usuario.logout(); cerrarSesion = true;
-                    }
+                            }
                             case 6 -> {
                                 usuario.logout(); System.exit(0);
-                    }
+                            }
                             default -> System.out.println("Opcion no valida.");
                         }                          }
                 default ->                     {
@@ -156,13 +171,11 @@ public class Flowdesk {
                             case 1 -> Report.generarDesdeConsola(scanner, caja);
                             case 2 -> caja.imprimirEstado();
                             case 3 -> {
-                                usuario.logout();
-                                cerrarSesion = true;
-                    }
+                                usuario.logout(); cerrarSesion = true;
+                            }
                             case 4 -> {
-                                usuario.logout();
-                                System.exit(0);
-                    }
+                                usuario.logout(); System.exit(0);
+                            }
                             default -> System.out.println("Opcion no valida.");
                         }                          }
             }

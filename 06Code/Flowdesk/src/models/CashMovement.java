@@ -27,9 +27,11 @@ public class CashMovement {
         this.paymentMethod = paymentMethod;
     }
 
+    // Método que registra el movimiento y actualiza la caja (se le pasa la caja)
     public void registerMovement(CashRegister caja) {
         listaMovimientos.add(this);
         
+        // Actualizamos la caja según el tipo
         if (this.type == MovementType.INCOME) {
             caja.addIncome(this.amount);
         } else {
@@ -37,6 +39,7 @@ public class CashMovement {
         }
     }
 
+    // Método para pedir los datos por consola
     public static void registrarDesdeConsola(Scanner scanner, CashRegister caja) {
         System.out.println("\n--- REGISTRAR MOVIMIENTO DE CAJA ---");
         
@@ -57,14 +60,16 @@ public class CashMovement {
         int metOpcion = Integer.parseInt(scanner.nextLine());
         PaymentMethod metodo = (metOpcion == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
 
-        Date fechaActual = new Date(24, 10, 2026); 
+        // Creamos la fecha actual simulada
+        Date fechaActual = new Date(24, 10, 2026); // Puedes usar LocalDate.now() si prefieres
 
         CashMovement nuevoMov = new CashMovement(id, tipo, monto, fechaActual, razon, metodo);
-        nuevoMov.registerMovement(caja); 
+        nuevoMov.registerMovement(caja); // Guarda y actualiza la caja
 
         System.out.println("¡Movimiento registrado exitosamente!");
     }
 
+    // Método para listar los movimientos
     public static void listarDesdeConsola() {
         System.out.println("\n--- HISTORIAL DE MOVIMIENTOS ---");
         if (listaMovimientos.isEmpty()) {

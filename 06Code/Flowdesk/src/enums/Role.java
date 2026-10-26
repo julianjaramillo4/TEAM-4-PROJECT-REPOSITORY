@@ -1,5 +1,7 @@
 package enums;
 
 public enum Role {
-    CASHIER, EMPLOYEE, MANAGER
+    CASHIER,
+    EMPLOYEE,
+    MANAGER
 }

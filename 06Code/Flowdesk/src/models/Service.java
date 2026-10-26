@@ -20,6 +20,12 @@ public class Service {
         this.price = price;
         this.category = category;
     }
+    
+    public Service() { } 
+
+    public static void setAll(List<Service> nuevaLista) {
+        listaServicios = nuevaLista;
+    }    
 
     public void register() {
         listaServicios.add(this);
@@ -29,6 +35,7 @@ public class Service {
         return listaServicios;
     }
 
+    // Método para crear servicio desde consola
     public static void registrarDesdeConsola(Scanner scanner) {
         if (Category.getAll().isEmpty()) {
             System.out.println("Primero debe crear al menos una categoria.");
@@ -57,7 +64,8 @@ public class Service {
             System.out.println("Categoria no encontrada.");
         }
     }
-
+    
+    // Método para imprimir la lista de servicios
     public static void listarDesdeConsola() {
         System.out.println("\n--- SERVICIOS ---");
         if (listaServicios.isEmpty()) {
@@ -69,34 +77,10 @@ public class Service {
         }
     }
 
+    // Getters
     public String getServiceId() { return serviceId; }
     public String getName() { return name; }
     public String getDescription() { return description; }
     public double getPrice() { return price; }
     public Category getCategory() { return category; }
-
-
-    public boolean update(Service data) {
-        return false;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }

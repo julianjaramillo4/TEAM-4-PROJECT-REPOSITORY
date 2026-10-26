@@ -33,6 +33,16 @@ public class WorkOrder {
         this.total = 0;
         this.balance = 0;
     }
+    
+    public WorkOrder() { } 
+
+    public static void setAll(List<WorkOrder> nuevaLista) {
+        listaOrdenes = nuevaLista;
+        // Es buena idea que el contador de IDs no vuelva a empezar en 1 al cargar datos
+        if (nuevaLista != null && !nuevaLista.isEmpty()) {
+            contadorOrdenes = nuevaLista.size() + 1;
+        }
+    }    
 
     public void create() {
         listaOrdenes.add(this);

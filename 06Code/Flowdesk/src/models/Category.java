@@ -17,6 +17,12 @@ public class Category {
         this.description = description;
     }
 
+    public Category() { } 
+
+    public static void setAll(List<Category> nuevaLista) {
+        listaCategorias = nuevaLista;
+    }
+    
     public void create() {
         listaCategorias.add(this);
     }
@@ -32,6 +38,7 @@ public class Category {
         return null;
     }
 
+    // Método para crear categoría desde consola
     public static void registrarDesdeConsola(Scanner scanner) {
         System.out.print("ID Categoria: ");
         String id = scanner.nextLine();
@@ -45,32 +52,13 @@ public class Category {
         System.out.println("Categoria creada exitosamente.");
     }
 
+    // Getters
     public String getCategoryId() { return categoryId; }
     public String getName() { return name; }
     public String getDescription() { return description; }
-
+    
     @Override
     public String toString() {
         return "[" + categoryId + "] " + name;
-    }
-
-
-    public void updateCategory() {
-    }
-
-    public List<Product> listProducts() {
-        return null;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
