@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class WorkOrder {
     private String orderId;
     private Date date;
@@ -15,11 +16,13 @@ public class WorkOrder {
     
     private Customer customer;
     private List<OrderDetail> details;
-    private List<Payment> payments;
+    private List<Payment> payments; // Lista para guardar los pagos de la orden
     private User user;
 
     private static List<WorkOrder> listaOrdenes = new ArrayList<>();
     private static int contadorOrdenes = 1; 
+    
+    public utils.Date getDate() { return date; }
 
     public WorkOrder(String orderId, Date date, OrderStatus status) {
         this.orderId = orderId;
@@ -37,6 +40,20 @@ public class WorkOrder {
 
     public static List<WorkOrder> getAll() {
         return listaOrdenes;
+    }
+
+    // Método para recibir un pago y actualizar el saldo
+    public void addPayment(Payment pago) {
+        this.payments.add(pago);
+        this.balance = this.total - calcularTotalPagado();
+    }
+
+    public double calcularTotalPagado() {
+        double pagado = 0;
+        for (Payment p : payments) {
+            pagado += p.getAmount();
+        }
+        return pagado;
     }
 
     public static void registrarDesdeConsola(Scanner scanner, User empleado) {
@@ -83,8 +100,7 @@ public class WorkOrder {
                     if (p.getProductId().equals(prodId)) {
                         System.out.print("Cantidad: ");
                         int cant = Integer.parseInt(scanner.nextLine());
-                        
-                        double precio = p.getPrice(); 
+                        double precio = p.getPrice(); // Usa el precio guardado
                         
                         detalle = new OrderDetail("D" + contadorDetalles++, p.getName(), cant, p.getDescription(), precio);
                         detalle.setProduct(p);
@@ -101,8 +117,7 @@ public class WorkOrder {
                     if (s.getServiceId().equals(servId)) {
                         System.out.print("Cantidad (Horas/Veces): ");
                         int cant = Integer.parseInt(scanner.nextLine());
-                        
-                        System.out.print("Precio Unitario a cobrar: $");
+                        System.out.print("Precio Unitario a cobrar: $"); // Pregunta el precio
                         double precio = Double.parseDouble(scanner.nextLine());
                         
                         detalle = new OrderDetail("D" + contadorDetalles++, s.getName(), cant, s.getDescription(), precio);
@@ -132,9 +147,7 @@ public class WorkOrder {
         for (OrderDetail d : this.details) {
             this.total += d.calculateSubtotal();
         }
-        if (this.payments.isEmpty()) {
-            this.balance = this.total;
-        }
+        this.balance = this.total - calcularTotalPagado(); 
     }
 
     public static void listarDesdeConsola() {
@@ -151,11 +164,11 @@ public class WorkOrder {
             }
         }
     }
-    
+
     public void changeStatus(OrderStatus nuevoEstado) {
         this.status = nuevoEstado;
     }
-        
+
     public static void actualizarEstadoDesdeConsola(Scanner scanner) {
         System.out.println("\n--- ACTUALIZAR ESTADO DE ORDEN ---");
         
@@ -209,8 +222,6 @@ public class WorkOrder {
         ordenEncontrada.changeStatus(nuevoEstado);
         System.out.println("¡Estado actualizado exitosamente a: " + ordenEncontrada.getStatus() + "!");
     }
-    
-    
 
     public String getOrderId() { return orderId; }
     public double getTotal() { return total; }
@@ -218,4 +229,5 @@ public class WorkOrder {
     public OrderStatus getStatus() { return status; }
     public Customer getCustomer() { return customer; }
     public List<OrderDetail> getDetails() { return details; }
+    public List<Payment> getPayments() { return payments; }
 }

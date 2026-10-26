@@ -3,18 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/Payment.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/WorkOrder.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/reports/Dashboard.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/enums/PaymentMethod.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/enums/OrderStatus.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/Category.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/Product.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/Service.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/reports/Report.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/enums/ReportType.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/utils/Date.java</file>
-            <file>file:/E:/GIT/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/OrderDetail.java</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/com/mycompany/flowdesk/Flowdesk.java</file>
         </group>
     </open-files>
 </project-private>
