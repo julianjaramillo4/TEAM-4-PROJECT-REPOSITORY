@@ -8,23 +8,115 @@ import models.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.net.URISyntaxException;
+import com.google.gson.JsonParseException;
+import exceptions.PersistenceException;
+import exceptions.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final String DATA_DIRECTORY = "datos_flowdesk/";
+
+
+    public static Path getDataDirectory() {
+        String configuredDirectory = System.getProperty("flowdesk.dataDirectory");
+        if (configuredDirectory != null && !configuredDirectory.isBlank()) {
+            return Path.of(configuredDirectory).toAbsolutePath().normalize();
+        }
+        try {
+            Path codeLocation = Path.of(DataManager.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI());
+            Path projectDirectory = findProjectDirectory(codeLocation);
+            if (projectDirectory != null) {
+                return projectDirectory.resolve("datos_flowdesk");
+            }
+        } catch (URISyntaxException exception) {
+            throw new PersistenceException("No se pudo localizar la carpeta de datos.", exception);
+        }
+        Path workingDirectory = Path.of(System.getProperty("user.dir")).toAbsolutePath().normalize();
+        Path projectDirectory = findProjectDirectory(workingDirectory);
+        return (projectDirectory == null ? workingDirectory : projectDirectory).resolve("datos_flowdesk");
+    }
+
+    private static Path findProjectDirectory(Path location) {
+        Path current = Files.isDirectory(location) ? location : location.getParent();
+        while (current != null) {
+            if (Files.isRegularFile(current.resolve("pom.xml")) && Files.isDirectory(current.resolve("src"))) {
+                return current;
+            }
+            Path nestedProject = current.resolve("06Code/Flowdesk");
+            if (Files.isRegularFile(nestedProject.resolve("pom.xml"))) {
+                return nestedProject;
+            }
+            current = current.getParent();
+        }
+        return null;
+    }
 
     public static void init() {
-        File dir = new File(DATA_DIRECTORY);
-        if (!dir.exists()) {
-            dir.mkdirs();
+        try {
+            Files.createDirectories(getDataDirectory());
+        } catch (IOException exception) {
+            throw new PersistenceException("No se pudo crear la carpeta de datos.", exception);
+        }
+    }
+
+    public static void saveUsers() {
+        init();
+        Path temporaryFile = null;
+        try {
+            Path directory = getDataDirectory();
+            temporaryFile = Files.createTempFile(directory, "usuarios-", ".tmp");
+            try (Writer writer = Files.newBufferedWriter(temporaryFile, StandardCharsets.UTF_8)) {
+                gson.toJson(User.getAll(), writer);
+            }
+            Path destination = directory.resolve("usuarios.json");
+            try {
+                Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException exception) {
+                Files.move(temporaryFile, destination, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException exception) {
+            throw new PersistenceException("No se pudieron guardar las cuentas. Intente nuevamente.", exception);
+        } finally {
+            if (temporaryFile != null) {
+                temporaryFile.toFile().delete();
+            }
+        }
+    }
+
+    public static void loadUsers() {
+        init();
+        Path file = getDataDirectory().resolve("usuarios.json");
+        if (!Files.exists(file)) {
+            User.setAll(new ArrayList<>());
+            return;
+        }
+        ArrayList<User> previousUsers = new ArrayList<>(User.getAll());
+        try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+            Type usersType = new TypeToken<ArrayList<User>>(){}.getType();
+            ArrayList<User> loadedUsers = gson.fromJson(reader, usersType);
+            if (loadedUsers == null || loadedUsers.contains(null)) {
+                throw new ValidationException("El archivo de cuentas no es valido.");
+            }
+            User.setAll(new ArrayList<>());
+            for (User user : loadedUsers) {
+                user.register();
+            }
+        } catch (IOException | JsonParseException | ValidationException exception) {
+            User.setAll(previousUsers);
+            throw new PersistenceException("No se pudieron cargar las cuentas. Revise el archivo de usuarios.", exception);
         }
     }
 
     public static <T> void saveList(List<T> items, String fileName) {
         init();
-        try (Writer writer = new FileWriter(DATA_DIRECTORY + fileName + ".json", StandardCharsets.UTF_8)) {
+        try (Writer writer = new FileWriter(getDataDirectory().resolve(fileName + ".json").toFile(), StandardCharsets.UTF_8)) {
             gson.toJson(items, writer);
         } catch (IOException e) {
             System.out.println("Error al guardar " + fileName + ". Verifique el archivo y los permisos de acceso.");
@@ -33,7 +125,7 @@ public class DataManager {
 
     public static <T> List<T> loadList(String fileName, Type listType) {
         init();
-        File file = new File(DATA_DIRECTORY + fileName + ".json");
+        File file = getDataDirectory().resolve(fileName + ".json").toFile();
         if (!file.exists()) {
             return new ArrayList<>();
         }
@@ -47,15 +139,16 @@ public class DataManager {
     }
 
     public static void saveAll() {
+        saveUsers();
         saveList(Customer.getAll(), "clientes");
         saveList(Category.getAll(), "categorias");
         saveList(Product.getAll(), "productos");
         saveList(Service.getAll(), "servicios");
         saveList(WorkOrder.getAll(), "ordenes");
-        saveList(User.getAll(), "usuarios");
     }
 
     public static void loadAll() {
+        loadUsers();
         Type customersType = new TypeToken<ArrayList<Customer>>(){}.getType();
         Customer.setAll(loadList("clientes", customersType));
 
@@ -71,13 +164,11 @@ public class DataManager {
         Type ordersType = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
         WorkOrder.setAll(loadList("ordenes", ordersType));
 
-        Type usersType = new TypeToken<ArrayList<User>>(){}.getType();
-        User.setAll(loadList("usuarios", usersType));
     }
 
     public static void saveCashRegister(CashRegister cashRegister) {
         init();
-        try (Writer writer = new FileWriter(DATA_DIRECTORY + "caja.json", StandardCharsets.UTF_8)) {
+        try (Writer writer = new FileWriter(getDataDirectory().resolve("caja.json").toFile(), StandardCharsets.UTF_8)) {
             gson.toJson(cashRegister, writer);
         } catch (IOException e) {
             System.out.println("Error al guardar caja. Verifique el archivo y los permisos de acceso.");
@@ -86,7 +177,7 @@ public class DataManager {
 
     public static CashRegister loadCashRegister() {
         init();
-        File file = new File(DATA_DIRECTORY + "caja.json");
+        File file = getDataDirectory().resolve("caja.json").toFile();
         if (!file.exists()) {
             return new CashRegister();
         }

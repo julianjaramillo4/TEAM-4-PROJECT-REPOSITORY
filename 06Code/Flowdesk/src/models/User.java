@@ -7,6 +7,7 @@ import java.util.Scanner;
 import utils.ConsoleInput;
 import utils.Validation;
 import exceptions.ValidationException;
+import exceptions.PersistenceException;
 
 public class User {
 
@@ -67,6 +68,10 @@ public class User {
     }
 
     public static User authenticateFromConsole(Role selectedRole, Scanner scanner) {
+        return authenticateFromConsole(selectedRole, scanner, () -> { });
+    }
+
+    public static User authenticateFromConsole(Role selectedRole, Scanner scanner, Runnable saveAccounts) {
         Validation.requireValue(selectedRole, "rol");
         User existingUser = findByRole(selectedRole);
 
@@ -84,6 +89,12 @@ public class User {
             );
 
             newUser.register();
+            try {
+                saveAccounts.run();
+            } catch (PersistenceException exception) {
+                users.remove(newUser);
+                throw exception;
+            }
 
             System.out.println("Cuenta creada con exito!");
             return newUser;

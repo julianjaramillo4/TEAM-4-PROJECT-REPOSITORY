@@ -10,6 +10,8 @@ import models.*;
 import reports.Dashboard;
 import reports.Report;
 import utils.ConsoleInput;
+import exceptions.PersistenceException;
+import com.google.gson.JsonParseException;
 
 public class Flowdesk {
     private static final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
@@ -19,8 +21,13 @@ public class Flowdesk {
 
     public static void main(String[] args) {
         configureConsole();
-        DataManager.loadAll();
-        cashRegister = DataManager.loadCashRegister();
+        try {
+            DataManager.loadAll();
+            cashRegister = DataManager.loadCashRegister();
+        } catch (PersistenceException | JsonParseException exception) {
+            System.out.println("No se pudo iniciar el sistema. Revise los archivos de datos y los permisos de acceso.");
+            return;
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(Flowdesk::saveData));
         System.out.println("Puede escribir :cancelar para abandonar una operacion.");
         try {
@@ -39,9 +46,13 @@ public class Flowdesk {
 
     private static void saveData() {
         System.out.println("\n[Guardando datos en el disco...]");
-        DataManager.saveAll();
-        DataManager.saveCashRegister(cashRegister);
-        System.out.println("[Datos guardados exitosamente.]");
+        try {
+            DataManager.saveAll();
+            DataManager.saveCashRegister(cashRegister);
+            System.out.println("[Datos guardados exitosamente.]");
+        } catch (PersistenceException exception) {
+            System.out.println("Error: " + exception.getMessage());
+        }
     }
 
     private static void startSession() {
@@ -60,7 +71,7 @@ public class Flowdesk {
             case 2 -> Role.CASHIER;
             default -> Role.EMPLOYEE;
         };
-        User user = User.authenticateFromConsole(role, scanner);
+        User user = User.authenticateFromConsole(role, scanner, DataManager::saveUsers);
         if (user != null) {
             user.login();
             showRoleSession(user);
