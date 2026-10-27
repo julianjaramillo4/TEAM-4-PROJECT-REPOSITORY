@@ -121,6 +121,13 @@ public class Payment {
                 && amount <= getWorkOrder().getBalance();
     }
 
+    // ---> MÉTODO AGREGADO AQUÍ <---
+    public String getPaymentDetails() {
+        return "Identificador del pago: " + paymentId
+                + ", Monto: " + amount
+                + ", Metodo: " + paymentMethod;
+    }
+
     public static void registerFromConsole(Scanner scanner, CashRegister cashRegister) {
         System.out.println("\n--- REGISTRAR PAGO ---");
 

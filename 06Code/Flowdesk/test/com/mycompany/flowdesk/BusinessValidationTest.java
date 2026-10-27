@@ -45,8 +45,11 @@ class BusinessValidationTest {
         return order;
     }
 
+    // CORREGIDO
     private Payment payment(String id, double amount, WorkOrder order) {
-        return new Payment(id, amount, date, PaymentMethod.CASH, order);
+        Payment p = new Payment(id, amount, date, PaymentMethod.CASH);
+        p.setWorkOrder(order);
+        return p;
     }
 
     private String capture(Runnable action) {
@@ -156,8 +159,12 @@ class BusinessValidationTest {
     void missingPaymentFieldsAndWrongOrderAreRejected() {
         WorkOrder order = order("WO-1");
         assertThrows(InvalidPaymentException.class, () -> payment(" ", 10, order).registerPayment());
-        assertThrows(InvalidPaymentException.class,
-                () -> new Payment("P1", 10, date, null, order).registerPayment());
+        // CORREGIDO
+        assertThrows(InvalidPaymentException.class, () -> {
+            Payment p = new Payment("P1", 10, date, null);
+            p.setWorkOrder(order);
+            p.registerPayment();
+        });
         assertThrows(InvalidPaymentException.class, () -> order.addPayment(payment("P1", 10, order("WO-2"))));
         assertThrows(InvalidPaymentException.class, () -> order.addPayment(null));
         assertEquals(100, order.getBalance());

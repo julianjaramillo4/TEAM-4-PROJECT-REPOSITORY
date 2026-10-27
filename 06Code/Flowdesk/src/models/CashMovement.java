@@ -40,6 +40,7 @@ public class CashMovement {
         } else {
             cashRegister.addExpense(this.amount);
         }
+        cashRegister.addMovement(this);
         movements.add(this);
     }
 
@@ -83,7 +84,7 @@ public class CashMovement {
         int methodOption = ConsoleInput.readOption(scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
         PaymentMethod method = (methodOption == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
 
-        Date currentDate = Date.now(); 
+        Date currentDate = Date.now();
 
         CashMovement newMovement = new CashMovement(id, type, amount, currentDate, reason, method);
         newMovement.registerMovement(cashRegister);
@@ -104,4 +105,11 @@ public class CashMovement {
             }
         }
     }
+    
+    public String getMovementId() { return movementId; }
+    public double getAmount() { return amount; }
+    public MovementType getType() { return type; }
+    public Date getDate() { return date; }
+    public String getReason() { return reason; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
 }

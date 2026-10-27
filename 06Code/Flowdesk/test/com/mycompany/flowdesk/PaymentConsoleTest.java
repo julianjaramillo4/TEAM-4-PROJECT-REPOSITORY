@@ -124,8 +124,11 @@ class PaymentConsoleTest {
 
     @Test
     void alreadyPaidOrderRejectsAnotherPaymentBeforeAskingForAmount() {
-        new Payment("P1", 100, new Date(27, 10, 2026), PaymentMethod.CASH, order)
-                .registerPayment(cashRegister);
+        // CORREGIDO
+        Payment p = new Payment("P1", 100, new Date(27, 10, 2026), PaymentMethod.CASH);
+        p.setWorkOrder(order);
+        p.registerPayment(cashRegister);
+
         String output = enterPayment("WO-001\n");
         assertTrue(output.contains("ya esta totalmente pagada"));
         assertFalse(output.contains("Monto a pagar ahora"));
@@ -135,13 +138,21 @@ class PaymentConsoleTest {
 
     @Test
     void successiveInstallmentsAndFinalPaymentPreserveTotalsAndRejectDuplicate() {
-        Payment first = new Payment("P1", 25, new Date(27, 10, 2026), PaymentMethod.CASH, order);
+        // CORREGIDO
+        Payment first = new Payment("P1", 25, new Date(27, 10, 2026), PaymentMethod.CASH);
+        first.setWorkOrder(order);
         first.registerPayment(cashRegister);
-        new Payment("P2", 35, new Date(27, 10, 2026), PaymentMethod.TRANSFER, order)
-                .registerPayment(cashRegister);
+
+        Payment second = new Payment("P2", 35, new Date(27, 10, 2026), PaymentMethod.TRANSFER);
+        second.setWorkOrder(order);
+        second.registerPayment(cashRegister);
+
         assertEquals(40, order.getBalance());
-        new Payment("P3", 40, new Date(27, 10, 2026), PaymentMethod.CASH, order)
-                .registerPayment(cashRegister);
+
+        Payment third = new Payment("P3", 40, new Date(27, 10, 2026), PaymentMethod.CASH);
+        third.setWorkOrder(order);
+        third.registerPayment(cashRegister);
+
         assertThrowsExactly(InvalidPaymentException.class, () -> first.registerPayment(cashRegister));
         assertEquals(0, order.getBalance());
         assertEquals(100, order.calculateTotalPaid());

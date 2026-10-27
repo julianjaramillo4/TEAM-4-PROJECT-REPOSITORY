@@ -175,7 +175,7 @@ public class Flowdesk {
         dashboard.showDashboard();
     }
 
-    static void showCatalogMenu(Scanner input) {
+    public static void showCatalogMenu(Scanner input) {
         while (true) {
             System.out.println("\n--- GESTION DE CATALOGO ---");
             System.out.println("1. Registrar nueva Categoria");

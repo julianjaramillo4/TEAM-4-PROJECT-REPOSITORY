@@ -130,7 +130,7 @@ public class DataManager {
         try (Writer writer = new FileWriter(getDataDirectory().resolve(fileName + ".json").toFile(), StandardCharsets.UTF_8)) {
             gson.toJson(items, writer);
         } catch (IOException e) {
-            System.out.println("Error al guardar " + fileName + ". Verifique el archivo y los permisos de acceso.");
+            throw new PersistenceException("Error al guardar " + fileName + ".json", e);
         }
     }
 
@@ -141,9 +141,8 @@ public class DataManager {
         try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             List<T> items = gson.fromJson(reader, listType);
             return items != null ? items : new ArrayList<>();
-        } catch (IOException e) {
-            System.out.println("Error al cargar " + fileName + ". Verifique el archivo y los permisos de acceso.");
-            return new ArrayList<>();
+        } catch (IOException | JsonParseException e) {
+            throw new PersistenceException("Error crítico al cargar " + fileName + ".json. Evitando sobrescritura.", e);
         }
     }
 
@@ -154,6 +153,7 @@ public class DataManager {
         saveList(Product.getAll(), "products");
         saveList(Service.getAll(), "services");
         saveList(WorkOrder.getAll(), "orders");
+        saveList(CashMovement.getAll(), "movements");
     }
 
     public static void loadAll() {
@@ -172,6 +172,9 @@ public class DataManager {
 
         Type ordersType = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
         WorkOrder.setAll(loadList("orders", ordersType));
+
+        Type movementsType = new TypeToken<ArrayList<CashMovement>>(){}.getType();
+        CashMovement.setAll(loadList("movements", movementsType));
     }
 
     public static void saveCashRegister(CashRegister cashRegister) {
@@ -179,7 +182,7 @@ public class DataManager {
         try (Writer writer = new FileWriter(getDataDirectory().resolve("cash_register.json").toFile(), StandardCharsets.UTF_8)) {
             gson.toJson(cashRegister, writer);
         } catch (IOException e) {
-            System.out.println("Error al guardar caja. Verifique el archivo y los permisos de acceso.");
+            throw new PersistenceException("Error al guardar cash_register.json", e);
         }
     }
 
@@ -190,9 +193,8 @@ public class DataManager {
         try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             CashRegister cashRegister = gson.fromJson(reader, CashRegister.class);
             return cashRegister != null ? cashRegister : new CashRegister();
-        } catch (IOException e) {
-            System.out.println("Error al cargar caja. Verifique el archivo y los permisos de acceso.");
-            return new CashRegister();
+        } catch (IOException | JsonParseException e) {
+            throw new PersistenceException("Error crítico al cargar cash_register.json. Evitando sobrescritura.", e);
         }
     }
 }
