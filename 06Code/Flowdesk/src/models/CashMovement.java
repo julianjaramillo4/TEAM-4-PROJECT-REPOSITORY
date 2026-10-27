@@ -21,6 +21,8 @@ public class CashMovement {
 
     private static List<CashMovement> movements = new ArrayList<>();
 
+    public CashMovement() { }
+
     public CashMovement(String movementId, MovementType type, double amount, Date date, String reason, PaymentMethod paymentMethod) {
         this.movementId = movementId;
         this.type = type;
@@ -64,13 +66,8 @@ public class CashMovement {
         Validation.requireValue(paymentMethod, "metodo de pago");
     }
 
-    public static List<CashMovement> getAll() {
-        return movements;
-    }
-
-    public static void setAll(List<CashMovement> newItems) {
-        movements = newItems == null ? new ArrayList<>() : newItems;
-    }
+    public static List<CashMovement> getAll() { return movements; }
+    public static void setAll(List<CashMovement> newItems) { movements = newItems == null ? new ArrayList<>() : newItems; }
 
     public static void registerFromConsole(Scanner scanner, CashRegister cashRegister) {
         System.out.println("\n--- REGISTRAR MOVIMIENTO DE CAJA ---");
@@ -81,13 +78,12 @@ public class CashMovement {
         MovementType type = (typeOption == 1) ? MovementType.INCOME : MovementType.EXPENSE;
 
         double amount = ConsoleInput.readPositiveAmount(scanner, "Monto: $");
-
         String reason = ConsoleInput.readRequiredText(scanner, "Razon/Descripcion: ");
 
         int methodOption = ConsoleInput.readOption(scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
         PaymentMethod method = (methodOption == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
 
-        Date currentDate = new Date(24, 10, 2026);
+        Date currentDate = Date.now(); 
 
         CashMovement newMovement = new CashMovement(id, type, amount, currentDate, reason, method);
         newMovement.registerMovement(cashRegister);

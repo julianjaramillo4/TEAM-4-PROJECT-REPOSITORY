@@ -40,13 +40,20 @@ public class WorkOrder {
         this.balance = 0;
     }
 
-    public static List<WorkOrder> getAll() {
-        return orders;
-    }
+    public static List<WorkOrder> getAll() { return orders; }
 
     public static void setAll(List<WorkOrder> newItems) {
         orders = newItems == null ? new ArrayList<>() : newItems;
-        orderCounter = orders.size() + 1;
+        int maxId = 0;
+        for (WorkOrder wo : orders) {
+            try {
+                if (wo.orderId != null && wo.orderId.startsWith("WO-")) {
+                    int num = Integer.parseInt(wo.orderId.substring(3));
+                    if (num > maxId) maxId = num;
+                }
+            } catch (NumberFormatException ignored) { }
+        }
+        orderCounter = maxId + 1;
     }
 
     public void create() {
@@ -129,7 +136,8 @@ public class WorkOrder {
         }
 
         System.out.println("Cliente asignado: " + customer.getName());
-        WorkOrder newOrder = new WorkOrder(newId, new Date(24, 10, 2026), OrderStatus.WAITING);
+        
+        WorkOrder newOrder = new WorkOrder(newId, Date.now(), OrderStatus.WAITING);
         newOrder.customer = customer;
         newOrder.user = employee;
 
@@ -141,9 +149,7 @@ public class WorkOrder {
             System.out.println("0. Terminar y guardar Orden");
             int option = ConsoleInput.readOption(scanner, "Opcion: ", 0, 2);
 
-            if (option == 0) {
-                break;
-            }
+            if (option == 0) break;
 
             OrderDetail detail = option == 1
                     ? readProductDetail(scanner, "D" + detailCounter)
@@ -173,7 +179,7 @@ public class WorkOrder {
         Product.listFromConsole();
         String productId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Producto: ");
         for (Product product : Product.getAll()) {
-            if (Validation.sameIdentifier(product.getId(), productId)) { // <-- getId()
+            if (Validation.sameIdentifier(product.getId(), productId)) {
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad: ");
                 OrderDetail detail = new OrderDetail(detailId, product.getName(), quantity,
                         product.getDescription(), product.getPrice());
@@ -184,7 +190,6 @@ public class WorkOrder {
         return null;
     }
 
-
     private static OrderDetail readServiceDetail(Scanner scanner, String detailId) {
         if (Service.getAll().isEmpty()) {
             System.out.println("No hay servicios.");
@@ -193,7 +198,7 @@ public class WorkOrder {
         Service.listFromConsole();
         String serviceId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Servicio: ");
         for (Service service : Service.getAll()) {
-            if (Validation.sameIdentifier(service.getId(), serviceId)) { // <-- getId()
+            if (Validation.sameIdentifier(service.getId(), serviceId)) {
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad (Horas/Veces): ");
                 double price = ConsoleInput.readAmount(scanner, "Precio Unitario a cobrar: $");
                 OrderDetail detail = new OrderDetail(detailId, service.getName(), quantity,
@@ -254,53 +259,31 @@ public class WorkOrder {
         System.out.println("0. Volver");
         int option = ConsoleInput.readOption(scanner, "Opcion: ", 0, 5);
         if (option == 0) return;
-        OrderStatus newStatus;
+        
+        OrderStatus newStatus = switch (option) {
+            case 1 -> OrderStatus.WAITING;
+            case 2 -> OrderStatus.APPROVED;
+            case 3 -> OrderStatus.IN_PROGRESS;
+            case 4 -> OrderStatus.COMPLETED;
+            case 5 -> OrderStatus.DELIVERED;
+            default -> null;
+        };
 
-        switch (option) {
-            case 1 -> newStatus = OrderStatus.WAITING;
-            case 2 -> newStatus = OrderStatus.APPROVED;
-            case 3 -> newStatus = OrderStatus.IN_PROGRESS;
-            case 4 -> newStatus = OrderStatus.COMPLETED;
-            case 5 -> newStatus = OrderStatus.DELIVERED;
-            default -> {
-                System.out.println("Opcion no valida.");
-                return;
-            }
+        if (newStatus == null) {
+            System.out.println("Opcion no valida.");
+            return;
         }
 
         matchingOrder.changeStatus(newStatus);
         System.out.println("¡Estado actualizado exitosamente a: " + matchingOrder.getStatus() + "!");
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public List<OrderDetail> getDetails() {
-        return details;
-    }
-
-    public List<Payment> getPayments() {
-        return payments;
-    }
+    public String getOrderId() { return orderId; }
+    public Date getDate() { return date; }
+    public double getTotal() { return total; }
+    public double getBalance() { return balance; }
+    public OrderStatus getStatus() { return status; }
+    public Customer getCustomer() { return customer; }
+    public List<OrderDetail> getDetails() { return details; }
+    public List<Payment> getPayments() { return payments; }
 }

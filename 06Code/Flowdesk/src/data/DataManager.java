@@ -1,27 +1,40 @@
 package data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import models.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.*;
 import java.net.URISyntaxException;
-import com.google.gson.JsonParseException;
 import exceptions.PersistenceException;
 import exceptions.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    
+    private static final JsonSerializer<CatalogItem> itemSerializer = (src, typeOfSrc, context) -> {
+        JsonObject jsonObject = context.serialize(src).getAsJsonObject();
+        jsonObject.addProperty("type", src.getItemType());
+        return jsonObject;
+    };
 
+    private static final JsonDeserializer<CatalogItem> itemDeserializer = (json, typeOfT, context) -> {
+        JsonObject jsonObject = json.getAsJsonObject();
+        String type = jsonObject.get("type").getAsString();
+        if ("PRODUCTO".equals(type)) return context.deserialize(jsonObject, Product.class);
+        if ("SERVICIO".equals(type)) return context.deserialize(jsonObject, Service.class);
+        throw new JsonParseException("Tipo desconocido: " + type);
+    };
+
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(CatalogItem.class, itemSerializer)
+            .registerTypeAdapter(CatalogItem.class, itemDeserializer)
+            .create();
 
     public static Path getDataDirectory() {
         String configuredDirectory = System.getProperty("flowdesk.dataDirectory");
@@ -71,7 +84,7 @@ public class DataManager {
         Path temporaryFile = null;
         try {
             Path directory = getDataDirectory();
-            temporaryFile = Files.createTempFile(directory, "users-", ".tmp"); // <-- Cambiado a inglés
+            temporaryFile = Files.createTempFile(directory, "users-", ".tmp");
             try (Writer writer = Files.newBufferedWriter(temporaryFile, StandardCharsets.UTF_8)) {
                 gson.toJson(User.getAll(), writer);
             }
@@ -84,9 +97,7 @@ public class DataManager {
         } catch (IOException exception) {
             throw new PersistenceException("No se pudieron guardar las cuentas. Intente nuevamente.", exception);
         } finally {
-            if (temporaryFile != null) {
-                temporaryFile.toFile().delete();
-            }
+            if (temporaryFile != null) temporaryFile.toFile().delete();
         }
     }
 
@@ -126,9 +137,7 @@ public class DataManager {
     public static <T> List<T> loadList(String fileName, Type listType) {
         init();
         File file = getDataDirectory().resolve(fileName + ".json").toFile();
-        if (!file.exists()) {
-            return new ArrayList<>();
-        }
+        if (!file.exists()) return new ArrayList<>();
         try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             List<T> items = gson.fromJson(reader, listType);
             return items != null ? items : new ArrayList<>();
@@ -140,7 +149,7 @@ public class DataManager {
 
     public static void saveAll() {
         saveUsers();
-        saveList(Customer.getAll(), "customers");     // <-- Corregido
+        saveList(Customer.getAll(), "customers");
         saveList(Category.getAll(), "categories");
         saveList(Product.getAll(), "products");
         saveList(Service.getAll(), "services");
@@ -149,9 +158,8 @@ public class DataManager {
 
     public static void loadAll() {
         loadUsers();
-        
         Type customersType = new TypeToken<ArrayList<Customer>>(){}.getType();
-        Customer.setAll(loadList("customers", customersType)); // <-- Corregido
+        Customer.setAll(loadList("customers", customersType));
 
         Type categoriesType = new TypeToken<ArrayList<Category>>(){}.getType();
         Category.setAll(loadList("categories", categoriesType));
@@ -164,7 +172,6 @@ public class DataManager {
 
         Type ordersType = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
         WorkOrder.setAll(loadList("orders", ordersType));
-
     }
 
     public static void saveCashRegister(CashRegister cashRegister) {
@@ -179,9 +186,7 @@ public class DataManager {
     public static CashRegister loadCashRegister() {
         init();
         File file = getDataDirectory().resolve("cash_register.json").toFile();
-        if (!file.exists()) {
-            return new CashRegister();
-        }
+        if (!file.exists()) return new CashRegister();
         try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             CashRegister cashRegister = gson.fromJson(reader, CashRegister.class);
             return cashRegister != null ? cashRegister : new CashRegister();
