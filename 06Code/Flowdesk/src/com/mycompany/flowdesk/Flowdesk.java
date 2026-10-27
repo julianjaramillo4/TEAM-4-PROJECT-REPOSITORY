@@ -2,6 +2,8 @@ package com.mycompany.flowdesk;
 
 import data.DataManager;
 import enums.Role;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import models.*;
@@ -10,12 +12,13 @@ import reports.Report;
 import utils.ConsoleInput;
 
 public class Flowdesk {
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
     private static final Dashboard dashboard = new Dashboard();
     private static CashRegister cashRegister;
     private static boolean exitRequested;
 
     public static void main(String[] args) {
+        configureConsole();
         DataManager.loadAll();
         cashRegister = DataManager.loadCashRegister();
         Runtime.getRuntime().addShutdownHook(new Thread(Flowdesk::saveData));
@@ -27,6 +30,11 @@ public class Flowdesk {
         } catch (NoSuchElementException exception) {
             System.out.println("\nEntrada finalizada. Saliendo del programa...");
         }
+    }
+
+    private static void configureConsole() {
+        System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
+        System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
     }
 
     private static void saveData() {

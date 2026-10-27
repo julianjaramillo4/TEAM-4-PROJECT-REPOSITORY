@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import models.*;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class DataManager {
 
     public static <T> void saveList(List<T> items, String fileName) {
         init();
-        try (Writer writer = new FileWriter(DATA_DIRECTORY + fileName + ".json")) {
+        try (Writer writer = new FileWriter(DATA_DIRECTORY + fileName + ".json", StandardCharsets.UTF_8)) {
             gson.toJson(items, writer);
         } catch (IOException e) {
             System.out.println("Error al guardar " + fileName + ". Verifique el archivo y los permisos de acceso.");
@@ -36,7 +37,7 @@ public class DataManager {
         if (!file.exists()) {
             return new ArrayList<>();
         }
-        try (Reader reader = new FileReader(file)) {
+        try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             List<T> items = gson.fromJson(reader, listType);
             return items != null ? items : new ArrayList<>();
         } catch (IOException e) {
@@ -76,7 +77,7 @@ public class DataManager {
 
     public static void saveCashRegister(CashRegister cashRegister) {
         init();
-        try (Writer writer = new FileWriter(DATA_DIRECTORY + "caja.json")) {
+        try (Writer writer = new FileWriter(DATA_DIRECTORY + "caja.json", StandardCharsets.UTF_8)) {
             gson.toJson(cashRegister, writer);
         } catch (IOException e) {
             System.out.println("Error al guardar caja. Verifique el archivo y los permisos de acceso.");
@@ -89,7 +90,7 @@ public class DataManager {
         if (!file.exists()) {
             return new CashRegister();
         }
-        try (Reader reader = new FileReader(file)) {
+        try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             CashRegister cashRegister = gson.fromJson(reader, CashRegister.class);
             return cashRegister != null ? cashRegister : new CashRegister();
         } catch (IOException e) {

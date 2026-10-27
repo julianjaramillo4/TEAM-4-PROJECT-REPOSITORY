@@ -1,1 +1,420 @@
-[]
+[
+  {
+    "productId": "XRX-001",
+    "name": "Impresión bond A4 - Un lado",
+    "description": "Impresión en impresión bond, formato A4, a un lado. Rango indicado: 1 a 10 unidades.",
+    "price": 0.5,
+    "category": {
+      "categoryId": "CAT-XRX-01",
+      "name": "Impresión bond",
+      "description": "Impresión en papel bond."
+    }
+  },
+  {
+    "productId": "XRX-002",
+    "name": "Impresión bond A3 - Dos lados",
+    "description": "Impresión en impresión bond, formato A3, a dos lados. Rango indicado: 1 a 10 unidades.",
+    "price": 1.0,
+    "category": {
+      "categoryId": "CAT-XRX-01",
+      "name": "Impresión bond",
+      "description": "Impresión en papel bond."
+    }
+  },
+  {
+    "productId": "XRX-003",
+    "name": "Couché 150 g A4 - Un lado",
+    "description": "Impresión en couché 150 g, formato A4, a un lado. Medidas: 22 x 32.",
+    "price": 0.8,
+    "category": {
+      "categoryId": "CAT-XRX-02",
+      "name": "Couché 150 g",
+      "description": "Impresión en papel couché de 150 g."
+    }
+  },
+  {
+    "productId": "XRX-004",
+    "name": "Couché 150 g A4 - Dos lados",
+    "description": "Impresión en couché 150 g, formato A4, a dos lados. Medidas: 22 x 32.",
+    "price": 1.5,
+    "category": {
+      "categoryId": "CAT-XRX-02",
+      "name": "Couché 150 g",
+      "description": "Impresión en papel couché de 150 g."
+    }
+  },
+  {
+    "productId": "XRX-005",
+    "name": "Couché 150 g A3 - Un lado",
+    "description": "Impresión en couché 150 g, formato A3, a un lado. Medidas: 32 x 45.",
+    "price": 1.5,
+    "category": {
+      "categoryId": "CAT-XRX-02",
+      "name": "Couché 150 g",
+      "description": "Impresión en papel couché de 150 g."
+    }
+  },
+  {
+    "productId": "XRX-006",
+    "name": "Couché 150 g A3 - Dos lados",
+    "description": "Impresión en couché 150 g, formato A3, a dos lados. Medidas: 32 x 45.",
+    "price": 2.5,
+    "category": {
+      "categoryId": "CAT-XRX-02",
+      "name": "Couché 150 g",
+      "description": "Impresión en papel couché de 150 g."
+    }
+  },
+  {
+    "productId": "XRX-007",
+    "name": "Couché 300 g MA4 - Un lado",
+    "description": "Impresión en couché 300 g, formato MA4, a un lado. Medidas: 24 x 33.",
+    "price": 1.0,
+    "category": {
+      "categoryId": "CAT-XRX-03",
+      "name": "Couché 300 g",
+      "description": "Impresión en papel couché de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-008",
+    "name": "Couché 300 g MA4 - Dos lados",
+    "description": "Impresión en couché 300 g, formato MA4, a dos lados. Medidas: 24 x 33.",
+    "price": 1.8,
+    "category": {
+      "categoryId": "CAT-XRX-03",
+      "name": "Couché 300 g",
+      "description": "Impresión en papel couché de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-009",
+    "name": "Couché 300 g MA3 - Un lado",
+    "description": "Impresión en couché 300 g, formato MA3, a un lado. Medidas: 33 x 48.",
+    "price": 2.0,
+    "category": {
+      "categoryId": "CAT-XRX-03",
+      "name": "Couché 300 g",
+      "description": "Impresión en papel couché de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-010",
+    "name": "Couché 300 g MA3 - Dos lados",
+    "description": "Impresión en couché 300 g, formato MA3, a dos lados. Medidas: 33 x 48.",
+    "price": 3.5,
+    "category": {
+      "categoryId": "CAT-XRX-03",
+      "name": "Couché 300 g",
+      "description": "Impresión en papel couché de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-011",
+    "name": "Marfil lisa 300 g MA3 - Un lado",
+    "description": "Impresión en marfil lisa 300 g, formato MA3, a un lado.",
+    "price": 2.5,
+    "category": {
+      "categoryId": "CAT-XRX-04",
+      "name": "Marfil lisa 300 g",
+      "description": "Impresión en marfil lisa de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-012",
+    "name": "Marfil lisa 300 g MA3 - Dos lados",
+    "description": "Impresión en marfil lisa 300 g, formato MA3, a dos lados.",
+    "price": 4.0,
+    "category": {
+      "categoryId": "CAT-XRX-04",
+      "name": "Marfil lisa 300 g",
+      "description": "Impresión en marfil lisa de 300 g."
+    }
+  },
+  {
+    "productId": "XRX-013",
+    "name": "Cartulina bristol MA4 - Un lado",
+    "description": "Impresión en cartulina bristol, formato MA4, a un lado. Medidas: 22 x 32.",
+    "price": 1.0,
+    "category": {
+      "categoryId": "CAT-XRX-05",
+      "name": "Cartulina bristol",
+      "description": "Impresión en cartulina bristol."
+    }
+  },
+  {
+    "productId": "XRX-014",
+    "name": "Cartulina bristol MA4 - Dos lados",
+    "description": "Impresión en cartulina bristol, formato MA4, a dos lados. Medidas: 22 x 32.",
+    "price": 1.8,
+    "category": {
+      "categoryId": "CAT-XRX-05",
+      "name": "Cartulina bristol",
+      "description": "Impresión en cartulina bristol."
+    }
+  },
+  {
+    "productId": "XRX-015",
+    "name": "Cartulina bristol MA3 - Un lado",
+    "description": "Impresión en cartulina bristol, formato MA3, a un lado. Medidas: 33 x 48.",
+    "price": 2.0,
+    "category": {
+      "categoryId": "CAT-XRX-05",
+      "name": "Cartulina bristol",
+      "description": "Impresión en cartulina bristol."
+    }
+  },
+  {
+    "productId": "XRX-016",
+    "name": "Cartulina bristol MA3 - Dos lados",
+    "description": "Impresión en cartulina bristol, formato MA3, a dos lados. Medidas: 33 x 48.",
+    "price": 3.5,
+    "category": {
+      "categoryId": "CAT-XRX-05",
+      "name": "Cartulina bristol",
+      "description": "Impresión en cartulina bristol."
+    }
+  },
+  {
+    "productId": "XRX-017",
+    "name": "Cartulina pegable MA4 - Un lado",
+    "description": "Impresión en cartulina pegable, formato MA4, a un lado. Medidas: 22 x 32.",
+    "price": 1.0,
+    "category": {
+      "categoryId": "CAT-XRX-06",
+      "name": "Cartulina pegable",
+      "description": "Impresión en cartulina pegable."
+    }
+  },
+  {
+    "productId": "XRX-018",
+    "name": "Cartulina pegable MA4 - Dos lados",
+    "description": "Impresión en cartulina pegable, formato MA4, a dos lados. Medidas: 22 x 32.",
+    "price": 1.8,
+    "category": {
+      "categoryId": "CAT-XRX-06",
+      "name": "Cartulina pegable",
+      "description": "Impresión en cartulina pegable."
+    }
+  },
+  {
+    "productId": "XRX-019",
+    "name": "Cartulina pegable MA3 - Un lado",
+    "description": "Impresión en cartulina pegable, formato MA3, a un lado. Medidas: 33 x 48.",
+    "price": 2.0,
+    "category": {
+      "categoryId": "CAT-XRX-06",
+      "name": "Cartulina pegable",
+      "description": "Impresión en cartulina pegable."
+    }
+  },
+  {
+    "productId": "XRX-020",
+    "name": "Cartulina pegable MA3 - Dos lados",
+    "description": "Impresión en cartulina pegable, formato MA3, a dos lados. Medidas: 33 x 48.",
+    "price": 3.5,
+    "category": {
+      "categoryId": "CAT-XRX-06",
+      "name": "Cartulina pegable",
+      "description": "Impresión en cartulina pegable."
+    }
+  },
+  {
+    "productId": "XRX-021",
+    "name": "Nacarada MA4 - Un lado",
+    "description": "Impresión en nacarada, formato MA4, a un lado.",
+    "price": 3.5,
+    "category": {
+      "categoryId": "CAT-XRX-07",
+      "name": "Nacarada",
+      "description": "Impresión en material nacarado."
+    }
+  },
+  {
+    "productId": "XRX-022",
+    "name": "Nacarada MA4 - Dos lados",
+    "description": "Impresión en nacarada, formato MA4, a dos lados.",
+    "price": 6.0,
+    "category": {
+      "categoryId": "CAT-XRX-07",
+      "name": "Nacarada",
+      "description": "Impresión en material nacarado."
+    }
+  },
+  {
+    "productId": "XRX-023",
+    "name": "Nacarada MA3 - Un lado",
+    "description": "Impresión en nacarada, formato MA3, a un lado.",
+    "price": 2.0,
+    "category": {
+      "categoryId": "CAT-XRX-07",
+      "name": "Nacarada",
+      "description": "Impresión en material nacarado."
+    }
+  },
+  {
+    "productId": "XRX-024",
+    "name": "Nacarada MA3 - Dos lados",
+    "description": "Impresión en nacarada, formato MA3, a dos lados.",
+    "price": 3.5,
+    "category": {
+      "categoryId": "CAT-XRX-07",
+      "name": "Nacarada",
+      "description": "Impresión en material nacarado."
+    }
+  },
+  {
+    "productId": "XRX-025",
+    "name": "Polipropileno blanco o transparente MA4 - Impresión",
+    "description": "Impresión en polipropileno blanco o transparente, formato MA4.",
+    "price": 2.5,
+    "category": {
+      "categoryId": "CAT-XRX-08",
+      "name": "Polipropileno blanco o transparente",
+      "description": "Impresión y troquelado en polipropileno blanco o transparente."
+    }
+  },
+  {
+    "productId": "XRX-026",
+    "name": "Polipropileno blanco o transparente MA4 - Troquelado",
+    "description": "Troquelado en polipropileno blanco o transparente, formato MA4.",
+    "price": 6.0,
+    "category": {
+      "categoryId": "CAT-XRX-08",
+      "name": "Polipropileno blanco o transparente",
+      "description": "Impresión y troquelado en polipropileno blanco o transparente."
+    }
+  },
+  {
+    "productId": "XRX-027",
+    "name": "Polipropileno blanco o transparente MA3 - Impresión",
+    "description": "Impresión en polipropileno blanco o transparente, formato MA3.",
+    "price": 2.5,
+    "category": {
+      "categoryId": "CAT-XRX-08",
+      "name": "Polipropileno blanco o transparente",
+      "description": "Impresión y troquelado en polipropileno blanco o transparente."
+    }
+  },
+  {
+    "productId": "XRX-028",
+    "name": "Polipropileno blanco o transparente MA3 - Troquelado",
+    "description": "Troquelado en polipropileno blanco o transparente, formato MA3.",
+    "price": 3.0,
+    "category": {
+      "categoryId": "CAT-XRX-08",
+      "name": "Polipropileno blanco o transparente",
+      "description": "Impresión y troquelado en polipropileno blanco o transparente."
+    }
+  },
+  {
+    "productId": "XRX-029",
+    "name": "Papel adhesivo MA3 - Impresión",
+    "description": "Impresión en papel adhesivo, formato MA3.",
+    "price": 2.2,
+    "category": {
+      "categoryId": "CAT-XRX-09",
+      "name": "Papel adhesivo",
+      "description": "Impresión y troquelado en papel adhesivo."
+    }
+  },
+  {
+    "productId": "XRX-030",
+    "name": "Papel adhesivo MA3 - Troquelado",
+    "description": "Troquelado en papel adhesivo, formato MA3.",
+    "price": 5.0,
+    "category": {
+      "categoryId": "CAT-XRX-09",
+      "name": "Papel adhesivo",
+      "description": "Impresión y troquelado en papel adhesivo."
+    }
+  },
+  {
+    "productId": "XRX-031",
+    "name": "Papel adhesivo MA4 - Impresión",
+    "description": "Impresión en papel adhesivo, formato MA4.",
+    "price": 1.4,
+    "category": {
+      "categoryId": "CAT-XRX-09",
+      "name": "Papel adhesivo",
+      "description": "Impresión y troquelado en papel adhesivo."
+    }
+  },
+  {
+    "productId": "XRX-032",
+    "name": "Papel adhesivo MA4 - Troquelado",
+    "description": "Troquelado en papel adhesivo, formato MA4.",
+    "price": 3.0,
+    "category": {
+      "categoryId": "CAT-XRX-09",
+      "name": "Papel adhesivo",
+      "description": "Impresión y troquelado en papel adhesivo."
+    }
+  },
+  {
+    "productId": "XRX-033",
+    "name": "Laminado de planchas - 1 a 10 unidades",
+    "description": "Laminado. Rango indicado: 1-10 unidades. Valor: $6.",
+    "price": 6.0,
+    "category": {
+      "categoryId": "CAT-XRX-10",
+      "name": "Laminado",
+      "description": "Laminado de planchas."
+    }
+  },
+  {
+    "productId": "XRX-034",
+    "name": "Laminado de planchas - Por unidad",
+    "description": "Laminado. Rango indicado: por unidad. Valor: $1.",
+    "price": 1.0,
+    "category": {
+      "categoryId": "CAT-XRX-10",
+      "name": "Laminado",
+      "description": "Laminado de planchas."
+    }
+  },
+  {
+    "productId": "XRX-035",
+    "name": "Promoción adhesivos - Una unidad",
+    "description": "Promoción de adhesivos para una unidad. Valor indicado para este rango: $6.",
+    "price": 6.0,
+    "category": {
+      "categoryId": "CAT-XRX-11",
+      "name": "Promoción adhesivos",
+      "description": "Tarifas promocionales de adhesivos por rango de unidades."
+    }
+  },
+  {
+    "productId": "XRX-036",
+    "name": "Promoción adhesivos - Dos unidades",
+    "description": "Promoción de adhesivos para dos unidades. Valor indicado para este rango: $10.",
+    "price": 10.0,
+    "category": {
+      "categoryId": "CAT-XRX-11",
+      "name": "Promoción adhesivos",
+      "description": "Tarifas promocionales de adhesivos por rango de unidades."
+    }
+  },
+  {
+    "productId": "XRX-037",
+    "name": "Promoción adhesivos - Tres a seis unidades",
+    "description": "Promoción de adhesivos para tres a seis unidades. Valor indicado para este rango: $4.",
+    "price": 4.0,
+    "category": {
+      "categoryId": "CAT-XRX-11",
+      "name": "Promoción adhesivos",
+      "description": "Tarifas promocionales de adhesivos por rango de unidades."
+    }
+  },
+  {
+    "productId": "XRX-038",
+    "name": "Promoción adhesivos - Más de siete unidades",
+    "description": "Promoción de adhesivos para más de siete unidades. Valor indicado para este rango: $3.",
+    "price": 3.0,
+    "category": {
+      "categoryId": "CAT-XRX-11",
+      "name": "Promoción adhesivos",
+      "description": "Tarifas promocionales de adhesivos por rango de unidades."
+    }
+  }
+]
