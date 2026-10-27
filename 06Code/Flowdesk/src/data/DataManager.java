@@ -12,88 +12,88 @@ import java.util.List;
 
 public class DataManager {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final String CARPETA = "datos_flowdesk/";
+    private static final String DATA_DIRECTORY = "datos_flowdesk/";
 
     public static void init() {
-        File dir = new File(CARPETA);
+        File dir = new File(DATA_DIRECTORY);
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
 
-    public static <T> void guardarLista(List<T> lista, String nombreArchivo) {
+    public static <T> void saveList(List<T> items, String fileName) {
         init();
-        try (Writer writer = new FileWriter(CARPETA + nombreArchivo + ".json")) {
-            gson.toJson(lista, writer);
+        try (Writer writer = new FileWriter(DATA_DIRECTORY + fileName + ".json")) {
+            gson.toJson(items, writer);
         } catch (IOException e) {
-            System.out.println("Error al guardar " + nombreArchivo + ": " + e.getMessage());
+            System.out.println("Error al guardar " + fileName + ". Verifique el archivo y los permisos de acceso.");
         }
     }
 
-    public static <T> List<T> cargarLista(String nombreArchivo, Type tipoLista) {
+    public static <T> List<T> loadList(String fileName, Type listType) {
         init();
-        File archivo = new File(CARPETA + nombreArchivo + ".json");
-        if (!archivo.exists()) {
-            return new ArrayList<>(); // Retorna lista vacía si es la primera vez
+        File file = new File(DATA_DIRECTORY + fileName + ".json");
+        if (!file.exists()) {
+            return new ArrayList<>();
         }
-        try (Reader reader = new FileReader(archivo)) {
-            List<T> lista = gson.fromJson(reader, tipoLista);
-            return lista != null ? lista : new ArrayList<>();
+        try (Reader reader = new FileReader(file)) {
+            List<T> items = gson.fromJson(reader, listType);
+            return items != null ? items : new ArrayList<>();
         } catch (IOException e) {
-            System.out.println("Error al cargar " + nombreArchivo + ": " + e.getMessage());
+            System.out.println("Error al cargar " + fileName + ". Verifique el archivo y los permisos de acceso.");
             return new ArrayList<>();
         }
     }
 
-    public static void guardarTodo() {
-        guardarLista(Customer.getAll(), "clientes");
-        guardarLista(Category.getAll(), "categorias");
-        guardarLista(Product.getAll(), "productos");
-        guardarLista(Service.getAll(), "servicios");
-        guardarLista(WorkOrder.getAll(), "ordenes");
-        guardarLista(User.getAll(), "usuarios");
+    public static void saveAll() {
+        saveList(Customer.getAll(), "clientes");
+        saveList(Category.getAll(), "categorias");
+        saveList(Product.getAll(), "productos");
+        saveList(Service.getAll(), "servicios");
+        saveList(WorkOrder.getAll(), "ordenes");
+        saveList(User.getAll(), "usuarios");
     }
 
-    public static void cargarTodo() {
-        Type tipoClientes = new TypeToken<ArrayList<Customer>>(){}.getType();
-        Customer.setAll(cargarLista("clientes", tipoClientes));
+    public static void loadAll() {
+        Type customersType = new TypeToken<ArrayList<Customer>>(){}.getType();
+        Customer.setAll(loadList("clientes", customersType));
 
-        Type tipoCategorias = new TypeToken<ArrayList<Category>>(){}.getType();
-        Category.setAll(cargarLista("categorias", tipoCategorias));
+        Type categoriesType = new TypeToken<ArrayList<Category>>(){}.getType();
+        Category.setAll(loadList("categorias", categoriesType));
 
-        Type tipoProductos = new TypeToken<ArrayList<Product>>(){}.getType();
-        Product.setAll(cargarLista("productos", tipoProductos));
+        Type productsType = new TypeToken<ArrayList<Product>>(){}.getType();
+        Product.setAll(loadList("productos", productsType));
 
-        Type tipoServicios = new TypeToken<ArrayList<Service>>(){}.getType();
-        Service.setAll(cargarLista("servicios", tipoServicios));
+        Type servicesType = new TypeToken<ArrayList<Service>>(){}.getType();
+        Service.setAll(loadList("servicios", servicesType));
 
-        Type tipoOrdenes = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
-        WorkOrder.setAll(cargarLista("ordenes", tipoOrdenes));
+        Type ordersType = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
+        WorkOrder.setAll(loadList("ordenes", ordersType));
 
-        Type tipoUsuarios = new TypeToken<ArrayList<User>>(){}.getType();
-        User.setAll(cargarLista("usuarios", tipoUsuarios));
+        Type usersType = new TypeToken<ArrayList<User>>(){}.getType();
+        User.setAll(loadList("usuarios", usersType));
     }
 
-    public static void guardarCaja(CashRegister caja) {
+    public static void saveCashRegister(CashRegister cashRegister) {
         init();
-        try (Writer writer = new FileWriter(CARPETA + "caja.json")) {
-            gson.toJson(caja, writer);
+        try (Writer writer = new FileWriter(DATA_DIRECTORY + "caja.json")) {
+            gson.toJson(cashRegister, writer);
         } catch (IOException e) {
-            System.out.println("Error al guardar caja: " + e.getMessage());
+            System.out.println("Error al guardar caja. Verifique el archivo y los permisos de acceso.");
         }
     }
 
-    public static CashRegister cargarCaja() {
+    public static CashRegister loadCashRegister() {
         init();
-        File archivo = new File(CARPETA + "caja.json");
-        if (!archivo.exists()) {
-            return new CashRegister(); 
+        File file = new File(DATA_DIRECTORY + "caja.json");
+        if (!file.exists()) {
+            return new CashRegister();
         }
-        try (Reader reader = new FileReader(archivo)) {
-            CashRegister caja = gson.fromJson(reader, CashRegister.class);
-            return caja != null ? caja : new CashRegister();
+        try (Reader reader = new FileReader(file)) {
+            CashRegister cashRegister = gson.fromJson(reader, CashRegister.class);
+            return cashRegister != null ? cashRegister : new CashRegister();
         } catch (IOException e) {
-            System.out.println("Error al cargar caja: " + e.getMessage());
+            System.out.println("Error al cargar caja. Verifique el archivo y los permisos de acceso.");
             return new CashRegister();
         }
     }

@@ -6,10 +6,9 @@ public class OrderDetail {
     private int quantity;
     private String description;
     private double unitPrice;
-    
-    // Relaciones (según diagrama)
-    private Product product; 
-    private Service service; 
+
+    private Product product;
+    private Service service;
 
     public OrderDetail(String detailId, String itemName, int quantity, String description, double unitPrice) {
         this.detailId = detailId;
@@ -23,7 +22,6 @@ public class OrderDetail {
         return quantity * unitPrice;
     }
 
-    // Getters y Setters
     public String getDetailId() { return detailId; }
     public String getItemName() { return itemName; }
     public int getQuantity() { return quantity; }

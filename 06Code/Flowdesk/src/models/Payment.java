@@ -5,6 +5,7 @@ import enums.MovementType;
 import enums.PaymentMethod;
 import utils.Date;
 import java.util.Scanner;
+import utils.ConsoleInput;
 
 public class Payment {
 
@@ -31,11 +32,11 @@ public class Payment {
 
     public void registerPayment() {
         if (workOrder == null) {
-            throw new IllegalStateException("Work order is required");
+            throw new IllegalStateException("Se requiere una orden de trabajo");
         }
 
         if (!validateAmount()) {
-            throw new IllegalArgumentException("Invalid payment amount");
+            throw new IllegalArgumentException("El monto del pago no es valido");
         }
 
         workOrder.addPayment(this);
@@ -49,111 +50,96 @@ public class Payment {
     }
 
     public String getPaymentDetails() {
-        return "Payment ID: " + paymentId
-                + ", Amount: " + amount
-                + ", Method: " + paymentMethod;
+        return "Identificador del pago: " + paymentId
+                + ", Monto: " + amount
+                + ", Metodo: " + paymentMethod;
     }
 
-    public static void registrarDesdeConsola(Scanner scanner, CashRegister caja) {
+    public static void registerFromConsole(Scanner scanner, CashRegister cashRegister) {
         System.out.println("\n--- REGISTRAR PAGO ---");
 
-        System.out.print("Ingrese el numero de orden a pagar (ej. WO-001): ");
-        String idOrden = scanner.nextLine();
+        String orderId = ConsoleInput.readRequiredText(scanner, "Ingrese el numero de orden a pagar (ej. WO-001): ");
 
-        WorkOrder orden = null;
+        WorkOrder order = null;
 
         for (WorkOrder wo : WorkOrder.getAll()) {
-            if (wo.getOrderId().equalsIgnoreCase(idOrden)) {
-                orden = wo;
+            if (wo.getOrderId().equalsIgnoreCase(orderId)) {
+                order = wo;
                 break;
             }
         }
 
-        if (orden == null) {
+        if (order == null) {
             System.out.println("Error: Orden no encontrada.");
             return;
         }
 
-        if (orden.getBalance() <= 0) {
+        if (order.getBalance() <= 0) {
             System.out.println("Esta orden ya esta totalmente pagada.");
             return;
         }
 
-        String nombreCliente = (orden.getCustomer() != null)
-                ? orden.getCustomer().getName()
+        String customerName = (order.getCustomer() != null)
+                ? order.getCustomer().getName()
                 : "Sin cliente";
 
-        System.out.println("Cliente: " + nombreCliente);
-        System.out.println("Total de la Orden: $" + orden.getTotal());
-        System.out.println("Saldo Pendiente: $" + orden.getBalance());
+        System.out.println("Cliente: " + customerName);
+        System.out.println("Total de la Orden: $" + order.getTotal());
+        System.out.println("Saldo Pendiente: $" + order.getBalance());
 
-        System.out.print("\nMonto a pagar ahora: $");
-        double monto;
+        double amount = ConsoleInput.readPositiveAmount(scanner, "\nMonto a pagar ahora: $");
 
-        try {
-            monto = Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Ingrese un monto valido.");
-            return;
-        }
-
-        if (!Double.isFinite(monto) || monto <= 0) {
-            System.out.println("El monto debe ser mayor a 0 y finito.");
-            return;
-        }
-
-        if (monto > orden.getBalance()) {
+        if (amount > order.getBalance()) {
             System.out.println("Error: El monto excede el saldo pendiente ($"
-                    + orden.getBalance() + ").");
+                    + order.getBalance() + ").");
             return;
         }
 
-        System.out.print("Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ");
-        String opcion = scanner.nextLine();
+        int option = ConsoleInput.readOption(scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
 
-        PaymentMethod metodo;
+        PaymentMethod method;
 
-        switch (opcion) {
-            case "1" -> metodo = PaymentMethod.CASH;
-            case "2" -> metodo = PaymentMethod.TRANSFER;
+        switch (option) {
+            case 1 -> method = PaymentMethod.CASH;
+            case 2 -> method = PaymentMethod.TRANSFER;
             default -> {
                 System.out.println("Metodo de pago no valido.");
                 return;
             }
         }
 
-        String nuevoIdPago = "P-" + System.currentTimeMillis();
+        String newPaymentId = "P-" + System.currentTimeMillis();
 
-        Payment nuevoPago = new Payment(
-                nuevoIdPago,
-                monto,
+        Payment newPayment = new Payment(
+                newPaymentId,
+                amount,
                 new Date(24, 10, 2026),
-                metodo,
-                orden
+                method,
+                order
         );
 
-        nuevoPago.registerPayment();
+        newPayment.registerPayment();
 
-        String idMovimiento = "MOV-" + nuevoIdPago;
+        String movementId = "MOV-" + newPaymentId;
 
-        CashMovement movimientoCaja = new CashMovement(
-                idMovimiento,
+        CashMovement cashMovement = new CashMovement(
+                movementId,
                 MovementType.INCOME,
-                monto,
+                amount,
                 new Date(24, 10, 2026),
-                "Pago Orden " + orden.getOrderId(),
-                metodo
+                "Pago Orden " + order.getOrderId(),
+                method
         );
 
-        movimientoCaja.registerMovement(caja);
-        nuevoPago.setCashMovement(movimientoCaja);
+        cashMovement.registerMovement(cashRegister);
+        newPayment.setCashMovement(cashMovement);
 
         System.out.println("\nPago registrado exitosamente!");
         System.out.println("Se ha generado un ingreso automatico en la caja.");
         System.out.println("Nuevo saldo pendiente de la orden: $"
-                + orden.getBalance());
+                + order.getBalance());
 
-        if (orden.getBalance() == 0) {
+        if (order.getBalance() == 0) {
             System.out.println("LA ORDEN HA SIDO TOTALMENTE PAGADA!");
         }
     }

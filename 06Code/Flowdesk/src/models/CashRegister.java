@@ -34,7 +34,7 @@ public class CashRegister {
         return income - expenses;
     }
 
-    public void imprimirEstado() {
+    public void printStatus() {
         System.out.println("\n--- ESTADO DE CAJA ---");
         System.out.println("Ingresos Totales: $" + calculateIncome());
         System.out.println("Egresos Totales:  $" + calculateExpenses());
@@ -44,7 +44,7 @@ public class CashRegister {
 
     public double getIncome() { return income; }
     public void setIncome(double income) { this.income = income; }
-    
+
     public double getExpenses() { return expenses; }
     public void setExpenses(double expenses) { this.expenses = expenses; }
 }

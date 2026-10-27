@@ -14,9 +14,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import utils.Date;
 
-/**
- * @author Cristopher Gualotuña, Runtime Dynamics, @ESPE
- */
+
 public class GuanunaTest {
 
     @BeforeEach
@@ -110,7 +108,7 @@ public class GuanunaTest {
     @Test public void testCustomerConsoleRejectsDuplicateId() {
         new Customer("C1", "Ana", "0991", "171", "Quito").register();
         Scanner scanner = new Scanner("1\nC1\n0\n");
-        String result = capture(() -> Customer.menuGestion(scanner));
+        String result = capture(() -> Customer.showManagementMenu(scanner));
         assertTrue(result.contains("Ya existe un cliente con ese ID"));
         assertEquals(1, Customer.getAll().size());
     }
@@ -177,7 +175,7 @@ public class GuanunaTest {
     @Test public void testCashMovementConsoleIncome() {
         CashRegister cash = new CashRegister();
         Scanner scanner = new Scanner("M11\n1\n15.5\nSales\n1\n");
-        capture(() -> CashMovement.registrarDesdeConsola(scanner, cash));
+        capture(() -> CashMovement.registerFromConsole(scanner, cash));
         double expResult = 15.5;
         double result = cash.calculateIncome();
         assertEquals(expResult, result, 0.001);
@@ -186,7 +184,7 @@ public class GuanunaTest {
     @Test public void testCashMovementConsoleExpense() {
         CashRegister cash = new CashRegister();
         Scanner scanner = new Scanner("M12\n2\n7.5\nSupplies\n2\n");
-        capture(() -> CashMovement.registrarDesdeConsola(scanner, cash));
+        capture(() -> CashMovement.registerFromConsole(scanner, cash));
         double expResult = 7.5;
         double result = cash.calculateExpenses();
         assertEquals(expResult, result, 0.001);
@@ -195,7 +193,7 @@ public class GuanunaTest {
     @Test public void testCashMovementConsolePrintsConfirmation() {
         CashRegister cash = new CashRegister();
         Scanner scanner = new Scanner("M13\n1\n8\nDesign\n1\n");
-        String result = capture(() -> CashMovement.registrarDesdeConsola(scanner, cash));
+        String result = capture(() -> CashMovement.registerFromConsole(scanner, cash));
         assertTrue(result.contains("Movimiento registrado exitosamente"));
     }
 
@@ -273,7 +271,7 @@ public class GuanunaTest {
 
     @Test public void testCashRegisterPrintedBalance() {
         CashRegister cash = new CashRegister(120, 45);
-        String result = capture(cash::imprimirEstado);
+        String result = capture(cash::printStatus);
         assertTrue(result.contains("Balance Actual:   $75.0"));
     }
 }

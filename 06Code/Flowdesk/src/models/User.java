@@ -4,6 +4,7 @@ import enums.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import utils.ConsoleInput;
 
 public class User {
 
@@ -12,7 +13,7 @@ public class User {
     private String protectedPassword;
     private Role role;
 
-    private static List<User> listaUsuarios = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
 
     public User() { }
 
@@ -24,56 +25,52 @@ public class User {
     }
 
     public static List<User> getAll() {
-        return listaUsuarios;
+        return users;
     }
 
-    public static void setAll(List<User> nuevaLista) {
-        listaUsuarios = nuevaLista;
+    public static void setAll(List<User> newItems) {
+        users = newItems;
     }
 
-    public static User gestionarAcceso(Role rolSeleccionado, Scanner scanner) {
-        User usuarioExistente = buscarPorRol(rolSeleccionado);
+    public static User authenticateFromConsole(Role selectedRole, Scanner scanner) {
+        User existingUser = findByRole(selectedRole);
 
-        if (usuarioExistente == null) {
-            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + rolSeleccionado + " ---");
-            System.out.print("Cree un nuevo Usuario: ");
-            String nuevoUser = scanner.nextLine();
+        if (existingUser == null) {
+            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + selectedRole + " ---");
+            String newUsername = ConsoleInput.readRequiredText(scanner, "Cree un nuevo Usuario: ");
 
-            System.out.print("Cree una Contrasena: ");
-            String nuevaPass = scanner.nextLine();
+            String newPassword = ConsoleInput.readRequiredText(scanner, "Cree una Contrasena: ");
 
-            User nuevo = new User(
-                    "U_" + rolSeleccionado,
-                    nuevoUser,
-                    nuevaPass,
-                    rolSeleccionado
+            User newUser = new User(
+                    "U_" + selectedRole.name(),
+                    newUsername,
+                    newPassword,
+                    selectedRole
             );
 
-            listaUsuarios.add(nuevo);
+            users.add(newUser);
 
             System.out.println("Cuenta creada con exito!");
-            return nuevo;
-            
+            return newUser;
+
         } else {
-            System.out.println("\n--- INICIO DE SESION: " + rolSeleccionado + " ---");
-            System.out.print("Usuario: ");
-            String userInput = scanner.nextLine();
+            System.out.println("\n--- INICIO DE SESION: " + selectedRole + " ---");
+            String userInput = ConsoleInput.readRequiredText(scanner, "Usuario: ");
 
-            System.out.print("Contrasena: ");
-            String passInput = scanner.nextLine();
+            String passInput = ConsoleInput.readRequiredText(scanner, "Contrasena: ");
 
-            if (usuarioExistente.validateCredentials(userInput, passInput)) {
-                return usuarioExistente;
+            if (existingUser.validateCredentials(userInput, passInput)) {
+                return existingUser;
             } else {
                 System.out.println("Acceso denegado. Credenciales incorrectas.\n");
-                return null; 
+                return null;
             }
         }
     }
 
-    private static User buscarPorRol(Role rol) {
-        for (User u : listaUsuarios) {
-            if (u.getRole() == rol) {
+    private static User findByRole(Role role) {
+        for (User u : users) {
+            if (u.getRole() == role) {
                 return u;
             }
         }
@@ -126,11 +123,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{"
-                + "userId=" + userId
-                + ", username=" + username
-                + ", protectedPassword=[PROTECTED]"
-                + ", role=" + role
+        return "Usuario{"
+                + "identificador=" + userId
+                + ", usuario=" + username
+                + ", contrasena=[OCULTA]"
+                + ", rol=" + role
                 + '}';
     }
 }
