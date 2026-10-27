@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class CashMovement {
     private String movementId;
@@ -26,16 +28,48 @@ public class CashMovement {
         this.date = date;
         this.reason = reason;
         this.paymentMethod = paymentMethod;
+        validate();
     }
 
     public void registerMovement(CashRegister cashRegister) {
-        movements.add(this);
-
+        validateRegistration(cashRegister);
         if (this.type == MovementType.INCOME) {
             cashRegister.addIncome(this.amount);
         } else {
             cashRegister.addExpense(this.amount);
         }
+        movements.add(this);
+    }
+
+    void validateRegistration(CashRegister cashRegister) {
+        validate();
+        Validation.requireValue(cashRegister, "caja");
+        for (CashMovement existing : movements) {
+            if (Validation.sameIdentifier(existing.movementId, movementId)) {
+                throw new ValidationException("Ya existe un movimiento con ese ID.");
+            }
+        }
+        double accumulatedAmount = type == MovementType.INCOME
+                ? cashRegister.calculateIncome() + amount
+                : cashRegister.calculateExpenses() + amount;
+        Validation.requireNonNegativeAmount(accumulatedAmount, "monto acumulado de caja");
+    }
+
+    private void validate() {
+        Validation.requireText(movementId, "identificador del movimiento");
+        Validation.requireText(reason, "motivo");
+        Validation.requirePositiveAmount(amount, "monto");
+        Validation.requireValue(type, "tipo de movimiento");
+        Validation.requireValue(date, "fecha");
+        Validation.requireValue(paymentMethod, "metodo de pago");
+    }
+
+    public static List<CashMovement> getAll() {
+        return movements;
+    }
+
+    public static void setAll(List<CashMovement> newItems) {
+        movements = newItems == null ? new ArrayList<>() : newItems;
     }
 
     public static void registerFromConsole(Scanner scanner, CashRegister cashRegister) {
@@ -53,9 +87,9 @@ public class CashMovement {
         int methodOption = ConsoleInput.readOption(scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
         PaymentMethod method = (methodOption == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
 
-        Date fechaActual = new Date(24, 10, 2026);
+        Date currentDate = new Date(24, 10, 2026);
 
-        CashMovement newMovement = new CashMovement(id, type, amount, fechaActual, reason, method);
+        CashMovement newMovement = new CashMovement(id, type, amount, currentDate, reason, method);
         newMovement.registerMovement(cashRegister);
 
         System.out.println("¡Movimiento registrado exitosamente!");

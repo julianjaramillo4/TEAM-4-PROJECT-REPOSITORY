@@ -1,5 +1,7 @@
 package models;
 
+import utils.Validation;
+
 public class CashRegister {
     private double income;
     private double expenses;
@@ -10,15 +12,21 @@ public class CashRegister {
     }
 
     public CashRegister(double income, double expenses) {
+        Validation.requireNonNegativeAmount(income, "ingresos");
+        Validation.requireNonNegativeAmount(expenses, "egresos");
         this.income = income;
         this.expenses = expenses;
     }
 
     public void addIncome(double amount) {
+        Validation.requirePositiveAmount(amount, "monto");
+        Validation.requireNonNegativeAmount(income + amount, "ingresos acumulados");
         this.income += amount;
     }
 
     public void addExpense(double amount) {
+        Validation.requirePositiveAmount(amount, "monto");
+        Validation.requireNonNegativeAmount(expenses + amount, "egresos acumulados");
         this.expenses += amount;
     }
 
@@ -43,8 +51,14 @@ public class CashRegister {
     }
 
     public double getIncome() { return income; }
-    public void setIncome(double income) { this.income = income; }
+    public void setIncome(double income) {
+        Validation.requireNonNegativeAmount(income, "ingresos");
+        this.income = income;
+    }
 
     public double getExpenses() { return expenses; }
-    public void setExpenses(double expenses) { this.expenses = expenses; }
+    public void setExpenses(double expenses) {
+        Validation.requireNonNegativeAmount(expenses, "egresos");
+        this.expenses = expenses;
+    }
 }

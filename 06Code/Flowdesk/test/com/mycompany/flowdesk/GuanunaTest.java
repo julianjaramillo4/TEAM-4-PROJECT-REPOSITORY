@@ -20,6 +20,7 @@ public class GuanunaTest {
     @BeforeEach
     public void setUp() {
         Customer.setAll(new ArrayList<>());
+        CashMovement.setAll(new ArrayList<>());
     }
 
     private String capture(Runnable action) {

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
+import exceptions.InvalidPaymentException;
 
 public class WorkOrder {
 
@@ -47,24 +50,40 @@ public class WorkOrder {
     }
 
     public void create() {
+        Validation.requireText(orderId, "identificador de la orden");
+        Validation.requireValue(date, "fecha");
+        Validation.requireValue(status, "estado");
+        if (details == null || details.isEmpty()) {
+            throw new ValidationException("La orden debe tener al menos un detalle.");
+        }
+        for (WorkOrder existing : orders) {
+            if (Validation.sameIdentifier(existing.orderId, orderId)) {
+                throw new ValidationException("Ya existe una orden con ese ID.");
+            }
+        }
+        ArrayList<String> detailIds = new ArrayList<>();
+        for (OrderDetail detail : details) {
+            Validation.requireValue(detail, "detalle");
+            detail.validate();
+            for (String existingId : detailIds) {
+                if (Validation.sameIdentifier(existingId, detail.getDetailId())) {
+                    throw new ValidationException("La orden contiene detalles con el mismo ID.");
+                }
+            }
+            detailIds.add(detail.getDetailId());
+        }
+        calculateTotals();
         orders.add(this);
     }
 
     public void addPayment(Payment payment) {
         if (payment == null) {
-            throw new IllegalArgumentException("El pago no puede estar vacio");
+            throw new InvalidPaymentException("El pago no puede estar vacio.");
         }
-        if (payment.getWorkOrder() != this) {
-            throw new IllegalArgumentException("El pago pertenece a otra orden");
-        }
-
-        double amount = payment.getAmount();
-
-        if (!Double.isFinite(amount) || amount <= 0 || amount > balance) {
-            throw new IllegalArgumentException("El monto del pago no es valido");
-        }
-
+        calculateTotals();
+        payment.validateFor(this);
         payments.add(payment);
+        payment.markRegistered();
         calculateTotals();
     }
 
@@ -77,14 +96,22 @@ public class WorkOrder {
     }
 
     public void calculateTotals() {
-        this.total = 0;
+        double calculatedTotal = 0;
         for (OrderDetail detail : details) {
-            this.total += detail.calculateSubtotal();
+            Validation.requireValue(detail, "detalle");
+            calculatedTotal += detail.calculateSubtotal();
         }
-        this.balance = this.total - calculateTotalPaid();
+        Validation.requireNonNegativeAmount(calculatedTotal, "total de la orden");
+        double paid = calculateTotalPaid();
+        Validation.requireNonNegativeAmount(paid, "total pagado");
+        double calculatedBalance = calculatedTotal - paid;
+        Validation.requireNonNegativeAmount(calculatedBalance, "saldo de la orden");
+        this.total = calculatedTotal;
+        this.balance = calculatedBalance;
     }
 
     public void changeStatus(OrderStatus newStatus) {
+        Validation.requireValue(newStatus, "estado");
         this.status = newStatus;
     }
 
@@ -146,7 +173,7 @@ public class WorkOrder {
         Product.listFromConsole();
         String productId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Producto: ");
         for (Product product : Product.getAll()) {
-            if (product.getProductId().equals(productId)) {
+            if (Validation.sameIdentifier(product.getProductId(), productId)) {
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad: ");
                 OrderDetail detail = new OrderDetail(detailId, product.getName(), quantity,
                         product.getDescription(), product.getPrice());
@@ -165,7 +192,7 @@ public class WorkOrder {
         Service.listFromConsole();
         String serviceId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Servicio: ");
         for (Service service : Service.getAll()) {
-            if (service.getServiceId().equals(serviceId)) {
+            if (Validation.sameIdentifier(service.getServiceId(), serviceId)) {
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad (Horas/Veces): ");
                 double price = ConsoleInput.readAmount(scanner, "Precio Unitario a cobrar: $");
                 OrderDetail detail = new OrderDetail(detailId, service.getName(), quantity,
@@ -204,7 +231,7 @@ public class WorkOrder {
         WorkOrder matchingOrder = null;
 
         for (WorkOrder wo : orders) {
-            if (wo.getOrderId().equalsIgnoreCase(searchId)) {
+            if (Validation.sameIdentifier(wo.getOrderId(), searchId)) {
                 matchingOrder = wo;
                 break;
             }

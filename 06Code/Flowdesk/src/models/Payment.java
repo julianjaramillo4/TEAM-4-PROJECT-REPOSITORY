@@ -6,6 +6,8 @@ import enums.PaymentMethod;
 import utils.Date;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.InvalidPaymentException;
 
 public class Payment {
 
@@ -15,6 +17,7 @@ public class Payment {
     private PaymentMethod paymentMethod;
     private WorkOrder workOrder;
     private CashMovement cashMovement;
+    private transient boolean registered;
 
     public Payment(String paymentId, double amount, Date date,
                    PaymentMethod paymentMethod) {
@@ -32,14 +35,66 @@ public class Payment {
 
     public void registerPayment() {
         if (workOrder == null) {
-            throw new IllegalStateException("Se requiere una orden de trabajo");
+            throw new InvalidPaymentException("Se requiere una orden de trabajo.");
         }
-
-        if (!validateAmount()) {
-            throw new IllegalArgumentException("El monto del pago no es valido");
-        }
-
         workOrder.addPayment(this);
+    }
+
+    public void registerPayment(CashRegister cashRegister) {
+        if (workOrder == null) {
+            throw new InvalidPaymentException("Se requiere una orden de trabajo.");
+        }
+        workOrder.calculateTotals();
+        validateFor(workOrder);
+        CashMovement movement = new CashMovement("MOV-" + paymentId, MovementType.INCOME,
+                amount, date, "Pago Orden " + workOrder.getOrderId(), paymentMethod);
+        movement.validateRegistration(cashRegister);
+        registerPayment();
+        movement.registerMovement(cashRegister);
+        cashMovement = movement;
+    }
+
+    void validateFor(WorkOrder order) {
+        if (isRegistered()) {
+            throw new InvalidPaymentException("El pago ya fue registrado.");
+        }
+        if (workOrder != order) {
+            throw new InvalidPaymentException("El pago pertenece a otra orden.");
+        }
+        if (paymentId == null || paymentId.isBlank() || date == null || paymentMethod == null) {
+            throw new InvalidPaymentException("El pago requiere identificador, fecha y metodo de pago.");
+        }
+        rejectDuplicateId(order);
+        for (WorkOrder existingOrder : WorkOrder.getAll()) {
+            if (existingOrder != order) {
+                rejectDuplicateId(existingOrder);
+            }
+        }
+        if (!validateAmount()) {
+            throw new InvalidPaymentException("El monto debe ser finito, mayor a 0 y no superar el saldo pendiente.");
+        }
+    }
+
+    private void rejectDuplicateId(WorkOrder order) {
+        for (Payment existing : order.getPayments()) {
+            if (Validation.sameIdentifier(existing.paymentId, paymentId)) {
+                throw new InvalidPaymentException("Ya existe un pago con ese ID.");
+            }
+        }
+    }
+
+    private boolean isRegistered() {
+        return registered || (workOrder != null && workOrder.getPayments().contains(this));
+    }
+
+    void markRegistered() {
+        registered = true;
+    }
+
+    private void requireEditable() {
+        if (isRegistered()) {
+            throw new InvalidPaymentException("Un pago registrado no se puede modificar.");
+        }
     }
 
     public boolean validateAmount() {
@@ -63,7 +118,7 @@ public class Payment {
         WorkOrder order = null;
 
         for (WorkOrder wo : WorkOrder.getAll()) {
-            if (wo.getOrderId().equalsIgnoreCase(orderId)) {
+            if (Validation.sameIdentifier(wo.getOrderId(), orderId)) {
                 order = wo;
                 break;
             }
@@ -118,21 +173,7 @@ public class Payment {
                 order
         );
 
-        newPayment.registerPayment();
-
-        String movementId = "MOV-" + newPaymentId;
-
-        CashMovement cashMovement = new CashMovement(
-                movementId,
-                MovementType.INCOME,
-                amount,
-                new Date(24, 10, 2026),
-                "Pago Orden " + order.getOrderId(),
-                method
-        );
-
-        cashMovement.registerMovement(cashRegister);
-        newPayment.setCashMovement(cashMovement);
+        newPayment.registerPayment(cashRegister);
 
         System.out.println("\nPago registrado exitosamente!");
         System.out.println("Se ha generado un ingreso automatico en la caja.");
@@ -149,6 +190,7 @@ public class Payment {
     }
 
     public void setPaymentId(String paymentId) {
+        requireEditable();
         this.paymentId = paymentId;
     }
 
@@ -157,6 +199,7 @@ public class Payment {
     }
 
     public void setAmount(double amount) {
+        requireEditable();
         this.amount = amount;
     }
 
@@ -165,6 +208,7 @@ public class Payment {
     }
 
     public void setDate(Date date) {
+        requireEditable();
         this.date = date;
     }
 
@@ -173,6 +217,7 @@ public class Payment {
     }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
+        requireEditable();
         this.paymentMethod = paymentMethod;
     }
 
@@ -181,6 +226,7 @@ public class Payment {
     }
 
     public void setWorkOrder(WorkOrder workOrder) {
+        requireEditable();
         this.workOrder = workOrder;
     }
 

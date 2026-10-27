@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class Customer {
     private String customerId;
@@ -20,10 +22,28 @@ public class Customer {
         this.phone = phone;
         this.idNumber = idNumber;
         this.address = address;
+        validate();
     }
 
     public void register() {
+        validate();
+        for (Customer existing : customers) {
+            if (Validation.sameIdentifier(existing.customerId, customerId)) {
+                throw new ValidationException("Ya existe un cliente con ese ID.");
+            }
+            if (Validation.sameIdentifier(existing.idNumber, idNumber)) {
+                throw new ValidationException("Ya existe un cliente con esa cedula.");
+            }
+        }
         customers.add(this);
+    }
+
+    void validate() {
+        Validation.requireText(customerId, "identificador del cliente");
+        Validation.requireText(name, "nombre del cliente");
+        Validation.requireText(phone, "telefono");
+        Validation.requireText(idNumber, "cedula");
+        Validation.requireText(address, "direccion");
     }
 
     public Customer() { }
@@ -34,7 +54,7 @@ public class Customer {
 
     public static Customer search(String searchTerm) {
         for (Customer c : customers) {
-            if (c.getCustomerId().equalsIgnoreCase(searchTerm) || c.getIdNumber().equals(searchTerm)) {
+            if (Validation.sameIdentifier(c.getCustomerId(), searchTerm) || Validation.sameIdentifier(c.getIdNumber(), searchTerm)) {
                 return c;
             }
         }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class Product {
     private String productId;
@@ -20,6 +22,7 @@ public class Product {
         this.description = description;
         this.price = price;
         this.category = category;
+        validate();
     }
 
     public Product() { }
@@ -29,7 +32,22 @@ public class Product {
     }
 
     public void register() {
+        validate();
+        for (Product existing : products) {
+            if (Validation.sameIdentifier(existing.productId, productId)) {
+                throw new ValidationException("Ya existe un producto con ese ID.");
+            }
+        }
         products.add(this);
+    }
+
+    void validate() {
+        Validation.requireText(productId, "identificador del producto");
+        Validation.requireText(name, "nombre del producto");
+        Validation.requireText(description, "descripcion");
+        Validation.requireNonNegativeAmount(price, "precio");
+        Validation.requireValue(category, "categoria");
+        category.validate();
     }
 
     public static List<Product> getAll() {

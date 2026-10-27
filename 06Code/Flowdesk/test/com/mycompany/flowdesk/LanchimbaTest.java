@@ -286,6 +286,7 @@ public class LanchimbaTest {
     @Test
     public void testCreateWorkOrder() {
         WorkOrder order = new WorkOrder("WO-102", new Date(25, 10, 2026), OrderStatus.WAITING);
+        order.getDetails().add(new OrderDetail("D1", "Volante", 1, "A4", 5));
         order.create();
 
         int expResult = 1;

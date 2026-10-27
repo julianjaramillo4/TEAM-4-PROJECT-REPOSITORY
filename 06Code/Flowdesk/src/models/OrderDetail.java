@@ -1,5 +1,7 @@
 package models;
 
+import utils.Validation;
+
 public class OrderDetail {
     private String detailId;
     private String itemName;
@@ -16,10 +18,22 @@ public class OrderDetail {
         this.quantity = quantity;
         this.description = description;
         this.unitPrice = unitPrice;
+        validate();
     }
 
     public double calculateSubtotal() {
-        return quantity * unitPrice;
+        validate();
+        double subtotal = quantity * unitPrice;
+        Validation.requireNonNegativeAmount(subtotal, "subtotal");
+        return subtotal;
+    }
+
+    void validate() {
+        Validation.requireText(detailId, "identificador del detalle");
+        Validation.requireText(itemName, "nombre del elemento");
+        Validation.requireText(description, "descripcion");
+        Validation.requirePositiveInt(quantity, "cantidad");
+        Validation.requireNonNegativeAmount(unitPrice, "precio unitario");
     }
 
     public String getDetailId() { return detailId; }

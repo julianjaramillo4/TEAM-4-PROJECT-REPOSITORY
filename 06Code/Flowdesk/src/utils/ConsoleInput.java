@@ -2,6 +2,8 @@ package utils;
 
 import java.util.Scanner;
 import java.util.concurrent.CancellationException;
+import exceptions.ValidationException;
+import exceptions.PersistenceException;
 
 public final class ConsoleInput {
     private ConsoleInput() { }
@@ -84,6 +86,8 @@ public final class ConsoleInput {
             action.run();
         } catch (CancellationException exception) {
             System.out.println("Operacion cancelada.");
+        } catch (ValidationException | PersistenceException exception) {
+            System.out.println("Error: " + exception.getMessage());
         }
     }
 }

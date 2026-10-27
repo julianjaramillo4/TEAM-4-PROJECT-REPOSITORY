@@ -252,7 +252,7 @@ public class JaramilloTest {
 
     @Test public void testRegisterPaymentWithoutOrderThrows() {
         Payment payment = new Payment("P1", 10, new Date(26, 10, 2026), PaymentMethod.CASH);
-        assertThrows(IllegalStateException.class, payment::registerPayment);
+        assertThrows(exceptions.InvalidPaymentException.class, payment::registerPayment);
     }
 
     @Test public void testPaymentDetailsIncludeIdAndMethod() {

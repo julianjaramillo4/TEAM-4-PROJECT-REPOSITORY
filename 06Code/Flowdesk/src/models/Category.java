@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class Category {
     private String categoryId;
@@ -16,6 +18,7 @@ public class Category {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
+        validate();
     }
 
     public Category() { }
@@ -25,7 +28,19 @@ public class Category {
     }
 
     public void create() {
+        validate();
+        for (Category existing : categories) {
+            if (Validation.sameIdentifier(existing.categoryId, categoryId)) {
+                throw new ValidationException("Ya existe una categoria con ese ID.");
+            }
+        }
         categories.add(this);
+    }
+
+    void validate() {
+        Validation.requireText(categoryId, "identificador de categoria");
+        Validation.requireText(name, "nombre de categoria");
+        Validation.requireText(description, "descripcion");
     }
 
     public static List<Category> getAll() {
@@ -34,7 +49,7 @@ public class Category {
 
     public static Category search(String id) {
         for (Category c : categories) {
-            if (c.getCategoryId().equalsIgnoreCase(id)) return c;
+            if (Validation.sameIdentifier(c.getCategoryId(), id)) return c;
         }
         return null;
     }

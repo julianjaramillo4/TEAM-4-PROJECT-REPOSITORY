@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class Service {
     private String serviceId;
@@ -20,6 +22,7 @@ public class Service {
         this.description = description;
         this.price = price;
         this.category = category;
+        validate();
     }
 
     public Service() { }
@@ -29,7 +32,22 @@ public class Service {
     }
 
     public void register() {
+        validate();
+        for (Service existing : services) {
+            if (Validation.sameIdentifier(existing.serviceId, serviceId)) {
+                throw new ValidationException("Ya existe un servicio con ese ID.");
+            }
+        }
         services.add(this);
+    }
+
+    void validate() {
+        Validation.requireText(serviceId, "identificador del servicio");
+        Validation.requireText(name, "nombre del servicio");
+        Validation.requireText(description, "descripcion");
+        Validation.requireNonNegativeAmount(price, "precio");
+        Validation.requireValue(category, "categoria");
+        category.validate();
     }
 
     public static List<Service> getAll() {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class User {
 
@@ -22,6 +24,38 @@ public class User {
         this.username = username;
         this.protectedPassword = protectedPassword;
         this.role = role;
+        validate();
+    }
+
+    private void validate() {
+        Validation.requireText(userId, "identificador del usuario");
+        Validation.requireText(username, "nombre de usuario");
+        Validation.requireText(protectedPassword, "contrasena");
+        Validation.requireValue(role, "rol");
+    }
+
+    public void register() {
+        validate();
+        if (users.contains(this)) {
+            throw new ValidationException("El usuario ya fue registrado.");
+        }
+        requireUniqueIdentity(userId, username, role);
+        users.add(this);
+    }
+
+    private void requireUniqueIdentity(String candidateId, String candidateName, Role candidateRole) {
+        for (User existing : users) {
+            if (existing == this) {
+                continue;
+            }
+            if (Validation.sameIdentifier(existing.userId, candidateId)
+                    || Validation.sameIdentifier(existing.username, candidateName)) {
+                throw new ValidationException("Ya existe un usuario con ese ID o nombre.");
+            }
+            if (existing.role == candidateRole) {
+                throw new ValidationException("Ya existe una cuenta para ese rol.");
+            }
+        }
     }
 
     public static List<User> getAll() {
@@ -33,6 +67,7 @@ public class User {
     }
 
     public static User authenticateFromConsole(Role selectedRole, Scanner scanner) {
+        Validation.requireValue(selectedRole, "rol");
         User existingUser = findByRole(selectedRole);
 
         if (existingUser == null) {
@@ -48,7 +83,7 @@ public class User {
                     selectedRole
             );
 
-            users.add(newUser);
+            newUser.register();
 
             System.out.println("Cuenta creada con exito!");
             return newUser;
@@ -94,6 +129,8 @@ public class User {
     }
 
     public void setUserId(String userId) {
+        Validation.requireText(userId, "identificador del usuario");
+        requireUniqueIdentity(userId, username, role);
         this.userId = userId;
     }
 
@@ -102,6 +139,8 @@ public class User {
     }
 
     public void setUsername(String username) {
+        Validation.requireText(username, "nombre de usuario");
+        requireUniqueIdentity(userId, username, role);
         this.username = username;
     }
 
@@ -110,6 +149,7 @@ public class User {
     }
 
     public void setProtectedPassword(String protectedPassword) {
+        Validation.requireText(protectedPassword, "contrasena");
         this.protectedPassword = protectedPassword;
     }
 
@@ -118,6 +158,8 @@ public class User {
     }
 
     public void setRole(Role role) {
+        Validation.requireValue(role, "rol");
+        requireUniqueIdentity(userId, username, role);
         this.role = role;
     }
 
