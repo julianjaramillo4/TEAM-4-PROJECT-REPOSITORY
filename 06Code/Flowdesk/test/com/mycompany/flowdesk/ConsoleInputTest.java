@@ -69,6 +69,29 @@ class ConsoleInputTest {
     }
 
     @Test
+    void optionBoundsAreInclusiveAndDoNotConsumeFollowingField() {
+        Scanner input = new Scanner("0\n3\nAna\n");
+        assertEquals(0, ConsoleInput.readOption(input, "Opcion: ", 0, 3));
+        assertEquals(3, ConsoleInput.readOption(input, "Opcion: ", 0, 3));
+        assertEquals("Ana", ConsoleInput.readRequiredText(input, "Nombre: "));
+    }
+
+    @Test
+    void integerLimitsAreAcceptedAfterOverflowIsRejected() {
+        Scanner input = new Scanner("2147483648\n2147483647\n-2147483649\n-2147483648\n");
+        assertEquals(Integer.MAX_VALUE, ConsoleInput.readInt(input, "Entero: "));
+        assertEquals(Integer.MIN_VALUE, ConsoleInput.readInt(input, "Entero: "));
+    }
+
+    @Test
+    void cancellationAfterInvalidAmountLeavesFollowingMenuOptionAvailable() {
+        Scanner input = new Scanner("texto\n-1\n :CANCELAR \n0\n");
+        assertThrows(CancellationException.class,
+                () -> ConsoleInput.readPositiveAmount(input, "Monto: "));
+        assertEquals(0, ConsoleInput.readOption(input, "Opcion: ", 0, 3));
+    }
+
+    @Test
     void cancelledCustomerFormReturnsToMenuWithoutSaving() {
         Customer.showManagementMenu(new Scanner("1\nC1\n:cancelar\n0\n"));
         assertTrue(Customer.getAll().isEmpty());
