@@ -173,7 +173,7 @@ public class WorkOrder {
         Product.listFromConsole();
         String productId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Producto: ");
         for (Product product : Product.getAll()) {
-            if (Validation.sameIdentifier(product.getProductId(), productId)) {
+            if (Validation.sameIdentifier(product.getId(), productId)) { // <-- getId()
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad: ");
                 OrderDetail detail = new OrderDetail(detailId, product.getName(), quantity,
                         product.getDescription(), product.getPrice());
@@ -184,6 +184,7 @@ public class WorkOrder {
         return null;
     }
 
+
     private static OrderDetail readServiceDetail(Scanner scanner, String detailId) {
         if (Service.getAll().isEmpty()) {
             System.out.println("No hay servicios.");
@@ -192,7 +193,7 @@ public class WorkOrder {
         Service.listFromConsole();
         String serviceId = ConsoleInput.readRequiredText(scanner, "Ingrese ID del Servicio: ");
         for (Service service : Service.getAll()) {
-            if (Validation.sameIdentifier(service.getServiceId(), serviceId)) {
+            if (Validation.sameIdentifier(service.getId(), serviceId)) { // <-- getId()
                 int quantity = ConsoleInput.readPositiveInt(scanner, "Cantidad (Horas/Veces): ");
                 double price = ConsoleInput.readAmount(scanner, "Precio Unitario a cobrar: $");
                 OrderDetail detail = new OrderDetail(detailId, service.getName(), quantity,

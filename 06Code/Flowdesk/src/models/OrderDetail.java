@@ -9,8 +9,7 @@ public class OrderDetail {
     private String description;
     private double unitPrice;
 
-    private Product product;
-    private Service service;
+    private transient CatalogItem catalogItem;
 
     public OrderDetail(String detailId, String itemName, int quantity, String description, double unitPrice) {
         this.detailId = detailId;
@@ -41,8 +40,23 @@ public class OrderDetail {
     public int getQuantity() { return quantity; }
     public String getDescription() { return description; }
     public double getUnitPrice() { return unitPrice; }
-    public Product getProduct() { return product; }
-    public void setProduct(Product product) { this.product = product; }
-    public Service getService() { return service; }
-    public void setService(Service service) { this.service = service; }
+
+    public CatalogItem getCatalogItem() { return catalogItem; }
+    public void setCatalogItem(CatalogItem catalogItem) { this.catalogItem = catalogItem; }
+
+    public void setProduct(Product product) { 
+        this.catalogItem = product; 
+    }
+
+    public void setService(Service service) { 
+        this.catalogItem = service; 
+    }
+
+    public Product getProduct() { 
+        return (catalogItem instanceof Product) ? (Product) catalogItem : null; 
+    }
+
+    public Service getService() { 
+        return (catalogItem instanceof Service) ? (Service) catalogItem : null; 
+    }
 }

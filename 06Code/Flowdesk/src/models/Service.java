@@ -7,25 +7,21 @@ import utils.ConsoleInput;
 import utils.Validation;
 import exceptions.ValidationException;
 
-public class Service {
-    private String serviceId;
-    private String name;
-    private String description;
-    private double price;
-    private Category category;
+public class Service extends CatalogItem {
 
     private static List<Service> services = new ArrayList<>();
 
     public Service(String serviceId, String name, String description, double price, Category category) {
-        this.serviceId = serviceId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.category = category;
+        super(serviceId, name, description, price, category);
         validate();
     }
 
-    public Service() { }
+    public Service() { super(); }
+
+    @Override
+    public String getItemType() {
+        return "SERVICIO";
+    }
 
     public static void setAll(List<Service> newItems) {
         services = newItems;
@@ -34,20 +30,15 @@ public class Service {
     public void register() {
         validate();
         for (Service existing : services) {
-            if (Validation.sameIdentifier(existing.serviceId, serviceId)) {
+            if (Validation.sameIdentifier(existing.getId(), this.id)) {
                 throw new ValidationException("Ya existe un servicio con ese ID.");
             }
         }
         services.add(this);
     }
 
-    void validate() {
-        Validation.requireText(serviceId, "identificador del servicio");
-        Validation.requireText(name, "nombre del servicio");
-        Validation.requireText(description, "descripcion");
-        Validation.requireNonNegativeAmount(price, "precio");
-        Validation.requireValue(category, "categoria");
-        category.validate();
+    public void validate() {
+        validateCommon();
     }
 
     public static List<Service> getAll() {
@@ -84,14 +75,8 @@ public class Service {
             System.out.println("No hay servicios registrados.");
         } else {
             for (Service s : services) {
-                System.out.println("- [" + s.getServiceId() + "] " + s.getName() + " | Cat: " + s.getCategory().getName() + " | $" + s.getPrice());
+                System.out.println("- [" + s.getId() + "] " + s.getName() + " | Cat: " + s.getCategory().getName() + " | $" + s.getPrice());
             }
         }
     }
-
-    public String getServiceId() { return serviceId; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
-    public Category getCategory() { return category; }
 }

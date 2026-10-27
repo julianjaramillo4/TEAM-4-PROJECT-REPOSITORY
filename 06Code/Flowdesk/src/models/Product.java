@@ -7,25 +7,21 @@ import utils.ConsoleInput;
 import utils.Validation;
 import exceptions.ValidationException;
 
-public class Product {
-    private String productId;
-    private String name;
-    private String description;
-    private double price;
-    private Category category;
+public class Product extends CatalogItem {
 
     private static List<Product> products = new ArrayList<>();
 
     public Product(String productId, String name, String description, double price, Category category) {
-        this.productId = productId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.category = category;
+        super(productId, name, description, price, category);
         validate();
     }
 
-    public Product() { }
+    public Product() { super(); }
+
+    @Override
+    public String getItemType() {
+        return "PRODUCTO";
+    }
 
     public static void setAll(List<Product> newItems) {
         products = newItems;
@@ -34,20 +30,15 @@ public class Product {
     public void register() {
         validate();
         for (Product existing : products) {
-            if (Validation.sameIdentifier(existing.productId, productId)) {
+            if (Validation.sameIdentifier(existing.getId(), this.id)) {
                 throw new ValidationException("Ya existe un producto con ese ID.");
             }
         }
         products.add(this);
     }
 
-    void validate() {
-        Validation.requireText(productId, "identificador del producto");
-        Validation.requireText(name, "nombre del producto");
-        Validation.requireText(description, "descripcion");
-        Validation.requireNonNegativeAmount(price, "precio");
-        Validation.requireValue(category, "categoria");
-        category.validate();
+    public void validate() {
+        validateCommon();
     }
 
     public static List<Product> getAll() {
@@ -84,14 +75,9 @@ public class Product {
             System.out.println("No hay productos registrados.");
         } else {
             for (Product p : products) {
-                System.out.println("- [" + p.getProductId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName());
+                System.out.println("- [" + p.getId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName());
             }
         }
     }
-
-    public String getProductId() { return productId; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
-    public Category getCategory() { return category; }
+    
 }

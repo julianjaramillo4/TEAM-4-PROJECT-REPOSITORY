@@ -71,11 +71,11 @@ public class DataManager {
         Path temporaryFile = null;
         try {
             Path directory = getDataDirectory();
-            temporaryFile = Files.createTempFile(directory, "usuarios-", ".tmp");
+            temporaryFile = Files.createTempFile(directory, "users-", ".tmp"); // <-- Cambiado a inglés
             try (Writer writer = Files.newBufferedWriter(temporaryFile, StandardCharsets.UTF_8)) {
                 gson.toJson(User.getAll(), writer);
             }
-            Path destination = directory.resolve("usuarios.json");
+            Path destination = directory.resolve("users.json");
             try {
                 Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             } catch (AtomicMoveNotSupportedException exception) {
@@ -92,7 +92,7 @@ public class DataManager {
 
     public static void loadUsers() {
         init();
-        Path file = getDataDirectory().resolve("usuarios.json");
+        Path file = getDataDirectory().resolve("users.json");
         if (!Files.exists(file)) {
             User.setAll(new ArrayList<>());
             return;
@@ -140,35 +140,36 @@ public class DataManager {
 
     public static void saveAll() {
         saveUsers();
-        saveList(Customer.getAll(), "clientes");
-        saveList(Category.getAll(), "categorias");
-        saveList(Product.getAll(), "productos");
-        saveList(Service.getAll(), "servicios");
-        saveList(WorkOrder.getAll(), "ordenes");
+        saveList(Customer.getAll(), "customers");     // <-- Corregido
+        saveList(Category.getAll(), "categories");
+        saveList(Product.getAll(), "products");
+        saveList(Service.getAll(), "services");
+        saveList(WorkOrder.getAll(), "orders");
     }
 
     public static void loadAll() {
         loadUsers();
+        
         Type customersType = new TypeToken<ArrayList<Customer>>(){}.getType();
-        Customer.setAll(loadList("clientes", customersType));
+        Customer.setAll(loadList("customers", customersType)); // <-- Corregido
 
         Type categoriesType = new TypeToken<ArrayList<Category>>(){}.getType();
-        Category.setAll(loadList("categorias", categoriesType));
+        Category.setAll(loadList("categories", categoriesType));
 
         Type productsType = new TypeToken<ArrayList<Product>>(){}.getType();
-        Product.setAll(loadList("productos", productsType));
+        Product.setAll(loadList("products", productsType));
 
         Type servicesType = new TypeToken<ArrayList<Service>>(){}.getType();
-        Service.setAll(loadList("servicios", servicesType));
+        Service.setAll(loadList("services", servicesType));
 
         Type ordersType = new TypeToken<ArrayList<WorkOrder>>(){}.getType();
-        WorkOrder.setAll(loadList("ordenes", ordersType));
+        WorkOrder.setAll(loadList("orders", ordersType));
 
     }
 
     public static void saveCashRegister(CashRegister cashRegister) {
         init();
-        try (Writer writer = new FileWriter(getDataDirectory().resolve("caja.json").toFile(), StandardCharsets.UTF_8)) {
+        try (Writer writer = new FileWriter(getDataDirectory().resolve("cash_register.json").toFile(), StandardCharsets.UTF_8)) {
             gson.toJson(cashRegister, writer);
         } catch (IOException e) {
             System.out.println("Error al guardar caja. Verifique el archivo y los permisos de acceso.");
@@ -177,7 +178,7 @@ public class DataManager {
 
     public static CashRegister loadCashRegister() {
         init();
-        File file = getDataDirectory().resolve("caja.json").toFile();
+        File file = getDataDirectory().resolve("cash_register.json").toFile();
         if (!file.exists()) {
             return new CashRegister();
         }
