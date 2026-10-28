@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Tarjetas de presentacion",
+    "price": 0.2,
+    "description": "Tarjeta impresa a color",
+    "category": {
+      "name": "Impresion y acabados",
+      "categoryId": "DEMO-CAT01",
+      "description": "Catalogo ficticio para exposicion"
+    },
+    "id": "DEMO-P001"
+  },
+  {
+    "name": "Volante publicitario",
+    "price": 0.15,
+    "description": "Volante A5 a color",
+    "category": {
+      "name": "Impresion y acabados",
+      "categoryId": "DEMO-CAT01",
+      "description": "Catalogo ficticio para exposicion"
+    },
+    "id": "DEMO-P002"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Papeleria Aurora (Demo)",
+    "address": "Quito - direccion ficticia",
+    "customerId": "DEMO-C001",
+    "phone": "0990000001",
+    "idNumber": "DEMO-001"
+  },
+  {
+    "name": "Cafeteria El Mirador (Demo)",
+    "address": "Sangolqui - direccion ficticia",
+    "customerId": "DEMO-C002",
+    "phone": "0990000002",
+    "idNumber": "DEMO-002"
+  },
+  {
+    "name": "Club Universitario (Demo)",
+    "address": "Quito - campus ficticio",
+    "customerId": "DEMO-C003",
+    "phone": "0990000003",
+    "idNumber": "DEMO-003"
+  }
+]

@@ -1,0 +1,117 @@
+[
+  {
+    "balance": 25.0,
+    "payments": [
+      {
+        "amount": 10.0,
+        "date": {
+          "day": 28,
+          "month": 10,
+          "year": 2026
+        },
+        "cashMovement": {
+          "amount": 10.0,
+          "movementId": "MOV-DEMO-PAGO001",
+          "type": "INCOME",
+          "date": {
+            "day": 28,
+            "month": 10,
+            "year": 2026
+          },
+          "reason": "Pago Orden WO-1",
+          "paymentMethod": "CASH"
+        },
+        "paymentId": "DEMO-PAGO001",
+        "orderId": "WO-1",
+        "paymentMethod": "CASH"
+      }
+    ],
+    "date": {
+      "day": 28,
+      "month": 10,
+      "year": 2026
+    },
+    "details": [
+      {
+        "detailId": "DEMO-D001",
+        "unitPrice": 0.2,
+        "itemName": "Tarjetas de presentacion",
+        "description": "100 tarjetas a color",
+        "quantity": 100
+      },
+      {
+        "detailId": "DEMO-D002",
+        "unitPrice": 15.0,
+        "itemName": "Diseno grafico",
+        "description": "Diseno para tarjetas",
+        "quantity": 1
+      }
+    ],
+    "total": 35.0,
+    "status": "IN_PROGRESS",
+    "customer": {
+      "name": "Papeleria Aurora (Demo)",
+      "address": "Quito - direccion ficticia",
+      "customerId": "DEMO-C001",
+      "phone": "0990000001",
+      "idNumber": "DEMO-001"
+    },
+    "orderId": "WO-1"
+  },
+  {
+    "balance": 30.0,
+    "payments": [],
+    "date": {
+      "day": 28,
+      "month": 10,
+      "year": 2026
+    },
+    "details": [
+      {
+        "detailId": "DEMO-D003",
+        "unitPrice": 0.15,
+        "itemName": "Volante publicitario",
+        "description": "200 volantes para cafeteria",
+        "quantity": 200
+      }
+    ],
+    "total": 30.0,
+    "status": "WAITING",
+    "customer": {
+      "name": "Cafeteria El Mirador (Demo)",
+      "address": "Sangolqui - direccion ficticia",
+      "customerId": "DEMO-C002",
+      "phone": "0990000002",
+      "idNumber": "DEMO-002"
+    },
+    "orderId": "WO-2"
+  },
+  {
+    "balance": 9.0,
+    "payments": [],
+    "date": {
+      "day": 28,
+      "month": 10,
+      "year": 2026
+    },
+    "details": [
+      {
+        "detailId": "DEMO-D004",
+        "unitPrice": 3.0,
+        "itemName": "Anillado",
+        "description": "Tres documentos anillados",
+        "quantity": 3
+      }
+    ],
+    "total": 9.0,
+    "status": "COMPLETED",
+    "customer": {
+      "name": "Club Universitario (Demo)",
+      "address": "Quito - campus ficticio",
+      "customerId": "DEMO-C003",
+      "phone": "0990000003",
+      "idNumber": "DEMO-003"
+    },
+    "orderId": "WO-3"
+  }
+]
