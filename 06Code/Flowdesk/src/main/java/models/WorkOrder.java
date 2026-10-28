@@ -87,13 +87,17 @@ public class WorkOrder {
         if (payment == null) {
             throw new InvalidPaymentException("El pago no puede estar vacio.");
         }
+        
+        if (payment.getWorkOrder() == null) {
+            payment.setWorkOrder(this);
+        }
+        
         calculateTotals();
         payment.validateFor(this);
         payments.add(payment);
         payment.markRegistered();
         calculateTotals();
     }
-
     public double calculateTotalPaid() {
         double totalPaid = 0;
         for (Payment payment : payments) {

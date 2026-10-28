@@ -88,7 +88,7 @@ public class DataManager {
             try (Writer writer = Files.newBufferedWriter(temporaryFile, StandardCharsets.UTF_8)) {
                 gson.toJson(User.getAll(), writer);
             }
-            Path destination = directory.resolve("users.json");
+            Path destination = directory.resolve("usuarios.json");
             try {
                 Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             } catch (AtomicMoveNotSupportedException exception) {
@@ -103,7 +103,7 @@ public class DataManager {
 
     public static void loadUsers() {
         init();
-        Path file = getDataDirectory().resolve("users.json");
+        Path file = getDataDirectory().resolve("usuarios.json");
         if (!Files.exists(file)) {
             User.setAll(new ArrayList<>());
             return;

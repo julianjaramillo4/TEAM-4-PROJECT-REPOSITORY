@@ -17,6 +17,9 @@ public class Payment {
     private String orderId;
     private CashMovement cashMovement;
     private transient boolean registered;
+    
+    // NUEVO: Guardamos la referencia directa para evitar fallos de búsqueda
+    private transient WorkOrder workOrderRef; 
 
     public Payment() { }
 
@@ -31,12 +34,15 @@ public class Payment {
         requireEditable();
         if (workOrder != null) {
             this.orderId = workOrder.getOrderId();
+            this.workOrderRef = workOrder; // Guardamos la referencia
         } else {
             this.orderId = null;
+            this.workOrderRef = null;
         }
     }
 
     public WorkOrder getWorkOrder() {
+        if (workOrderRef != null) return workOrderRef; // Priorizamos la referencia directa
         if (orderId == null) return null;
         for (WorkOrder wo : WorkOrder.getAll()) {
             if (Validation.sameIdentifier(wo.getOrderId(), orderId)) {
@@ -115,13 +121,17 @@ public class Payment {
     }
 
     public boolean validateAmount() {
-        return getWorkOrder() != null
+        WorkOrder wo = getWorkOrder();
+        // Se agrega validación por si acaso la orden no ha calculado sus totales aún
+        if (wo != null) {
+            wo.calculateTotals(); 
+        }
+        return wo != null
                 && Double.isFinite(amount)
                 && amount > 0
-                && amount <= getWorkOrder().getBalance();
+                && amount <= wo.getBalance();
     }
 
-    // ---> MÉTODO AGREGADO AQUÍ <---
     public String getPaymentDetails() {
         return "Identificador del pago: " + paymentId
                 + ", Monto: " + amount

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.mycompany.flowdesk.ConsoleInputTest" time="0.041" tests="13" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk\target\test-classes;C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk\target\classes;C:\Users\User\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\User\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\User\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="America/Guayaquil"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin"/>
+    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire15367844758919523190\surefirebooter-20261028073018338_3.jar C:\Users\User\AppData\Local\Temp\surefire15367844758919523190 2026-10-28T07-30-18_122-jvmRun1 surefire-20261028073018338_1tmp surefire_0-20261028073018338_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk\target\test-classes;C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk\target\classes;C:\Users\User\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\User\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\User\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\User"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire15367844758919523190\surefirebooter-20261028073018338_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.11+10-LTS"/>
+    <property name="user.name" value="User"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-21.0.11+10"/>
+    <property name="maven.ext.class.path" value="C:\Users\User\Downloads\Nueva carpeta (2)\netbeans\java\maven-nblib\netbeans-eventspy.jar"/>
+    <property name="localRepository" value="C:\Users\User\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\User\AppData\Local\Temp\"/>
+    <property name="java.version" value="21.0.11"/>
+    <property name="user.dir" value="C:\Users\User\Documents\TEAM-4-PROJECT-REPOSITORY\06Code\Flowdesk"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\User\AppData\Local\Microsoft\WindowsApps;C:\msys64\ucrt64\bin;C:\Users\User\.dotnet\tools;C:\Users\User\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\User\AppData\Roaming\npm;C:\Users\User\Downloads\Nueva carpeta (2)\netbeans\bin\;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="21.0.11+10-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="exhaustedInputDoesNotRetryForever" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+    <system-out><![CDATA[Opcion: Ingrese un numero entero valido.
+Opcion: ]]></system-out>
+  </testcase>
+  <testcase name="orderCreationRetriesInvalidQuantityAndMenuOption" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.012">
+    <system-out><![CDATA[
+--- CREAR NUEVA ORDEN DE TRABAJO ---
+Numero de Orden generado: WO-001
+Ingrese ID o Cedula del Cliente: Cliente asignado: Ana
+
+1. Agregar Producto
+2. Agregar Servicio
+0. Terminar y guardar Orden
+Opcion: Opcion no valida. Ingrese un numero entre 0 y 2.
+Opcion: 
+--- PRODUCTOS ---
+- [P1] Volante | Precio: $2.5 | Cat: Impresion
+Ingrese ID del Producto: Cantidad: Ingrese un numero entero valido.
+Cantidad: Ingrese un entero mayor a 0.
+Cantidad: Elemento agregado. Subtotal: $5.0
+
+1. Agregar Producto
+2. Agregar Servicio
+0. Terminar y guardar Orden
+Opcion: 
+¡Orden WO-001 creada exitosamente!
+Total a pagar: $5.0
+]]></system-out>
+  </testcase>
+  <testcase name="cancelledCustomerFormReturnsToMenuWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[
+--- GESTION DE CLIENTES ---
+1. Registrar nuevo Cliente
+2. Buscar Cliente
+3. Listar todos los Clientes
+0. Volver al menu principal
+Opcion: 
+--- REGISTRAR NUEVO CLIENTE ---
+ID del Cliente: Nombre completo: Operacion cancelada.
+
+--- GESTION DE CLIENTES ---
+1. Registrar nuevo Cliente
+2. Buscar Cliente
+3. Listar todos los Clientes
+0. Volver al menu principal
+Opcion: ]]></system-out>
+  </testcase>
+  <testcase name="integerLimitsAreAcceptedAfterOverflowIsRejected" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+    <system-out><![CDATA[Entero: Ingrese un numero entero valido.
+Entero: Entero: Ingrese un numero entero valido.
+Entero: ]]></system-out>
+  </testcase>
+  <testcase name="rejectsNonFiniteNegativeAndMalformedAmounts" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+    <system-out><![CDATA[Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
+Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
+Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
+Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
+Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
+Precio: Precio: ]]></system-out>
+  </testcase>
+  <testcase name="cancellationWorksForEveryReader" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+    <system-out><![CDATA[Texto: Cantidad: Monto: ]]></system-out>
+  </testcase>
+  <testcase name="cancellationAfterInvalidAmountLeavesFollowingMenuOptionAvailable" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
+Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
+Monto: Opcion: ]]></system-out>
+  </testcase>
+  <testcase name="cancelledCatalogFormReturnsToCatalogWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.003">
+    <system-out><![CDATA[
+--- GESTION DE CATALOGO ---
+1. Registrar nueva Categoria
+2. Registrar Producto
+3. Registrar Servicio
+4. Listar Productos
+5. Listar Servicios
+0. Volver
+Opcion: ID Categoria: Nombre Categoria: Operacion cancelada.
+
+--- GESTION DE CATALOGO ---
+1. Registrar nueva Categoria
+2. Registrar Producto
+3. Registrar Servicio
+4. Listar Productos
+5. Listar Servicios
+0. Volver
+Opcion: ]]></system-out>
+  </testcase>
+  <testcase name="optionBoundsAreInclusiveAndDoNotConsumeFollowingField" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Opcion: Opcion: Nombre: ]]></system-out>
+  </testcase>
+  <testcase name="retriesNonPositiveQuantities" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Cantidad: Ingrese un entero mayor a 0.
+Cantidad: Ingrese un entero mayor a 0.
+Cantidad: Ingrese un numero entero valido.
+Cantidad: ]]></system-out>
+  </testcase>
+  <testcase name="positiveAmountRetriesZero" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
+Monto: ]]></system-out>
+  </testcase>
+  <testcase name="retriesMalformedOverflowAndOutOfRangeOptions" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Opcion: Ingrese un numero entero valido.
+Opcion: Ingrese un numero entero valido.
+Opcion: Opcion no valida. Ingrese un numero entre 0 y 3.
+Opcion: Opcion no valida. Ingrese un numero entre 0 y 3.
+Opcion: ]]></system-out>
+  </testcase>
+  <testcase name="requiredTextRetriesBlankAndPreservesPasswordCharacters" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+    <system-out><![CDATA[Texto: Este campo es obligatorio.
+Texto: Este campo es obligatorio.
+Texto: ]]></system-out>
+  </testcase>
+</testsuite>
