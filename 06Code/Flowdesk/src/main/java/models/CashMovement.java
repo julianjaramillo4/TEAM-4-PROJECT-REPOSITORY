@@ -21,9 +21,15 @@ public class CashMovement {
 
     private static List<CashMovement> movements = new ArrayList<>();
 
-    public CashMovement() { }
+    public CashMovement() {}
 
-    public CashMovement(String movementId, MovementType type, double amount, Date date, String reason, PaymentMethod paymentMethod) {
+    public CashMovement(
+            String movementId,
+            MovementType type,
+            double amount,
+            Date date,
+            String reason,
+            PaymentMethod paymentMethod) {
         this.movementId = movementId;
         this.type = type;
         this.amount = amount;
@@ -52,9 +58,10 @@ public class CashMovement {
                 throw new ValidationException("Ya existe un movimiento con ese ID.");
             }
         }
-        double accumulatedAmount = type == MovementType.INCOME
-                ? cashRegister.calculateIncome() + amount
-                : cashRegister.calculateExpenses() + amount;
+        double accumulatedAmount =
+                type == MovementType.INCOME
+                        ? cashRegister.calculateIncome() + amount
+                        : cashRegister.calculateExpenses() + amount;
         Validation.requireNonNegativeAmount(accumulatedAmount, "monto acumulado de caja");
     }
 
@@ -67,8 +74,13 @@ public class CashMovement {
         Validation.requireValue(paymentMethod, "metodo de pago");
     }
 
-    public static List<CashMovement> getAll() { return movements; }
-    public static void setAll(List<CashMovement> newItems) { movements = newItems == null ? new ArrayList<>() : newItems; }
+    public static List<CashMovement> getAll() {
+        return movements;
+    }
+
+    public static void setAll(List<CashMovement> newItems) {
+        movements = newItems == null ? new ArrayList<>() : newItems;
+    }
 
     public static void registerFromConsole(Scanner scanner, CashRegister cashRegister) {
         System.out.println("\n--- REGISTRAR MOVIMIENTO DE CAJA ---");
@@ -81,7 +93,9 @@ public class CashMovement {
         double amount = ConsoleInput.readPositiveAmount(scanner, "Monto: $");
         String reason = ConsoleInput.readRequiredText(scanner, "Razon/Descripcion: ");
 
-        int methodOption = ConsoleInput.readOption(scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
+        int methodOption =
+                ConsoleInput.readOption(
+                        scanner, "Metodo de pago (1. EFECTIVO / 2. TRANSFERENCIA): ", 1, 2);
         PaymentMethod method = (methodOption == 1) ? PaymentMethod.CASH : PaymentMethod.TRANSFER;
 
         Date currentDate = Date.now();
@@ -99,17 +113,47 @@ public class CashMovement {
         } else {
             for (CashMovement m : movements) {
                 String sign = (m.type == MovementType.INCOME) ? "+" : "-";
-                System.out.println("- [" + m.movementId + "] " + m.date.toString() +
-                                   " | " + m.type + " | " + sign + "$" + m.amount +
-                                   " | " + m.reason + " (" + m.paymentMethod + ")");
+                System.out.println(
+                        "- ["
+                                + m.movementId
+                                + "] "
+                                + m.date.toString()
+                                + " | "
+                                + m.type
+                                + " | "
+                                + sign
+                                + "$"
+                                + m.amount
+                                + " | "
+                                + m.reason
+                                + " ("
+                                + m.paymentMethod
+                                + ")");
             }
         }
     }
-    
-    public String getMovementId() { return movementId; }
-    public double getAmount() { return amount; }
-    public MovementType getType() { return type; }
-    public Date getDate() { return date; }
-    public String getReason() { return reason; }
-    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+
+    public String getMovementId() {
+        return movementId;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public MovementType getType() {
+        return type;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
 }

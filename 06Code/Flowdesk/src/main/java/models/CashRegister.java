@@ -41,9 +41,17 @@ public class CashRegister {
         }
     }
 
-    public double calculateIncome() { return income; }
-    public double calculateExpenses() { return expenses; }
-    public double calculateBalance() { return income - expenses; }
+    public double calculateIncome() {
+        return income;
+    }
+
+    public double calculateExpenses() {
+        return expenses;
+    }
+
+    public double calculateBalance() {
+        return income - expenses;
+    }
 
     public void printStatus() {
         System.out.println("\n--- ESTADO DE CAJA ---");
@@ -53,18 +61,27 @@ public class CashRegister {
         System.out.println("----------------------");
     }
 
-    public List<CashMovement> getMovements() { return movements; }
+    public List<CashMovement> getMovements() {
+        return movements;
+    }
+
     public void setMovements(List<CashMovement> movements) {
         this.movements = movements == null ? new ArrayList<>() : movements;
     }
 
-    public double getIncome() { return income; }
+    public double getIncome() {
+        return income;
+    }
+
     public void setIncome(double income) {
         Validation.requireNonNegativeAmount(income, "ingresos");
         this.income = income;
     }
 
-    public double getExpenses() { return expenses; }
+    public double getExpenses() {
+        return expenses;
+    }
+
     public void setExpenses(double expenses) {
         Validation.requireNonNegativeAmount(expenses, "egresos");
         this.expenses = expenses;

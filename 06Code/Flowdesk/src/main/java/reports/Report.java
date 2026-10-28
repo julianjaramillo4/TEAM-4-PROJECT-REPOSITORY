@@ -27,24 +27,38 @@ public class Report {
         System.out.println("2. Semanal");
         System.out.println("3. Mensual");
         System.out.println("0. Volver");
-        
+
         int option = ConsoleInput.readOption(scanner, "Opcion: ", 0, 3);
         if (option == 0) return;
 
-        ReportType type = switch (option) {
-            case 1 -> ReportType.DAILY;
-            case 2 -> ReportType.WEEKLY;
-            default -> ReportType.MONTHLY;
-        };
+        ReportType type =
+                switch (option) {
+                    case 1 -> ReportType.DAILY;
+                    case 2 -> ReportType.WEEKLY;
+                    default -> ReportType.MONTHLY;
+                };
 
         System.out.println("\n=== REPORTE " + type + " DE FLOWDESK ===");
 
         var orders = WorkOrder.getAll();
         System.out.println("Total de ordenes: " + orders.size());
 
-        long completed = orders.stream().filter(o -> o.getStatus() == OrderStatus.COMPLETED || o.getStatus() == OrderStatus.DELIVERED).count();
-        long pending = orders.stream().filter(o -> o.getStatus() == OrderStatus.WAITING || o.getStatus() == OrderStatus.APPROVED || o.getStatus() == OrderStatus.IN_PROGRESS).count();
-        
+        long completed =
+                orders.stream()
+                        .filter(
+                                o ->
+                                        o.getStatus() == OrderStatus.COMPLETED
+                                                || o.getStatus() == OrderStatus.DELIVERED)
+                        .count();
+        long pending =
+                orders.stream()
+                        .filter(
+                                o ->
+                                        o.getStatus() == OrderStatus.WAITING
+                                                || o.getStatus() == OrderStatus.APPROVED
+                                                || o.getStatus() == OrderStatus.IN_PROGRESS)
+                        .count();
+
         System.out.println("Ordenes terminadas: " + completed);
         System.out.println("Ordenes pendientes: " + pending);
 
@@ -59,10 +73,21 @@ public class Report {
         System.out.println("=======================================\n");
     }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     @Override
     public String toString() {

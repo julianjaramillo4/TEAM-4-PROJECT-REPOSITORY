@@ -31,7 +31,7 @@ public class Dashboard {
         }
 
         System.out.println("Total de ordenes en el sistema: " + ordenesDelReporte.size());
-        
+
         int[] counts = new int[5];
         for (WorkOrder o : ordenesDelReporte) {
             if (o.getStatus() != null) {
@@ -40,16 +40,24 @@ public class Dashboard {
         }
         System.out.println("En espera: " + counts[OrderStatus.WAITING.ordinal()] + " orden(es)");
         System.out.println("Aprobada: " + counts[OrderStatus.APPROVED.ordinal()] + " orden(es)");
-        System.out.println("En proceso: " + counts[OrderStatus.IN_PROGRESS.ordinal()] + " orden(es)");
+        System.out.println(
+                "En proceso: " + counts[OrderStatus.IN_PROGRESS.ordinal()] + " orden(es)");
         System.out.println("Completada: " + counts[OrderStatus.COMPLETED.ordinal()] + " orden(es)");
         System.out.println("Entregada: " + counts[OrderStatus.DELIVERED.ordinal()] + " orden(es)");
-        
+
         System.out.println("\n--- ORDENES PENDIENTES ---");
         for (WorkOrder o : ordenesDelReporte) {
-            String customerName = o.getCustomer() != null ? o.getCustomer().getName() : "Sin cliente";
-            System.out.println("[" + o.getOrderId() + "] Cliente: " + customerName + " | Estado: " + o.getStatus());
+            String customerName =
+                    o.getCustomer() != null ? o.getCustomer().getName() : "Sin cliente";
+            System.out.println(
+                    "["
+                            + o.getOrderId()
+                            + "] Cliente: "
+                            + customerName
+                            + " | Estado: "
+                            + o.getStatus());
         }
-        
+
         System.out.println("=============================================\n");
     }
 }

@@ -46,7 +46,7 @@ public class Customer {
         Validation.requireText(address, "direccion");
     }
 
-    public Customer() { }
+    public Customer() {}
 
     public static void setAll(List<Customer> newItems) {
         customers = newItems;
@@ -54,7 +54,8 @@ public class Customer {
 
     public static Customer search(String searchTerm) {
         for (Customer c : customers) {
-            if (Validation.sameIdentifier(c.getCustomerId(), searchTerm) || Validation.sameIdentifier(c.getIdNumber(), searchTerm)) {
+            if (Validation.sameIdentifier(c.getCustomerId(), searchTerm)
+                    || Validation.sameIdentifier(c.getIdNumber(), searchTerm)) {
                 return c;
             }
         }
@@ -106,7 +107,8 @@ public class Customer {
 
     private static void searchFromConsole(Scanner scanner) {
         System.out.println("\n--- BUSCAR CLIENTE ---");
-        String searchTerm = ConsoleInput.readRequiredText(scanner, "Ingrese el ID o la Cedula del cliente: ");
+        String searchTerm =
+                ConsoleInput.readRequiredText(scanner, "Ingrese el ID o la Cedula del cliente: ");
 
         Customer match = search(searchTerm);
 
@@ -128,14 +130,29 @@ public class Customer {
             System.out.println("No hay clientes registrados aun.");
         } else {
             for (Customer c : customers) {
-                System.out.println("- [" + c.getCustomerId() + "] " + c.getName() + " | Tel: " + c.getPhone());
+                System.out.println(
+                        "- [" + c.getCustomerId() + "] " + c.getName() + " | Tel: " + c.getPhone());
             }
         }
     }
 
-    public String getCustomerId() { return customerId; }
-    public String getName() { return name; }
-    public String getPhone() { return phone; }
-    public String getIdNumber() { return idNumber; }
-    public String getAddress() { return address; }
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 }

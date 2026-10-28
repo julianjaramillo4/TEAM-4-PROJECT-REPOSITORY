@@ -11,7 +11,8 @@ public class OrderDetail {
 
     private transient CatalogItem catalogItem;
 
-    public OrderDetail(String detailId, String itemName, int quantity, String description, double unitPrice) {
+    public OrderDetail(
+            String detailId, String itemName, int quantity, String description, double unitPrice) {
         this.detailId = detailId;
         this.itemName = itemName;
         this.quantity = quantity;
@@ -35,28 +36,47 @@ public class OrderDetail {
         Validation.requireNonNegativeAmount(unitPrice, "precio unitario");
     }
 
-    public String getDetailId() { return detailId; }
-    public String getItemName() { return itemName; }
-    public int getQuantity() { return quantity; }
-    public String getDescription() { return description; }
-    public double getUnitPrice() { return unitPrice; }
-
-    public CatalogItem getCatalogItem() { return catalogItem; }
-    public void setCatalogItem(CatalogItem catalogItem) { this.catalogItem = catalogItem; }
-
-    public void setProduct(Product product) { 
-        this.catalogItem = product; 
+    public String getDetailId() {
+        return detailId;
     }
 
-    public void setService(Service service) { 
-        this.catalogItem = service; 
+    public String getItemName() {
+        return itemName;
     }
 
-    public Product getProduct() { 
-        return (catalogItem instanceof Product) ? (Product) catalogItem : null; 
+    public int getQuantity() {
+        return quantity;
     }
 
-    public Service getService() { 
-        return (catalogItem instanceof Service) ? (Service) catalogItem : null; 
+    public String getDescription() {
+        return description;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public CatalogItem getCatalogItem() {
+        return catalogItem;
+    }
+
+    public void setCatalogItem(CatalogItem catalogItem) {
+        this.catalogItem = catalogItem;
+    }
+
+    public void setProduct(Product product) {
+        this.catalogItem = product;
+    }
+
+    public void setService(Service service) {
+        this.catalogItem = service;
+    }
+
+    public Product getProduct() {
+        return (catalogItem instanceof Product) ? (Product) catalogItem : null;
+    }
+
+    public Service getService() {
+        return (catalogItem instanceof Service) ? (Service) catalogItem : null;
     }
 }

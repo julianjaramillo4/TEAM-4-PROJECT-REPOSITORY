@@ -3,7 +3,7 @@ package utils;
 import exceptions.ValidationException;
 
 public final class Validation {
-    private Validation() { }
+    private Validation() {}
 
     public static void requireText(String value, String fieldName) {
         if (value == null || value.isBlank()) {
@@ -25,13 +25,15 @@ public final class Validation {
 
     public static void requireNonNegativeAmount(double value, String fieldName) {
         if (!Double.isFinite(value) || value < 0) {
-            throw new ValidationException("El campo " + fieldName + " debe ser finito y mayor o igual a 0.");
+            throw new ValidationException(
+                    "El campo " + fieldName + " debe ser finito y mayor o igual a 0.");
         }
     }
 
     public static void requirePositiveAmount(double value, String fieldName) {
         if (!Double.isFinite(value) || value <= 0) {
-            throw new ValidationException("El campo " + fieldName + " debe ser finito y mayor a 0.");
+            throw new ValidationException(
+                    "El campo " + fieldName + " debe ser finito y mayor a 0.");
         }
     }
 

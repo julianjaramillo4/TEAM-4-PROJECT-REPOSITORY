@@ -16,8 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountPersistenceTest {
-    @TempDir
-    Path directory;
+    @TempDir Path directory;
     private String previousDirectory;
     private ArrayList<User> previousUsers;
 
@@ -41,8 +40,9 @@ class AccountPersistenceTest {
 
     @Test
     void accountIsSavedBeforeFirstLoginReturns() throws Exception {
-        User user = User.authenticateFromConsole(Role.EMPLOYEE,
-                new Scanner("niño\ncontraseña\n"), DataManager::saveUsers);
+        User user =
+                User.authenticateFromConsole(
+                        Role.EMPLOYEE, new Scanner("niño\ncontraseña\n"), DataManager::saveUsers);
         assertTrue(Files.exists(directory.resolve("users.json")));
         User.setAll(new ArrayList<>());
         DataManager.loadUsers();
@@ -52,14 +52,20 @@ class AccountPersistenceTest {
 
     @Test
     void allRolesAreRecoveredAndAuthenticateWithoutRegistration() {
-        User.authenticateFromConsole(Role.MANAGER, new Scanner("manager\nsecret1\n"), DataManager::saveUsers);
-        User.authenticateFromConsole(Role.CASHIER, new Scanner("cashier\nsecret2\n"), DataManager::saveUsers);
-        User.authenticateFromConsole(Role.EMPLOYEE, new Scanner("employee\nsecret3\n"), DataManager::saveUsers);
+        User.authenticateFromConsole(
+                Role.MANAGER, new Scanner("manager\nsecret1\n"), DataManager::saveUsers);
+        User.authenticateFromConsole(
+                Role.CASHIER, new Scanner("cashier\nsecret2\n"), DataManager::saveUsers);
+        User.authenticateFromConsole(
+                Role.EMPLOYEE, new Scanner("employee\nsecret3\n"), DataManager::saveUsers);
         User.setAll(new ArrayList<>());
         DataManager.loadUsers();
-        assertNotNull(User.authenticateFromConsole(Role.MANAGER, new Scanner("manager\nsecret1\n")));
-        assertNotNull(User.authenticateFromConsole(Role.CASHIER, new Scanner("cashier\nsecret2\n")));
-        assertNotNull(User.authenticateFromConsole(Role.EMPLOYEE, new Scanner("employee\nsecret3\n")));
+        assertNotNull(
+                User.authenticateFromConsole(Role.MANAGER, new Scanner("manager\nsecret1\n")));
+        assertNotNull(
+                User.authenticateFromConsole(Role.CASHIER, new Scanner("cashier\nsecret2\n")));
+        assertNotNull(
+                User.authenticateFromConsole(Role.EMPLOYEE, new Scanner("employee\nsecret3\n")));
         assertEquals(3, User.getAll().size());
     }
 
@@ -68,12 +74,18 @@ class AccountPersistenceTest {
         Path blockedDirectory = directory.resolve("blocked");
         Files.writeString(blockedDirectory, "not a directory", StandardCharsets.UTF_8);
         System.setProperty("flowdesk.dataDirectory", blockedDirectory.toString());
-        assertThrows(PersistenceException.class, () -> User.authenticateFromConsole(Role.MANAGER,
-                new Scanner("manager\nsecret\n"), DataManager::saveUsers));
+        assertThrows(
+                PersistenceException.class,
+                () ->
+                        User.authenticateFromConsole(
+                                Role.MANAGER,
+                                new Scanner("manager\nsecret\n"),
+                                DataManager::saveUsers));
         assertTrue(User.getAll().isEmpty());
         System.setProperty("flowdesk.dataDirectory", directory.toString());
-        assertNotNull(User.authenticateFromConsole(Role.MANAGER,
-                new Scanner("manager\nsecret\n"), DataManager::saveUsers));
+        assertNotNull(
+                User.authenticateFromConsole(
+                        Role.MANAGER, new Scanner("manager\nsecret\n"), DataManager::saveUsers));
     }
 
     @Test

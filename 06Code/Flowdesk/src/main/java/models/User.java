@@ -16,7 +16,7 @@ public class User {
 
     private static List<User> users = new ArrayList<>();
 
-    public User() { }
+    public User() {}
 
     public User(String userId, String username, String password, Role role) {
         this.userId = userId;
@@ -40,16 +40,27 @@ public class User {
         Validation.requireValue(role, "rol");
     }
 
-    public String getUserId() { return userId; }
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public Role getRole() { return role; }
+    public String getUserId() {
+        return userId;
+    }
 
-    
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
     public void setUserId(String userId) {
         if (users.contains(this)) {
             for (User existing : users) {
-                if (existing != this && existing.getUserId() != null 
+                if (existing != this
+                        && existing.getUserId() != null
                         && existing.getUserId().equals(userId)) {
                     throw new ValidationException("Ya existe un usuario con ese ID.");
                 }
@@ -61,7 +72,8 @@ public class User {
     public void setUsername(String username) {
         if (users.contains(this)) {
             for (User existing : users) {
-                if (existing != this && existing.getUsername() != null 
+                if (existing != this
+                        && existing.getUsername() != null
                         && existing.getUsername().equalsIgnoreCase(username)) {
                     throw new ValidationException("Ya existe un usuario con ese nombre.");
                 }
@@ -70,23 +82,30 @@ public class User {
         this.username = username;
     }
 
-    public void setPassword(String password) { this.password = password; }
-    public void setRole(Role role) { this.role = role; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public void register() {
         validate();
-        
+
         for (User existing : users) {
             if (existing != this) {
                 if (existing.getUserId() != null && existing.getUserId().equals(this.userId)) {
                     throw new ValidationException("Ya existe un usuario con ese ID.");
                 }
-                if (existing.getUsername() != null && existing.getUsername().equalsIgnoreCase(this.username)) {
-                    throw new ValidationException("Ya existe un usuario con ese nombre de usuario.");
+                if (existing.getUsername() != null
+                        && existing.getUsername().equalsIgnoreCase(this.username)) {
+                    throw new ValidationException(
+                            "Ya existe un usuario con ese nombre de usuario.");
                 }
             }
         }
-        
+
         if (!users.contains(this)) {
             users.add(this);
         }
@@ -113,8 +132,10 @@ public class User {
     }
 
     public boolean validateCredentials(String username, String password) {
-        return this.username != null && this.username.equals(username) &&
-               this.password != null && this.password.equals(password);
+        return this.username != null
+                && this.username.equals(username)
+                && this.password != null
+                && this.password.equals(password);
     }
 
     public static User authenticateFromConsole(Role role, Scanner scanner) {
@@ -142,7 +163,7 @@ public class User {
         }
 
         String newUserId = "U_" + role.name();
-        
+
         for (User u : users) {
             if (u.getUserId() != null && u.getUserId().equals(newUserId)) {
                 newUserId = newUserId + "_" + System.currentTimeMillis();

@@ -6,7 +6,7 @@ import exceptions.ValidationException;
 import exceptions.PersistenceException;
 
 public final class ConsoleInput {
-    private ConsoleInput() { }
+    private ConsoleInput() {}
 
     private static String readLine(Scanner scanner, String prompt) {
         System.out.print(prompt);
@@ -43,7 +43,8 @@ public final class ConsoleInput {
             if (option >= minimum && option <= maximum) {
                 return option;
             }
-            System.out.println("Opcion no valida. Ingrese un numero entre " + minimum + " y " + maximum + ".");
+            System.out.println(
+                    "Opcion no valida. Ingrese un numero entre " + minimum + " y " + maximum + ".");
         }
     }
 
@@ -75,9 +76,10 @@ public final class ConsoleInput {
             } catch (NumberFormatException exception) {
 
             }
-            System.out.println(allowZero
-                    ? "Ingrese un monto valido mayor o igual a 0 (use punto decimal)."
-                    : "Ingrese un monto valido mayor a 0 (use punto decimal).");
+            System.out.println(
+                    allowZero
+                            ? "Ingrese un monto valido mayor o igual a 0 (use punto decimal)."
+                            : "Ingrese un monto valido mayor a 0 (use punto decimal).");
         }
     }
 

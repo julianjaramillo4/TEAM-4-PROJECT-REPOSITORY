@@ -53,8 +53,12 @@ class PaymentConsoleTest {
     }
 
     private String enterPayment(String input) {
-        return capture(() -> ConsoleInput.runAction(
-                () -> Payment.registerFromConsole(new Scanner(input), cashRegister)));
+        return capture(
+                () ->
+                        ConsoleInput.runAction(
+                                () ->
+                                        Payment.registerFromConsole(
+                                                new Scanner(input), cashRegister)));
     }
 
     private void assertUnchanged() {
@@ -151,7 +155,8 @@ class PaymentConsoleTest {
         third.setWorkOrder(order);
         third.registerPayment(cashRegister);
 
-        assertThrowsExactly(InvalidPaymentException.class, () -> first.registerPayment(cashRegister));
+        assertThrowsExactly(
+                InvalidPaymentException.class, () -> first.registerPayment(cashRegister));
         assertEquals(0, order.getBalance());
         assertEquals(100, order.calculateTotalPaid());
         assertEquals(100, cashRegister.calculateIncome());

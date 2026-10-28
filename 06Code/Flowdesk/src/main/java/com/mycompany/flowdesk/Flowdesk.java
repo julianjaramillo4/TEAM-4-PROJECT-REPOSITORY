@@ -67,11 +67,12 @@ public class Flowdesk {
             exitRequested = true;
             return;
         }
-        Role role = switch (option) {
-            case 1 -> Role.MANAGER;
-            case 2 -> Role.CASHIER;
-            default -> Role.EMPLOYEE;
-        };
+        Role role =
+                switch (option) {
+                    case 1 -> Role.MANAGER;
+                    case 2 -> Role.CASHIER;
+                    default -> Role.EMPLOYEE;
+                };
         User user = User.authenticateFromConsole(role, scanner, DataManager::saveUsers);
         if (user != null) {
             user.login();
@@ -84,11 +85,12 @@ public class Flowdesk {
             System.out.println("El usuario no tiene un rol asignado.");
             return;
         }
-        int logoutOption = switch (user.getRole()) {
-            case EMPLOYEE -> 6;
-            case CASHIER -> 5;
-            case MANAGER -> 3;
-        };
+        int logoutOption =
+                switch (user.getRole()) {
+                    case EMPLOYEE -> 6;
+                    case CASHIER -> 5;
+                    case MANAGER -> 3;
+                };
         boolean loggedOut = false;
         while (!loggedOut && !exitRequested) {
             try {
@@ -109,7 +111,8 @@ public class Flowdesk {
     }
 
     private static void showRoleMenu(User user) {
-        System.out.println("\n--- MENU DE: " + user.getRole() + " | Usuario: " + user.getUsername() + " ---");
+        System.out.println(
+                "\n--- MENU DE: " + user.getRole() + " | Usuario: " + user.getUsername() + " ---");
         switch (user.getRole()) {
             case EMPLOYEE -> {
                 System.out.println("1. Gestionar Clientes");
@@ -166,7 +169,9 @@ public class Flowdesk {
 
     private static void executeManagerOption(int option) {
         switch (option) {
-            case 1 -> ReportGenerator.generateGeneralReport(WorkOrder.getAll(), cashRegister.getMovements());
+            case 1 ->
+                    ReportGenerator.generateGeneralReport(
+                            WorkOrder.getAll(), cashRegister.getMovements());
             case 2 -> cashRegister.printStatus();
         }
     }
