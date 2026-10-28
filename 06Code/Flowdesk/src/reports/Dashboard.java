@@ -1,79 +1,100 @@
 package reports;
 
 import enums.OrderStatus;
+import models.Payment;
 import models.WorkOrder;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Dashboard {
-    private List<WorkOrder> orders;
-    private Map<OrderStatus, Integer> quantityByStatus;
+    
+    private ArrayList<Integer> conteoPorEstado;
+    private ArrayList<Double> ingresosPorMetodoPago;
+    private ArrayList<WorkOrder> ordenesDelReporte;
 
     public Dashboard() {
-        this.quantityByStatus = new HashMap<>();
+        conteoPorEstado = new ArrayList<>();
+        ingresosPorMetodoPago = new ArrayList<>();
+        ordenesDelReporte = new ArrayList<>();
     }
 
-    public void setOrders(List<WorkOrder> orders) {
-        this.orders = orders;
+    private void inicializarListas() {
+        conteoPorEstado.clear();
+        ingresosPorMetodoPago.clear();
+
+        for (int i = 0; i < 5; i++) {
+            conteoPorEstado.add(0); 
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            ingresosPorMetodoPago.add(0.0);
+        }
+    }
+
+    public void setOrders(List<WorkOrder> ordenes) {
+        if (ordenes == null || ordenes.isEmpty()) {
+            this.ordenesDelReporte = new ArrayList<>();
+            return; 
+        }
+        
+        this.ordenesDelReporte = new ArrayList<>(ordenes);
+        realizarCalculos();
+    }
+
+    private void realizarCalculos() {
+        inicializarListas(); 
+        
+        for (WorkOrder orden : ordenesDelReporte) {
+            
+            if (orden.getStatus() != null) {
+                int estadoIndex = orden.getStatus().ordinal(); 
+                
+                if (estadoIndex >= 0 && estadoIndex < conteoPorEstado.size()) {
+                    int conteoActual = conteoPorEstado.get(estadoIndex);
+                    conteoPorEstado.set(estadoIndex, conteoActual + 1); 
+                }
+            }
+
+            if (orden.getPayments() != null) {
+                for (Payment pago : orden.getPayments()) {
+                    if (pago.getPaymentMethod() != null) {
+                        int pagoIndex = pago.getPaymentMethod().ordinal(); 
+                        
+                        if (pagoIndex >= 0 && pagoIndex < ingresosPorMetodoPago.size()) {
+                            double ingresoActual = ingresosPorMetodoPago.get(pagoIndex);
+                            ingresosPorMetodoPago.set(pagoIndex, ingresoActual + pago.getAmount()); 
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void mostrarDashboard() {
-        System.out.println("\n\n>>> CARGANDO DASHBOARD <<<");
+        System.out.println("\n=============================================");
+        System.out.println("       DASHBOARD DE ORDENES (US003)          ");
+        System.out.println("=============================================");
         
-        if (orders == null || orders.isEmpty()) {
-            System.out.println("[!] ERROR: La lista de ordenes esta vacia.");
-            System.out.println("[!] Asegurate de crear una orden primero.");
+        if (ordenesDelReporte.isEmpty()) {
+            System.out.println(" No hay ordenes registradas en el sistema.   ");
+            System.out.println("=============================================\n");
             return;
         }
 
-        quantityByStatus.clear();
-        for (OrderStatus status : OrderStatus.values()) {
-            quantityByStatus.put(status, 0);
-        }
-
-        for (WorkOrder order : orders) {
-            OrderStatus status = order.getStatus();
-            quantityByStatus.put(status, quantityByStatus.get(status) + 1);
-        }
-
-        System.out.println("\n=============================================");
-        System.out.println("         DASHBOARD - ESTADO DE ORDENES       ");
-        System.out.println("=============================================");
-        System.out.println("Total de ordenes en el sistema: " + orders.size());
+        System.out.println("TOTAL DE ORDENES: " + ordenesDelReporte.size());
         System.out.println("---------------------------------------------");
         
-        for (Map.Entry<OrderStatus, Integer> entry : quantityByStatus.entrySet()) {
-            System.out.println(" - " + entry.getKey() + ": " + entry.getValue() + " orden(es)");
-        }
-        System.out.println("=============================================");
-
-        // 2. ORDENES PENDIENTES
-        System.out.println("\n--- ORDENES PENDIENTES (WAITING / IN_PROGRESS) ---");
-        boolean hayPendientes = false;
-        for (WorkOrder wo : orders) {
-            if (wo.getStatus() == OrderStatus.WAITING || wo.getStatus() == OrderStatus.IN_PROGRESS) {
-                System.out.println("- [" + wo.getOrderId() + "] Cliente: " + wo.getCustomer().getName() + " | Estado: " + wo.getStatus());
-                hayPendientes = true;
-            }
-        }
-        if (!hayPendientes) {
-            System.out.println("No hay ordenes pendientes. ¡Todo al dia!");
-        }
-
-        System.out.println("\n--- HISTORIAL COMPLETO DE ORDENES ---");
-        for (WorkOrder wo : orders) {
-            System.out.println("- [" + wo.getOrderId() + "] Fecha: " + wo.getDate().toString() + 
-                               " | Cliente: " + wo.getCustomer().getName() + 
-                               " | Estado: " + wo.getStatus() + 
-                               " | Total: $" + wo.getTotal() + 
-                               " | Saldo: $" + wo.getBalance());
-        }
+        System.out.println("Ordenes en ESPERA (WAITING):        " + conteoPorEstado.get(0)); 
+        System.out.println("Ordenes APROBADAS (APPROVED):       " + conteoPorEstado.get(1));
+        System.out.println("Ordenes EN PROGRESO (IN_PROGRESS):  " + conteoPorEstado.get(2));
+        System.out.println("Ordenes COMPLETADAS (COMPLETED):    " + conteoPorEstado.get(3));
+        System.out.println("Ordenes ENTREGADAS (DELIVERED):     " + conteoPorEstado.get(4));
         
-        System.out.println("=============================================");
-        System.out.println("\n>>> FIN DEL DASHBOARD <<<\n");
+        System.out.println("\n--- INGRESOS REALES (PAGOS RECIBIDOS) ---");
+        System.out.printf("Efectivo:      $%.2f\n", ingresosPorMetodoPago.get(0));
+        System.out.printf("Tarjeta:       $%.2f\n", ingresosPorMetodoPago.get(1));
+        System.out.printf("Transferencia: $%.2f\n", ingresosPorMetodoPago.get(2));
+        
+        System.out.println("=============================================\n");
     }
-
-    public List<WorkOrder> getOrders() { return orders; }
-    public Map<OrderStatus, Integer> getQuantityByStatus() { return quantityByStatus; }
 }

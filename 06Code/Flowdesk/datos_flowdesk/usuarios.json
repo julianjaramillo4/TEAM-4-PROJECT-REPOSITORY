@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "userId": "U_EMPLOYEE",
+    "username": "julian",
+    "protectedPassword": "123",
+    "role": "EMPLOYEE"
+  }
+]
