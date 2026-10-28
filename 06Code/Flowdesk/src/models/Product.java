@@ -3,60 +3,65 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
-public class Product {
-    private String productId;
-    private String name;
-    private String description;
-    private double price; 
-    private Category category;
+public class Product extends CatalogItem {
 
-    private static List<Product> listaProductos = new ArrayList<>();
+    private static List<Product> products = new ArrayList<>();
 
     public Product(String productId, String name, String description, double price, Category category) {
-        this.productId = productId;
-        this.name = name;
-        this.description = description;
-        this.price = price; 
-        this.category = category;
+        super(productId, name, description, price, category);
+        validate();
     }
-    
-    public Product() { } 
 
-    public static void setAll(List<Product> nuevaLista) {
-        listaProductos = nuevaLista;
+    public Product() { super(); }
+
+    @Override
+    public String getItemType() {
+        return "PRODUCTO";
+    }
+
+    public static void setAll(List<Product> newItems) {
+        products = newItems;
     }
 
     public void register() {
-        listaProductos.add(this);
+        validate();
+        for (Product existing : products) {
+            if (Validation.sameIdentifier(existing.getId(), this.id)) {
+                throw new ValidationException("Ya existe un producto con ese ID.");
+            }
+        }
+        products.add(this);
+    }
+
+    public void validate() {
+        validateCommon();
     }
 
     public static List<Product> getAll() {
-        return listaProductos;
+        return products;
     }
 
-    public static void registrarDesdeConsola(Scanner scanner) {
+    public static void registerFromConsole(Scanner scanner) {
         if (Category.getAll().isEmpty()) {
             System.out.println("Primero debe crear al menos una categoria.");
             return;
         }
-        
-        System.out.print("ID Producto: ");
-        String id = scanner.nextLine();
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Descripcion: ");
-        String desc = scanner.nextLine();
-        System.out.print("Precio: "); 
-        double precio = Double.parseDouble(scanner.nextLine()); 
-        
+
+        String id = ConsoleInput.readRequiredText(scanner, "ID Producto: ");
+        String name = ConsoleInput.readRequiredText(scanner, "Nombre: ");
+        String description = ConsoleInput.readRequiredText(scanner, "Descripcion: ");
+        double price = ConsoleInput.readAmount(scanner, "Precio: ");
+
         System.out.println("Seleccione Categoria:");
         for (Category c : Category.getAll()) System.out.println(c.toString());
-        System.out.print("ID Categoria: ");
-        Category cat = Category.search(scanner.nextLine());
+        Category category = Category.search(ConsoleInput.readRequiredText(scanner, "ID Categoria: "));
 
-        if (cat != null) {
-            Product p = new Product(id, nombre, desc, precio, cat); 
+        if (category != null) {
+            Product p = new Product(id, name, description, price, category);
             p.register();
             System.out.println("Producto registrado.");
         } else {
@@ -64,21 +69,15 @@ public class Product {
         }
     }
 
-    public static void listarDesdeConsola() {
+    public static void listFromConsole() {
         System.out.println("\n--- PRODUCTOS ---");
-        if (listaProductos.isEmpty()) {
+        if (products.isEmpty()) {
             System.out.println("No hay productos registrados.");
         } else {
-            for (Product p : listaProductos) {
-                System.out.println("- [" + p.getProductId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName()); 
+            for (Product p : products) {
+                System.out.println("- [" + p.getId() + "] " + p.getName() + " | Precio: $" + p.getPrice() + " | Cat: " + p.getCategory().getName());
             }
         }
     }
-
-    // Getters
-    public String getProductId() { return productId; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; } 
-    public Category getCategory() { return category; }
+    
 }

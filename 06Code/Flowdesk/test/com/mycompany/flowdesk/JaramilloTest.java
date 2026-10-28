@@ -21,9 +21,7 @@ import reports.Dashboard;
 import reports.Report;
 import utils.Date;
 
-/**
- * @author Julian Jaramillo, Runtime Dynamics, @ESPE
- */
+
 public class JaramilloTest {
 
     @BeforeEach
@@ -46,7 +44,7 @@ public class JaramilloTest {
     private WorkOrder order(String id, OrderStatus status, double price) {
         WorkOrder result = new WorkOrder(id, new Date(26, 10, 2026), status);
         result.getDetails().add(new OrderDetail("D-" + id, "Banner", 1, "Vinyl", price));
-        result.calcularTotales();
+        result.calculateTotals();
         return result;
     }
 
@@ -68,11 +66,11 @@ public class JaramilloTest {
             list.add(order);
         }
         dashboard.setOrders(list);
-        return capture(dashboard::mostrarDashboard);
+        return capture(dashboard::showDashboard);
     }
 
     private String reportOutput(String option, CashRegister cash) {
-        return capture(() -> Report.generarDesdeConsola(new Scanner(option + "\n"), cash));
+        return capture(() -> Report.generateFromConsole(new Scanner(option + "\n"), cash));
     }
 
     @Test public void testDashboardStartsWithoutOrders() {
@@ -93,33 +91,33 @@ public class JaramilloTest {
     @Test public void testDashboardRejectsEmptyDisplayGracefully() {
         Dashboard dashboard = new Dashboard();
         dashboard.setOrders(new ArrayList<>());
-        String result = capture(dashboard::mostrarDashboard);
+        String result = capture(dashboard::showDashboard);
         assertTrue(result.contains("lista de ordenes esta vacia"));
     }
 
     @Test public void testDashboardCountsOneWaitingOrder() {
         String result = dashboardOutput(order("W1", OrderStatus.WAITING, 10));
-        assertTrue(result.contains("WAITING: 1 orden(es)"));
+        assertTrue(result.contains("En espera: 1 orden(es)"));
     }
 
     @Test public void testDashboardCountsTwoApprovedOrders() {
         String result = dashboardOutput(order("A1", OrderStatus.APPROVED, 10), order("A2", OrderStatus.APPROVED, 20));
-        assertTrue(result.contains("APPROVED: 2 orden(es)"));
+        assertTrue(result.contains("Aprobada: 2 orden(es)"));
     }
 
     @Test public void testDashboardCountsInProgressOrder() {
         String result = dashboardOutput(order("P1", OrderStatus.IN_PROGRESS, 15));
-        assertTrue(result.contains("IN_PROGRESS: 1 orden(es)"));
+        assertTrue(result.contains("En proceso: 1 orden(es)"));
     }
 
     @Test public void testDashboardCountsCompletedOrder() {
         String result = dashboardOutput(order("C1", OrderStatus.COMPLETED, 30));
-        assertTrue(result.contains("COMPLETED: 1 orden(es)"));
+        assertTrue(result.contains("Completada: 1 orden(es)"));
     }
 
     @Test public void testDashboardCountsDeliveredOrder() {
         String result = dashboardOutput(order("D1", OrderStatus.DELIVERED, 30));
-        assertTrue(result.contains("DELIVERED: 1 orden(es)"));
+        assertTrue(result.contains("Entregada: 1 orden(es)"));
     }
 
     @Test public void testDashboardDisplaysTotalOrderCount() {
@@ -129,26 +127,26 @@ public class JaramilloTest {
 
     @Test public void testDashboardListsPendingOrderId() {
         String result = dashboardOutput(order("WO-888", OrderStatus.WAITING, 10));
-        assertTrue(result.contains("[WO-888] Cliente: Ana | Estado: WAITING"));
+        assertTrue(result.contains("[WO-888] Cliente: Ana | Estado: En espera"));
     }
 
     @Test public void testDailyReportSelection() {
         String result = reportOutput("1", new CashRegister());
-        assertTrue(result.contains("REPORTE DAILY DE FLOWDESK"));
+        assertTrue(result.contains("REPORTE Diario DE FLOWDESK"));
     }
 
     @Test public void testWeeklyReportSelection() {
         String result = reportOutput("2", new CashRegister());
-        assertTrue(result.contains("REPORTE WEEKLY DE FLOWDESK"));
+        assertTrue(result.contains("REPORTE Semanal DE FLOWDESK"));
     }
 
     @Test public void testMonthlyReportSelection() {
         String result = reportOutput("3", new CashRegister());
-        assertTrue(result.contains("REPORTE MONTHLY DE FLOWDESK"));
+        assertTrue(result.contains("REPORTE Mensual DE FLOWDESK"));
     }
 
     @Test public void testReportRejectsUnknownOption() {
-        String result = reportOutput("9", new CashRegister());
+        String result = reportOutput("9\n0", new CashRegister());
         assertTrue(result.contains("Opcion no valida"));
     }
 
@@ -254,13 +252,13 @@ public class JaramilloTest {
 
     @Test public void testRegisterPaymentWithoutOrderThrows() {
         Payment payment = new Payment("P1", 10, new Date(26, 10, 2026), PaymentMethod.CASH);
-        assertThrows(IllegalStateException.class, payment::registerPayment);
+        assertThrows(exceptions.InvalidPaymentException.class, payment::registerPayment);
     }
 
     @Test public void testPaymentDetailsIncludeIdAndMethod() {
         Payment payment = new Payment("PAY-77", 10, new Date(26, 10, 2026), PaymentMethod.TRANSFER);
         String result = payment.getPaymentDetails();
         assertAll(() -> assertTrue(result.contains("PAY-77")),
-                  () -> assertTrue(result.contains("TRANSFER")));
+                  () -> assertTrue(result.contains("Transferencia")));
     }
 }

@@ -16,10 +16,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import utils.Date;
 
-/**
- *
- * @author Cristopher Lanchimba, Runtime Dynamic, @ESPE
- */
+
 public class LanchimbaTest {
 
     public LanchimbaTest() {
@@ -111,7 +108,7 @@ public class LanchimbaTest {
         Scanner scanner = new Scanner("manager1\nsecret1\n");
 
         int expResult = 1;
-        User resultUser = User.gestionarAcceso(Role.MANAGER, scanner);
+        User resultUser = User.authenticateFromConsole(Role.MANAGER, scanner);
         int result = User.getAll().size();
 
         assertEquals(expResult, result);
@@ -124,7 +121,7 @@ public class LanchimbaTest {
         Scanner scanner = new Scanner("employee1\nsecret2\n");
 
         int expResult = 1;
-        User resultUser = User.gestionarAcceso(Role.EMPLOYEE, scanner);
+        User resultUser = User.authenticateFromConsole(Role.EMPLOYEE, scanner);
         int result = User.getAll().size();
 
         assertEquals(expResult, result);
@@ -139,7 +136,7 @@ public class LanchimbaTest {
         Scanner scanner = new Scanner("cashier\n321\n");
 
         User expResult = registeredUser;
-        User result = User.gestionarAcceso(Role.CASHIER, scanner);
+        User result = User.authenticateFromConsole(Role.CASHIER, scanner);
 
         assertSame(expResult, result);
     }
@@ -151,7 +148,7 @@ public class LanchimbaTest {
         Scanner scanner = new Scanner("cashier\n999\n");
 
         User expResult = null;
-        User result = User.gestionarAcceso(Role.CASHIER, scanner);
+        User result = User.authenticateFromConsole(Role.CASHIER, scanner);
 
         assertEquals(expResult, result);
     }
@@ -289,6 +286,7 @@ public class LanchimbaTest {
     @Test
     public void testCreateWorkOrder() {
         WorkOrder order = new WorkOrder("WO-102", new Date(25, 10, 2026), OrderStatus.WAITING);
+        order.getDetails().add(new OrderDetail("D1", "Volante", 1, "A4", 5));
         order.create();
 
         int expResult = 1;
@@ -322,7 +320,7 @@ public class LanchimbaTest {
     public void testCalculateOrderTotalSingleDetail() {
         WorkOrder order = new WorkOrder("WO-104", new Date(25, 10, 2026), OrderStatus.WAITING);
         order.getDetails().add(new OrderDetail("D1", "Flyer", 3, "A4", 4.00));
-        order.calcularTotales();
+        order.calculateTotals();
 
         double expResult = 12.00;
         double result = order.getTotal();
@@ -335,7 +333,7 @@ public class LanchimbaTest {
         WorkOrder order = new WorkOrder("WO-105", new Date(25, 10, 2026), OrderStatus.WAITING);
         order.getDetails().add(new OrderDetail("D1", "Flyer", 2, "A4", 10.00));
         order.getDetails().add(new OrderDetail("D2", "Sticker", 1, "Vinyl", 5.50));
-        order.calcularTotales();
+        order.calculateTotals();
 
         double expResult = 25.50;
         double result = order.getTotal();
@@ -346,7 +344,7 @@ public class LanchimbaTest {
     @Test
     public void testCalculateEmptyOrderTotal() {
         WorkOrder order = new WorkOrder("WO-106", new Date(25, 10, 2026), OrderStatus.WAITING);
-        order.calcularTotales();
+        order.calculateTotals();
 
         double expResult = 0.00;
         double result = order.getTotal();
@@ -377,7 +375,7 @@ public class LanchimbaTest {
                 new OrderDetail("D1", "Banner", 1, "Vinyl", 50.00)
         );
 
-        order.calcularTotales();
+        order.calculateTotals();
 
         Payment payment = new Payment(
                 "PAY-1",
@@ -408,7 +406,7 @@ public class LanchimbaTest {
                 new OrderDetail("D1", "Banner", 1, "Vinyl", 50.00)
         );
 
-        order.calcularTotales();
+        order.calculateTotals();
 
         Payment payment = new Payment(
                 "PAY-2",
@@ -424,6 +422,6 @@ public class LanchimbaTest {
         double result = order.getBalance();
 
         assertEquals(expResult, result, 0.001);
-        assertEquals(50.00, order.calcularTotalPagado(), 0.001);
+        assertEquals(50.00, order.calculateTotalPaid(), 0.001);
     }
 }

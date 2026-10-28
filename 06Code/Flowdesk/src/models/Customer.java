@@ -3,6 +3,9 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
 
 public class Customer {
     private String customerId;
@@ -11,7 +14,7 @@ public class Customer {
     private String idNumber;
     private String address;
 
-    private static List<Customer> listaClientes = new ArrayList<>();
+    private static List<Customer> customers = new ArrayList<>();
 
     public Customer(String customerId, String name, String phone, String idNumber, String address) {
         this.customerId = customerId;
@@ -19,21 +22,39 @@ public class Customer {
         this.phone = phone;
         this.idNumber = idNumber;
         this.address = address;
+        validate();
     }
 
     public void register() {
-        listaClientes.add(this);
+        validate();
+        for (Customer existing : customers) {
+            if (Validation.sameIdentifier(existing.customerId, customerId)) {
+                throw new ValidationException("Ya existe un cliente con ese ID.");
+            }
+            if (Validation.sameIdentifier(existing.idNumber, idNumber)) {
+                throw new ValidationException("Ya existe un cliente con esa cedula.");
+            }
+        }
+        customers.add(this);
     }
-    
-    public Customer() { } 
 
-    public static void setAll(List<Customer> nuevaLista) {
-        listaClientes = nuevaLista;
+    void validate() {
+        Validation.requireText(customerId, "identificador del cliente");
+        Validation.requireText(name, "nombre del cliente");
+        Validation.requireText(phone, "telefono");
+        Validation.requireText(idNumber, "cedula");
+        Validation.requireText(address, "direccion");
     }
 
-    public static Customer search(String criterio) {
-        for (Customer c : listaClientes) {
-            if (c.getCustomerId().equalsIgnoreCase(criterio) || c.getIdNumber().equals(criterio)) {
+    public Customer() { }
+
+    public static void setAll(List<Customer> newItems) {
+        customers = newItems;
+    }
+
+    public static Customer search(String searchTerm) {
+        for (Customer c : customers) {
+            if (Validation.sameIdentifier(c.getCustomerId(), searchTerm) || Validation.sameIdentifier(c.getIdNumber(), searchTerm)) {
                 return c;
             }
         }
@@ -41,86 +62,72 @@ public class Customer {
     }
 
     public static List<Customer> getAll() {
-        return listaClientes;
+        return customers;
     }
 
-    public static void menuGestion(Scanner scanner) {
-        boolean volver = false;
-        while (!volver) {
+    public static void showManagementMenu(Scanner scanner) {
+        boolean goBack = false;
+        while (!goBack) {
             System.out.println("\n--- GESTION DE CLIENTES ---");
             System.out.println("1. Registrar nuevo Cliente");
             System.out.println("2. Buscar Cliente");
             System.out.println("3. Listar todos los Clientes");
             System.out.println("0. Volver al menu principal");
-            System.out.print("Opcion: ");
+            int option = ConsoleInput.readOption(scanner, "Opcion: ", 0, 3);
 
-            int opcion;
-            try {
-                opcion = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Ingrese un numero valido.");
-                continue;
-            }
-
-            switch (opcion) {
-                case 1: registrarPorConsola(scanner); break;
-                case 2: buscarPorConsola(scanner); break;
-                case 3: listarPorConsola(); break;
-                case 0: volver = true; break;
+            switch (option) {
+                case 1: ConsoleInput.runAction(() -> registerFromConsole(scanner)); break;
+                case 2: ConsoleInput.runAction(() -> searchFromConsole(scanner)); break;
+                case 3: listFromConsole(); break;
+                case 0: goBack = true; break;
                 default: System.out.println("Opcion no valida.");
             }
         }
     }
 
-    private static void registrarPorConsola(Scanner scanner) {
+    private static void registerFromConsole(Scanner scanner) {
         System.out.println("\n--- REGISTRAR NUEVO CLIENTE ---");
-        System.out.print("ID del Cliente: ");
-        String id = scanner.nextLine();
-        
+        String id = ConsoleInput.readRequiredText(scanner, "ID del Cliente: ");
+
         if (search(id) != null) {
             System.out.println("Error: Ya existe un cliente con ese ID.");
             return;
         }
 
-        System.out.print("Nombre completo: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Telefono: ");
-        String tel = scanner.nextLine();
-        System.out.print("Cedula/DNI: ");
-        String cedula = scanner.nextLine();
-        System.out.print("Direccion: ");
-        String direccion = scanner.nextLine();
+        String name = ConsoleInput.readRequiredText(scanner, "Nombre completo: ");
+        String phone = ConsoleInput.readRequiredText(scanner, "Telefono: ");
+        String nationalId = ConsoleInput.readRequiredText(scanner, "Cedula/DNI: ");
+        String address = ConsoleInput.readRequiredText(scanner, "Direccion: ");
 
-        Customer nuevoCliente = new Customer(id, nombre, tel, cedula, direccion);
-        nuevoCliente.register(); 
+        Customer newCustomer = new Customer(id, name, phone, nationalId, address);
+        newCustomer.register();
         System.out.println("¡Cliente registrado con exito!");
     }
 
-    private static void buscarPorConsola(Scanner scanner) {
+    private static void searchFromConsole(Scanner scanner) {
         System.out.println("\n--- BUSCAR CLIENTE ---");
-        System.out.print("Ingrese el ID o la Cedula del cliente: ");
-        String criterio = scanner.nextLine();
+        String searchTerm = ConsoleInput.readRequiredText(scanner, "Ingrese el ID o la Cedula del cliente: ");
 
-        Customer encontrado = search(criterio); 
+        Customer match = search(searchTerm);
 
-        if (encontrado != null) {
+        if (match != null) {
             System.out.println("\n--- CLIENTE ENCONTRADO ---");
-            System.out.println("ID: " + encontrado.getCustomerId());
-            System.out.println("Nombre: " + encontrado.getName());
-            System.out.println("Telefono: " + encontrado.getPhone());
-            System.out.println("Cedula: " + encontrado.getIdNumber());
-            System.out.println("Direccion: " + encontrado.getAddress());
+            System.out.println("ID: " + match.getCustomerId());
+            System.out.println("Nombre: " + match.getName());
+            System.out.println("Telefono: " + match.getPhone());
+            System.out.println("Cedula: " + match.getIdNumber());
+            System.out.println("Direccion: " + match.getAddress());
         } else {
             System.out.println("Cliente no encontrado.");
         }
     }
 
-    private static void listarPorConsola() {
+    private static void listFromConsole() {
         System.out.println("\n--- LISTA DE CLIENTES ---");
-        if (listaClientes.isEmpty()) {
+        if (customers.isEmpty()) {
             System.out.println("No hay clientes registrados aun.");
         } else {
-            for (Customer c : listaClientes) {
+            for (Customer c : customers) {
                 System.out.println("- [" + c.getCustomerId() + "] " + c.getName() + " | Tel: " + c.getPhone());
             }
         }

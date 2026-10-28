@@ -1,181 +1,182 @@
 package com.mycompany.flowdesk;
 
+import data.DataManager;
 import enums.Role;
-import models.User;
-import models.Customer;
-import models.Category;
-import models.Product;
-import models.Service;
-import models.CashRegister;
-import models.CashMovement;
-import models.WorkOrder;
-import models.Payment;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import models.*;
 import reports.Dashboard;
 import reports.Report;
-import data.DataManager; 
-import java.util.Scanner;
+import utils.ConsoleInput;
+import exceptions.PersistenceException;
+import com.google.gson.JsonParseException;
 
 public class Flowdesk {
-
-    static Scanner scanner = new Scanner(System.in);
-    static CashRegister caja; // <-- Ya no se inicializa aquí
-    static Dashboard dashboard = new Dashboard();
+    private static final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
+    private static final Dashboard dashboard = new Dashboard();
+    private static CashRegister cashRegister;
+    private static boolean exitRequested;
 
     public static void main(String[] args) {
+        configureConsole();
+        try {
+            DataManager.loadAll();
+            cashRegister = DataManager.loadCashRegister();
+        } catch (PersistenceException | JsonParseException exception) {
+            System.out.println("No se pudo iniciar el sistema. Revise los archivos de datos y los permisos de acceso.");
+            return;
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(Flowdesk::saveData));
+        System.out.println("Puede escribir :cancelar para abandonar una operacion.");
+        try {
+            while (!exitRequested) {
+                ConsoleInput.runAction(Flowdesk::startSession);
+            }
+        } catch (NoSuchElementException exception) {
+            System.out.println("\nEntrada finalizada. Saliendo del programa...");
+        }
+    }
 
-        DataManager.cargarTodo();          
-        caja = DataManager.cargarCaja();   
+    private static void configureConsole() {
+        System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
+        System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
+    }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\n[Guardando datos en el disco...]");
-            DataManager.guardarTodo();
-            DataManager.guardarCaja(caja);
+    private static void saveData() {
+        System.out.println("\n[Guardando datos en el disco...]");
+        try {
+            DataManager.saveAll();
+            DataManager.saveCashRegister(cashRegister);
             System.out.println("[Datos guardados exitosamente.]");
-        }));
+        } catch (PersistenceException exception) {
+            System.out.println("Error: " + exception.getMessage());
+        }
+    }
 
-        boolean salirPrograma = false;
+    private static void startSession() {
+        System.out.println("\n--- FLOWDESK - SISTEMA DE GESTION ---");
+        System.out.println("1. Gerente");
+        System.out.println("2. Cajero");
+        System.out.println("3. Empleado");
+        System.out.println("4. Salir del programa");
+        int option = ConsoleInput.readOption(scanner, "Seleccione su rol: ", 1, 4);
+        if (option == 4) {
+            exitRequested = true;
+            return;
+        }
+        Role role = switch (option) {
+            case 1 -> Role.MANAGER;
+            case 2 -> Role.CASHIER;
+            default -> Role.EMPLOYEE;
+        };
+        User user = User.authenticateFromConsole(role, scanner, DataManager::saveUsers);
+        if (user != null) {
+            user.login();
+            showRoleSession(user);
+        }
+    }
 
-        while (!salirPrograma) {
-            System.out.println("\n=============================================");
-            System.out.println("        FLOWDESK - SISTEMA DE GESTION        ");
-            System.out.println("=============================================");
-            System.out.println("1. MANAGER (Gerente)");
-            System.out.println("2. CASHIER (Cajero)");
-            System.out.println("3. EMPLOYEE (Empleado)");
-            System.out.println("4. Salir del programa");
-            System.out.print("Seleccione su rol: ");
-
-            int opcionRol = leerEntero();
-
-            if (opcionRol == 4) {
-                System.out.println("Saliendo del programa...");
-                break; 
-            }
-
-            Role rolSeleccionado = null;
-            switch (opcionRol) {
-                case 1 -> rolSeleccionado = Role.MANAGER;
-                case 2 -> rolSeleccionado = Role.CASHIER;
-                case 3 -> rolSeleccionado = Role.EMPLOYEE;
-                default -> {
-                    System.out.println("Opcion no valida.");
-                    continue;
+    static void showRoleSession(User user) {
+        if (user.getRole() == null) {
+            System.out.println("El usuario no tiene un rol asignado.");
+            return;
+        }
+        int logoutOption = switch (user.getRole()) {
+            case EMPLOYEE -> 6;
+            case CASHIER -> 5;
+            case MANAGER -> 3;
+        };
+        boolean loggedOut = false;
+        while (!loggedOut && !exitRequested) {
+            try {
+                showRoleMenu(user);
+                int option = ConsoleInput.readOption(scanner, "Opcion: ", 1, logoutOption + 1);
+                if (option >= logoutOption) {
+                    user.logout();
+                    loggedOut = true;
+                    exitRequested = option == logoutOption + 1;
+                } else {
+                    ConsoleInput.runAction(() -> executeRoleOption(user, option));
                 }
-            }
-
-            User usuarioLogueado = User.gestionarAcceso(rolSeleccionado, scanner);
-
-            if (usuarioLogueado != null) {
-                usuarioLogueado.login();
-                menuRol(usuarioLogueado);
+            } catch (java.util.concurrent.CancellationException exception) {
+                user.logout();
+                loggedOut = true;
             }
         }
     }
 
-    static void menuRol(User usuario) {
-        boolean cerrarSesion = false;
-
-        while (!cerrarSesion) {
-            System.out.println("\n=============================================");
-            System.out.println("   MENU DE: " + usuario.getRole() + " | Usuario: " + usuario.getUsername());
-            System.out.println("=============================================");
-            
-            if (null == usuario.getRole()) {
+    private static void showRoleMenu(User user) {
+        System.out.println("\n--- MENU DE: " + user.getRole() + " | Usuario: " + user.getUsername() + " ---");
+        switch (user.getRole()) {
+            case EMPLOYEE -> {
+                System.out.println("1. Gestionar Clientes");
+                System.out.println("2. Gestionar Productos y Servicios");
+                System.out.println("3. Crear Nueva Orden de Trabajo");
+                System.out.println("4. Actualizar Estado de Orden");
+                System.out.println("5. Ver Panel de control de Ordenes");
+                System.out.println("6. Cerrar Sesion");
+                System.out.println("7. Salir del programa");
+            }
+            case CASHIER -> {
+                System.out.println("1. Registrar Movimiento de Caja Manual");
+                System.out.println("2. Registrar Pago de Orden");
+                System.out.println("3. Ver Estado de Caja");
+                System.out.println("4. Historial de Movimientos");
+                System.out.println("5. Cerrar Sesion");
+                System.out.println("6. Salir del programa");
+            }
+            case MANAGER -> {
                 System.out.println("1. Generar Reporte");
                 System.out.println("2. Ver Estado de Caja");
                 System.out.println("3. Cerrar Sesion");
                 System.out.println("4. Salir del programa");
-                System.out.print("Opcion: ");
-
-                int opcionMenu = leerEntero();
-                switch (opcionMenu) {
-                    case 1 -> Report.generarDesdeConsola(scanner, caja);
-                    case 2 -> caja.imprimirEstado();
-                    case 3 -> {
-                        usuario.logout(); cerrarSesion = true;
-                    }
-                    case 4 -> {
-                        usuario.logout(); System.exit(0);
-                    }
-                    default -> System.out.println("Opcion no valida.");
-                }
-            } 
-            else 
-            switch (usuario.getRole()) {
-                case EMPLOYEE ->                     {
-                        System.out.println("1. Gestionar Clientes");
-                        System.out.println("2. Gestionar Productos y Servicios");
-                        System.out.println("3. Crear Nueva Orden de Trabajo");
-                        System.out.println("4. Actualizar Estado de Orden");
-                        System.out.println("5. Ver Dashboard de Ordenes (US003)");
-                        System.out.println("6. Cerrar Sesion");
-                        System.out.println("7. Salir del programa");
-                        System.out.print("Opcion: ");
-                        int opcionMenu = leerEntero();
-                        switch (opcionMenu) {
-                            case 1 -> Customer.menuGestion(scanner);
-                            case 2 -> menuCatalogo(scanner);
-                            case 3 -> WorkOrder.registrarDesdeConsola(scanner, usuario);
-                            case 4 -> WorkOrder.actualizarEstadoDesdeConsola(scanner);
-                            case 5 -> {
-                                dashboard.setOrders(WorkOrder.getAll());
-                                dashboard.mostrarDashboard();
-                            }
-                            case 6 -> {
-                                usuario.logout(); cerrarSesion = true;
-                            }
-                            case 7 -> {
-                                usuario.logout(); System.exit(0);
-                            }
-                            default -> System.out.println("Opcion no valida.");
-                        }                          }
-                case CASHIER ->                     {
-                        System.out.println("1. Registrar Movimiento de Caja Manual");
-                        System.out.println("2. Registrar Pago de Orden");
-                        System.out.println("3. Ver Estado de Caja");
-                        System.out.println("4. Historial de Movimientos");
-                        System.out.println("5. Cerrar Sesion");
-                        System.out.println("6. Salir del programa");
-                        System.out.print("Opcion: ");
-                        int opcionMenu = leerEntero();
-                        switch (opcionMenu) {
-                            case 1 -> CashMovement.registrarDesdeConsola(scanner, caja);
-                            case 2 -> Payment.registrarDesdeConsola(scanner, caja);
-                            case 3 -> caja.imprimirEstado();
-                            case 4 -> CashMovement.listarDesdeConsola();
-                            case 5 -> {
-                                usuario.logout(); cerrarSesion = true;
-                            }
-                            case 6 -> {
-                                usuario.logout(); System.exit(0);
-                            }
-                            default -> System.out.println("Opcion no valida.");
-                        }                          }
-                default ->                     {
-                        System.out.println("1. Generar Reporte");
-                        System.out.println("2. Ver Estado de Caja");
-                        System.out.println("3. Cerrar Sesion");
-                        System.out.println("4. Salir del programa");
-                        System.out.print("Opcion: ");
-                        int opcionMenu = leerEntero();
-                        switch (opcionMenu) {
-                            case 1 -> Report.generarDesdeConsola(scanner, caja);
-                            case 2 -> caja.imprimirEstado();
-                            case 3 -> {
-                                usuario.logout(); cerrarSesion = true;
-                            }
-                            case 4 -> {
-                                usuario.logout(); System.exit(0);
-                            }
-                            default -> System.out.println("Opcion no valida.");
-                        }                          }
             }
         }
     }
 
-    static void menuCatalogo(Scanner scanner) {
-        boolean volver = false;
-        while (!volver) {
+    private static void executeRoleOption(User user, int option) {
+        switch (user.getRole()) {
+            case EMPLOYEE -> executeEmployeeOption(user, option);
+            case CASHIER -> executeCashierOption(option);
+            case MANAGER -> executeManagerOption(option);
+        }
+    }
+
+    private static void executeEmployeeOption(User user, int option) {
+        switch (option) {
+            case 1 -> Customer.showManagementMenu(scanner);
+            case 2 -> showCatalogMenu(scanner);
+            case 3 -> WorkOrder.registerFromConsole(scanner, user);
+            case 4 -> WorkOrder.updateStatusFromConsole(scanner);
+            case 5 -> showDashboard();
+        }
+    }
+
+    private static void executeCashierOption(int option) {
+        switch (option) {
+            case 1 -> CashMovement.registerFromConsole(scanner, cashRegister);
+            case 2 -> Payment.registerFromConsole(scanner, cashRegister);
+            case 3 -> cashRegister.printStatus();
+            case 4 -> CashMovement.listFromConsole();
+        }
+    }
+
+    private static void executeManagerOption(int option) {
+        switch (option) {
+            case 1 -> Report.generateFromConsole(scanner, cashRegister);
+            case 2 -> cashRegister.printStatus();
+        }
+    }
+
+    private static void showDashboard() {
+        dashboard.setOrders(WorkOrder.getAll());
+        dashboard.showDashboard();
+    }
+
+    public static void showCatalogMenu(Scanner input) {
+        while (true) {
             System.out.println("\n--- GESTION DE CATALOGO ---");
             System.out.println("1. Registrar nueva Categoria");
             System.out.println("2. Registrar Producto");
@@ -183,26 +184,19 @@ public class Flowdesk {
             System.out.println("4. Listar Productos");
             System.out.println("5. Listar Servicios");
             System.out.println("0. Volver");
-            System.out.print("Opcion: ");
-
-            int opcion = leerEntero();
-            switch (opcion) {
-                case 1 -> Category.registrarDesdeConsola(scanner);
-                case 2 -> Product.registrarDesdeConsola(scanner);
-                case 3 -> Service.registrarDesdeConsola(scanner);
-                case 4 -> Product.listarDesdeConsola();
-                case 5 -> Service.listarDesdeConsola();
-                case 0 -> volver = true;
-                default -> System.out.println("Opcion no valida.");
-            }
+            int option = ConsoleInput.readOption(input, "Opcion: ", 0, 5);
+            if (option == 0) return;
+            ConsoleInput.runAction(() -> executeCatalogOption(input, option));
         }
     }
 
-    static int leerEntero() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            return -1;
+    private static void executeCatalogOption(Scanner input, int option) {
+        switch (option) {
+            case 1 -> Category.registerFromConsole(input);
+            case 2 -> Product.registerFromConsole(input);
+            case 3 -> Service.registerFromConsole(input);
+            case 4 -> Product.listFromConsole();
+            case 5 -> Service.listFromConsole();
         }
     }
 }

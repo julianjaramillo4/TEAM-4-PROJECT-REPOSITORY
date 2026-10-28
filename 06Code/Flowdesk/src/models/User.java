@@ -4,6 +4,10 @@ import enums.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import utils.ConsoleInput;
+import utils.Validation;
+import exceptions.ValidationException;
+import exceptions.PersistenceException;
 
 public class User {
 
@@ -12,7 +16,7 @@ public class User {
     private String protectedPassword;
     private Role role;
 
-    private static List<User> listaUsuarios = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
 
     public User() { }
 
@@ -21,59 +25,98 @@ public class User {
         this.username = username;
         this.protectedPassword = protectedPassword;
         this.role = role;
+        validate();
     }
 
-    public static List<User> getAll() {
-        return listaUsuarios;
+    private void validate() {
+        Validation.requireText(userId, "identificador del usuario");
+        Validation.requireText(username, "nombre de usuario");
+        Validation.requireText(protectedPassword, "contrasena");
+        Validation.requireValue(role, "rol");
     }
 
-    public static void setAll(List<User> nuevaLista) {
-        listaUsuarios = nuevaLista;
+    public void register() {
+        validate();
+        if (users.contains(this)) {
+            throw new ValidationException("El usuario ya fue registrado.");
+        }
+        requireUniqueIdentity(userId, username, role);
+        users.add(this);
     }
 
-    public static User gestionarAcceso(Role rolSeleccionado, Scanner scanner) {
-        User usuarioExistente = buscarPorRol(rolSeleccionado);
-
-        if (usuarioExistente == null) {
-            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + rolSeleccionado + " ---");
-            System.out.print("Cree un nuevo Usuario: ");
-            String nuevoUser = scanner.nextLine();
-
-            System.out.print("Cree una Contrasena: ");
-            String nuevaPass = scanner.nextLine();
-
-            User nuevo = new User(
-                    "U_" + rolSeleccionado,
-                    nuevoUser,
-                    nuevaPass,
-                    rolSeleccionado
-            );
-
-            listaUsuarios.add(nuevo);
-
-            System.out.println("Cuenta creada con exito!");
-            return nuevo;
-            
-        } else {
-            System.out.println("\n--- INICIO DE SESION: " + rolSeleccionado + " ---");
-            System.out.print("Usuario: ");
-            String userInput = scanner.nextLine();
-
-            System.out.print("Contrasena: ");
-            String passInput = scanner.nextLine();
-
-            if (usuarioExistente.validateCredentials(userInput, passInput)) {
-                return usuarioExistente;
-            } else {
-                System.out.println("Acceso denegado. Credenciales incorrectas.\n");
-                return null; 
+    private void requireUniqueIdentity(String candidateId, String candidateName, Role candidateRole) {
+        for (User existing : users) {
+            if (existing == this) {
+                continue;
+            }
+            if (Validation.sameIdentifier(existing.userId, candidateId)
+                    || Validation.sameIdentifier(existing.username, candidateName)) {
+                throw new ValidationException("Ya existe un usuario con ese ID o nombre.");
+            }
+            if (existing.role == candidateRole) {
+                throw new ValidationException("Ya existe una cuenta para ese rol.");
             }
         }
     }
 
-    private static User buscarPorRol(Role rol) {
-        for (User u : listaUsuarios) {
-            if (u.getRole() == rol) {
+    public static List<User> getAll() {
+        return users;
+    }
+
+    public static void setAll(List<User> newItems) {
+        users = newItems;
+    }
+
+    public static User authenticateFromConsole(Role selectedRole, Scanner scanner) {
+        return authenticateFromConsole(selectedRole, scanner, () -> { });
+    }
+
+    public static User authenticateFromConsole(Role selectedRole, Scanner scanner, Runnable saveAccounts) {
+        Validation.requireValue(selectedRole, "rol");
+        User existingUser = findByRole(selectedRole);
+
+        if (existingUser == null) {
+            System.out.println("\n--- PRIMER INGRESO: CONFIGURAR CUENTA PARA " + selectedRole + " ---");
+            String newUsername = ConsoleInput.readRequiredText(scanner, "Cree un nuevo Usuario: ");
+
+            String newPassword = ConsoleInput.readRequiredText(scanner, "Cree una Contrasena: ");
+
+            User newUser = new User(
+                    "U_" + selectedRole.name(),
+                    newUsername,
+                    newPassword,
+                    selectedRole
+            );
+
+            newUser.register();
+            try {
+                saveAccounts.run();
+            } catch (PersistenceException exception) {
+                users.remove(newUser);
+                throw exception;
+            }
+
+            System.out.println("Cuenta creada con exito!");
+            return newUser;
+
+        } else {
+            System.out.println("\n--- INICIO DE SESION: " + selectedRole + " ---");
+            String userInput = ConsoleInput.readRequiredText(scanner, "Usuario: ");
+
+            String passInput = ConsoleInput.readRequiredText(scanner, "Contrasena: ");
+
+            if (existingUser.validateCredentials(userInput, passInput)) {
+                return existingUser;
+            } else {
+                System.out.println("Acceso denegado. Credenciales incorrectas.\n");
+                return null;
+            }
+        }
+    }
+
+    private static User findByRole(Role role) {
+        for (User u : users) {
+            if (u.getRole() == role) {
                 return u;
             }
         }
@@ -97,6 +140,8 @@ public class User {
     }
 
     public void setUserId(String userId) {
+        Validation.requireText(userId, "identificador del usuario");
+        requireUniqueIdentity(userId, username, role);
         this.userId = userId;
     }
 
@@ -105,6 +150,8 @@ public class User {
     }
 
     public void setUsername(String username) {
+        Validation.requireText(username, "nombre de usuario");
+        requireUniqueIdentity(userId, username, role);
         this.username = username;
     }
 
@@ -113,6 +160,7 @@ public class User {
     }
 
     public void setProtectedPassword(String protectedPassword) {
+        Validation.requireText(protectedPassword, "contrasena");
         this.protectedPassword = protectedPassword;
     }
 
@@ -121,16 +169,18 @@ public class User {
     }
 
     public void setRole(Role role) {
+        Validation.requireValue(role, "rol");
+        requireUniqueIdentity(userId, username, role);
         this.role = role;
     }
 
     @Override
     public String toString() {
-        return "User{"
-                + "userId=" + userId
-                + ", username=" + username
-                + ", protectedPassword=[PROTECTED]"
-                + ", role=" + role
+        return "Usuario{"
+                + "identificador=" + userId
+                + ", usuario=" + username
+                + ", contrasena=[OCULTA]"
+                + ", rol=" + role
                 + '}';
     }
 }
