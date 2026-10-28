@@ -4,5 +4,11 @@
     "username": "Gerente",
     "password": "Genrente",
     "role": "MANAGER"
+  },
+  {
+    "userId": "U_MANAGER_1793194507933",
+    "username": "Daniel Lanchimba",
+    "password": "200603",
+    "role": "MANAGER"
   }
 ]
