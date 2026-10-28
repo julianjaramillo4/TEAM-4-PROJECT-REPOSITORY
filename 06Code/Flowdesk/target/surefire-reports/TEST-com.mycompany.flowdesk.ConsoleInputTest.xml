@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.mycompany.flowdesk.ConsoleInputTest" time="0.056" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.mycompany.flowdesk.ConsoleInputTest" time="0.091" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,8 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="EC"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21.0.12\bin"/>
-    <property name="sun.java.command" value="C:\Users\CRIS\AppData\Local\Temp\surefire9369156479148035806\surefirebooter-20261028083250619_3.jar C:\Users\CRIS\AppData\Local\Temp\surefire9369156479148035806 2026-10-28T08-32-49_913-jvmRun1 surefire-20261028083250619_1tmp surefire_0-20261028083250619_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\CRIS\AppData\Local\Temp\surefire8171459629818799331\surefirebooter-20261028084601240_3.jar C:\Users\CRIS\AppData\Local\Temp\surefire8171459629818799331 2026-10-28T08-46-01_075-jvmRun1 surefire-20261028084601240_1tmp surefire_0-20261028084601240_2tmp"/>
     <property name="jdk.debug" value="release"/>
+    <property name="test" value="AccountPersistenceTest,ConsoleInputTest"/>
     <property name="surefire.test.class.path" value="C:\Users\CRIS\Dev\universidad\oop\TEAM-4-PROJECT-CLEAN\06Code\Flowdesk\target\test-classes;C:\Users\CRIS\Dev\universidad\oop\TEAM-4-PROJECT-CLEAN\06Code\Flowdesk\target\classes;C:\Users\CRIS\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\CRIS\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\CRIS\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\CRIS\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\CRIS\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\CRIS\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\CRIS\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\CRIS\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\CRIS"/>
@@ -30,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\CRIS\AppData\Local\Temp\surefire9369156479148035806\surefirebooter-20261028083250619_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\CRIS\AppData\Local\Temp\surefire8171459629818799331\surefirebooter-20261028084601240_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.12+7-LTS-205"/>
@@ -58,11 +59,11 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="exhaustedInputDoesNotRetryForever" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+  <testcase name="exhaustedInputDoesNotRetryForever" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.008">
     <system-out><![CDATA[Opcion: Ingrese un numero entero valido.
 Opcion: ]]></system-out>
   </testcase>
-  <testcase name="orderCreationRetriesInvalidQuantityAndMenuOption" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.018">
+  <testcase name="orderCreationRetriesInvalidQuantityAndMenuOption" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.041">
     <system-out><![CDATA[
 --- CREAR NUEVA ORDEN DE TRABAJO ---
 Numero de Orden generado: WO-001
@@ -87,7 +88,7 @@ Opcion:
 Total a pagar: $5.0
 ]]></system-out>
   </testcase>
-  <testcase name="cancelledCustomerFormReturnsToMenuWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+  <testcase name="cancelledCustomerFormReturnsToMenuWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.006">
     <system-out><![CDATA[
 --- GESTION DE CLIENTES ---
 1. Registrar nuevo Cliente
@@ -105,12 +106,12 @@ ID del Cliente: Nombre completo: Operacion cancelada.
 0. Volver al menu principal
 Opcion: ]]></system-out>
   </testcase>
-  <testcase name="integerLimitsAreAcceptedAfterOverflowIsRejected" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+  <testcase name="integerLimitsAreAcceptedAfterOverflowIsRejected" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.0">
     <system-out><![CDATA[Entero: Ingrese un numero entero valido.
 Entero: Entero: Ingrese un numero entero valido.
 Entero: ]]></system-out>
   </testcase>
-  <testcase name="rejectsNonFiniteNegativeAndMalformedAmounts" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+  <testcase name="rejectsNonFiniteNegativeAndMalformedAmounts" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.003">
     <system-out><![CDATA[Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
 Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
 Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
@@ -118,15 +119,15 @@ Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
 Precio: Ingrese un monto valido mayor o igual a 0 (use punto decimal).
 Precio: Precio: ]]></system-out>
   </testcase>
-  <testcase name="cancellationWorksForEveryReader" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.0">
+  <testcase name="cancellationWorksForEveryReader" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.004">
     <system-out><![CDATA[Texto: Cantidad: Monto: ]]></system-out>
   </testcase>
-  <testcase name="cancellationAfterInvalidAmountLeavesFollowingMenuOptionAvailable" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.0">
+  <testcase name="cancellationAfterInvalidAmountLeavesFollowingMenuOptionAvailable" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
     <system-out><![CDATA[Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
 Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
 Monto: Opcion: ]]></system-out>
   </testcase>
-  <testcase name="cancelledCatalogFormReturnsToCatalogWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.007">
+  <testcase name="cancelledCatalogFormReturnsToCatalogWithoutSaving" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.006">
     <system-out><![CDATA[
 --- GESTION DE CATALOGO ---
 1. Registrar nueva Categoria
@@ -146,7 +147,7 @@ Opcion: ID Categoria: Nombre Categoria: Operacion cancelada.
 0. Volver
 Opcion: ]]></system-out>
   </testcase>
-  <testcase name="optionBoundsAreInclusiveAndDoNotConsumeFollowingField" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+  <testcase name="optionBoundsAreInclusiveAndDoNotConsumeFollowingField" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.0">
     <system-out><![CDATA[Opcion: Opcion: Nombre: ]]></system-out>
   </testcase>
   <testcase name="retriesNonPositiveQuantities" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
@@ -155,11 +156,11 @@ Cantidad: Ingrese un entero mayor a 0.
 Cantidad: Ingrese un numero entero valido.
 Cantidad: ]]></system-out>
   </testcase>
-  <testcase name="positiveAmountRetriesZero" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
+  <testcase name="positiveAmountRetriesZero" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.0">
     <system-out><![CDATA[Monto: Ingrese un monto valido mayor a 0 (use punto decimal).
 Monto: ]]></system-out>
   </testcase>
-  <testcase name="retriesMalformedOverflowAndOutOfRangeOptions" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.001">
+  <testcase name="retriesMalformedOverflowAndOutOfRangeOptions" classname="com.mycompany.flowdesk.ConsoleInputTest" time="0.002">
     <system-out><![CDATA[Opcion: Ingrese un numero entero valido.
 Opcion: Ingrese un numero entero valido.
 Opcion: Opcion no valida. Ingrese un numero entre 0 y 3.

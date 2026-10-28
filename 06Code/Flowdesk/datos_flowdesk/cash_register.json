@@ -1,10 +1,11 @@
 {
+  "income": 110.0,
   "expenses": 12.0,
   "movements": [
     {
-      "amount": 100.0,
       "movementId": "DEMO-M001",
       "type": "INCOME",
+      "amount": 100.0,
       "date": {
         "day": 28,
         "month": 10,
@@ -14,9 +15,9 @@
       "paymentMethod": "CASH"
     },
     {
-      "amount": 12.0,
       "movementId": "DEMO-M002",
       "type": "EXPENSE",
+      "amount": 12.0,
       "date": {
         "day": 28,
         "month": 10,
@@ -26,9 +27,9 @@
       "paymentMethod": "CASH"
     },
     {
-      "amount": 10.0,
       "movementId": "MOV-DEMO-PAGO001",
       "type": "INCOME",
+      "amount": 10.0,
       "date": {
         "day": 28,
         "month": 10,
@@ -37,6 +38,5 @@
       "reason": "Pago Orden WO-1",
       "paymentMethod": "CASH"
     }
-  ],
-  "income": 110.0
+  ]
 }

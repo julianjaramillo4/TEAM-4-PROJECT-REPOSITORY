@@ -1,0 +1,14 @@
+[
+  {
+    "userId": "U_EMPLOYEE",
+    "username": "joquin loza",
+    "password": "20000004",
+    "role": "EMPLOYEE"
+  },
+  {
+    "userId": "U_MANAGER",
+    "username": "julian",
+    "password": "123",
+    "role": "MANAGER"
+  }
+]
