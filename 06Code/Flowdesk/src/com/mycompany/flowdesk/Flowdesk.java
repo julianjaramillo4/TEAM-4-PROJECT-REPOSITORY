@@ -12,6 +12,7 @@ import reports.Report;
 import utils.ConsoleInput;
 import exceptions.PersistenceException;
 import com.google.gson.JsonParseException;
+import reports.ReportGenerator;
 
 public class Flowdesk {
     private static final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
@@ -165,14 +166,14 @@ public class Flowdesk {
 
     private static void executeManagerOption(int option) {
         switch (option) {
-            case 1 -> Report.generateFromConsole(scanner, cashRegister);
+            case 1 -> ReportGenerator.generarReporteGeneral(WorkOrder.getAll(), cashRegister.getMovements());
             case 2 -> cashRegister.printStatus();
         }
     }
 
     private static void showDashboard() {
         dashboard.setOrders(WorkOrder.getAll());
-        dashboard.showDashboard();
+        dashboard.mostrarDashboard();
     }
 
     public static void showCatalogMenu(Scanner input) {
