@@ -3,6 +3,7 @@ package models;
 import enums.Role;
 import exceptions.ValidationException;
 import utils.Validation;
+import utils.ConsoleInput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -122,17 +123,15 @@ public class User {
 
     public static User authenticateFromConsole(Role role, Scanner scanner, Runnable saveCallback) {
         System.out.println("\n--- INICIO DE SESION: " + role + " ---");
-        System.out.print("Usuario: ");
-        String username = scanner.nextLine().trim();
-        System.out.print("Contrasena: ");
-        String password = scanner.nextLine().trim();
-
-        if (username.isEmpty()) {
-            username = "admin";
-        }
+        String username = ConsoleInput.readRequiredText(scanner, "Usuario: ").trim();
+        String password = ConsoleInput.readRequiredText(scanner, "Contrasena: ").trim();
 
         for (User u : users) {
             if (u.getUsername().equals(username)) {
+                if (u.getRole() != role) {
+                    System.out.println("El usuario no pertenece al rol seleccionado.");
+                    return null;
+                }
                 if (u.getPassword().equals(password)) {
                     return u;
                 } else {
