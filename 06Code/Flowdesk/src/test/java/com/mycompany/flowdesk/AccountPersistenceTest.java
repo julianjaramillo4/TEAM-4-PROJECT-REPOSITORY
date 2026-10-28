@@ -43,7 +43,7 @@ class AccountPersistenceTest {
     void accountIsSavedBeforeFirstLoginReturns() throws Exception {
         User user = User.authenticateFromConsole(Role.EMPLOYEE,
                 new Scanner("niño\ncontraseña\n"), DataManager::saveUsers);
-        assertTrue(Files.exists(directory.resolve("usuarios.json")));
+        assertTrue(Files.exists(directory.resolve("users.json")));
         User.setAll(new ArrayList<>());
         DataManager.loadUsers();
         assertEquals(user.getUserId(), User.getAll().get(0).getUserId());
@@ -79,7 +79,7 @@ class AccountPersistenceTest {
     @Test
     void malformedAccountFileIsPreservedAndExistingMemoryIsRestored() throws Exception {
         new User("U1", "manager", "secret", Role.MANAGER).register();
-        Path file = directory.resolve("usuarios.json");
+        Path file = directory.resolve("users.json");
         Files.writeString(file, "{broken", StandardCharsets.UTF_8);
         assertThrows(PersistenceException.class, DataManager::loadUsers);
         assertEquals("{broken", Files.readString(file, StandardCharsets.UTF_8));
@@ -89,7 +89,7 @@ class AccountPersistenceTest {
 
     @Test
     void invalidAccountDataIsRejectedWithoutRecreatingAccounts() throws Exception {
-        Path file = directory.resolve("usuarios.json");
+        Path file = directory.resolve("users.json");
         Files.writeString(file, "[{}]", StandardCharsets.UTF_8);
         assertThrows(PersistenceException.class, DataManager::loadUsers);
         assertEquals("[{}]", Files.readString(file, StandardCharsets.UTF_8));

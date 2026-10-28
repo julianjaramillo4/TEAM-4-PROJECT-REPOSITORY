@@ -19,10 +19,8 @@ public abstract class CatalogItem {
 
     public CatalogItem() { }
 
-    // Método polimórfico solicitado
     public abstract String getItemType();
 
-    // Lógica de validación común
     protected void validateCommon() {
         Validation.requireText(id, "identificador");
         Validation.requireText(name, "nombre");
@@ -32,14 +30,12 @@ public abstract class CatalogItem {
         category.validate();
     }
 
-    // Getters
     public String getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
     public double getPrice() { return price; }
     public Category getCategory() { return category; }
 
-    // Setters necesarios para Gson (si los usas)
     public void setId(String id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }

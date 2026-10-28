@@ -16,7 +16,6 @@ public class Dashboard {
     }
 
     public void setOrders(List<WorkOrder> ordenes) {
-        // No hacemos copia para respetar el assertSame del test
         this.ordenesDelReporte = ordenes;
     }
 

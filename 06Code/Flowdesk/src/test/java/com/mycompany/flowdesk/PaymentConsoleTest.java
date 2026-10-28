@@ -124,7 +124,6 @@ class PaymentConsoleTest {
 
     @Test
     void alreadyPaidOrderRejectsAnotherPaymentBeforeAskingForAmount() {
-        // CORREGIDO
         Payment p = new Payment("P1", 100, new Date(27, 10, 2026), PaymentMethod.CASH);
         p.setWorkOrder(order);
         p.registerPayment(cashRegister);
@@ -138,7 +137,6 @@ class PaymentConsoleTest {
 
     @Test
     void successiveInstallmentsAndFinalPaymentPreserveTotalsAndRejectDuplicate() {
-        // CORREGIDO
         Payment first = new Payment("P1", 25, new Date(27, 10, 2026), PaymentMethod.CASH);
         first.setWorkOrder(order);
         first.registerPayment(cashRegister);

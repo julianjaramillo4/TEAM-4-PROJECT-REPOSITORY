@@ -44,7 +44,6 @@ public class User {
     public String getPassword() { return password; }
     public Role getRole() { return role; }
 
-    // --- SETTERS CON PROTECCIÓN CONTRA DUPLICADOS ---
     
     public void setUserId(String userId) {
         if (users.contains(this)) {
@@ -72,8 +71,6 @@ public class User {
 
     public void setPassword(String password) { this.password = password; }
     public void setRole(Role role) { this.role = role; }
-
-    // --- REGISTRO ---
 
     public void register() {
         validate();
@@ -147,7 +144,6 @@ public class User {
 
         String newUserId = "U_" + role.name();
         
-        // Validación para evitar IDs duplicados si ya existe alguien con ese rol en memoria
         for (User u : users) {
             if (u.getUserId() != null && u.getUserId().equals(newUserId)) {
                 newUserId = newUserId + "_" + System.currentTimeMillis();
@@ -162,7 +158,7 @@ public class User {
             try {
                 saveCallback.run();
             } catch (RuntimeException e) {
-                users.remove(newUser); // Rollback si falla el guardado
+                users.remove(newUser);
                 throw e;
             }
         }

@@ -26,6 +26,7 @@ public class Flowdesk {
             cashRegister = DataManager.loadCashRegister();
         } catch (PersistenceException | JsonParseException exception) {
             System.out.println("No se pudo iniciar el sistema. Revise los archivos de datos.");
+            exception.printStackTrace();
             return;
         }
         Runtime.getRuntime().addShutdownHook(new Thread(Flowdesk::saveData));
@@ -165,14 +166,14 @@ public class Flowdesk {
 
     private static void executeManagerOption(int option) {
         switch (option) {
-            case 1 -> ReportGenerator.generarReporteGeneral(WorkOrder.getAll(), cashRegister.getMovements());
+            case 1 -> ReportGenerator.generateGeneralReport(WorkOrder.getAll(), cashRegister.getMovements());
             case 2 -> cashRegister.printStatus();
         }
     }
 
     private static void showDashboard() {
         dashboard.setOrders(WorkOrder.getAll());
-        System.out.println(dashboard);
+        dashboard.showDashboard();
     }
 
     public static void showCatalogMenu(Scanner input) {

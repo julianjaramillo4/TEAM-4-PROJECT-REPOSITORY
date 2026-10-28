@@ -76,11 +76,11 @@ public class Customer {
             int option = ConsoleInput.readOption(scanner, "Opcion: ", 0, 3);
 
             switch (option) {
-                case 1: ConsoleInput.runAction(() -> registerFromConsole(scanner)); break;
-                case 2: ConsoleInput.runAction(() -> searchFromConsole(scanner)); break;
-                case 3: listFromConsole(); break;
-                case 0: goBack = true; break;
-                default: System.out.println("Opcion no valida.");
+                case 1 -> ConsoleInput.runAction(() -> registerFromConsole(scanner));
+                case 2 -> ConsoleInput.runAction(() -> searchFromConsole(scanner));
+                case 3 -> listFromConsole();
+                case 0 -> goBack = true;
+                default -> System.out.println("Opcion no valida.");
             }
         }
     }

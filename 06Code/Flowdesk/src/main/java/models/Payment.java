@@ -18,7 +18,7 @@ public class Payment {
     private CashMovement cashMovement;
     private transient boolean registered;
     
-    // NUEVO: Guardamos la referencia directa para evitar fallos de búsqueda
+
     private transient WorkOrder workOrderRef; 
 
     public Payment() { }
@@ -34,7 +34,7 @@ public class Payment {
         requireEditable();
         if (workOrder != null) {
             this.orderId = workOrder.getOrderId();
-            this.workOrderRef = workOrder; // Guardamos la referencia
+            this.workOrderRef = workOrder; 
         } else {
             this.orderId = null;
             this.workOrderRef = null;
@@ -42,7 +42,7 @@ public class Payment {
     }
 
     public WorkOrder getWorkOrder() {
-        if (workOrderRef != null) return workOrderRef; // Priorizamos la referencia directa
+        if (workOrderRef != null) return workOrderRef; 
         if (orderId == null) return null;
         for (WorkOrder wo : WorkOrder.getAll()) {
             if (Validation.sameIdentifier(wo.getOrderId(), orderId)) {
@@ -122,7 +122,6 @@ public class Payment {
 
     public boolean validateAmount() {
         WorkOrder wo = getWorkOrder();
-        // Se agrega validación por si acaso la orden no ha calculado sus totales aún
         if (wo != null) {
             wo.calculateTotals(); 
         }
