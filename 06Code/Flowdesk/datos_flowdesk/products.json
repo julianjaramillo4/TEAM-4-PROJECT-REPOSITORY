@@ -378,5 +378,16 @@
       "name": "Promoción adhesivos",
       "description": "Tarifas promocionales de adhesivos por rango de unidades."
     }
+  },
+  {
+    "id": "1",
+    "name": "copias",
+    "description": "copias mediante impresora ",
+    "price": 150.0,
+    "category": {
+      "categoryId": "CAT-XRX-01",
+      "name": "Impresión bond",
+      "description": "Impresión en papel bond."
+    }
   }
 ]

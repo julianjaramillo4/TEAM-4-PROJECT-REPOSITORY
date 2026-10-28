@@ -1,28 +1,5 @@
 [
   {
-    "orderId": "WO-002",
-    "date": {
-      "day": 24,
-      "month": 10,
-      "year": 2026
-    },
-    "total": 0.0,
-    "balance": 0.0,
-    "status": "WAITING",
-    "customer": {
-      "customerId": "1",
-      "name": "jely jaramillo",
-      "phone": "0968391828",
-      "idNumber": "1752483436",
-      "address": "Quito Sur"
-    },
-    "details": [],
-    "payments": [],
-    "user": {
-      "userId": "U_EMPLOYEE",
-      "username": "julian",
-      "protectedPassword": "123",
-      "role": "EMPLOYEE"
-    }
+    "price": 0.0
   }
 ]

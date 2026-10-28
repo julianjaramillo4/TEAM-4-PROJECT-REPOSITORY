@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/reports/CsvExporter.java</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/com/mycompany/flowdesk/Flowdesk.java</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/reports/Report.java</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/src/models/User.java</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/reportes/reporte_movimientos_20261027_225540.csv</file>
+            <file>file:/C:/Users/JULIAN/TEAM-4-PROJECT-REPOSITORY/06Code/Flowdesk/reportes/reporte_ordenes_20261027_225540.csv</file>
         </group>
     </open-files>
 </project-private>
