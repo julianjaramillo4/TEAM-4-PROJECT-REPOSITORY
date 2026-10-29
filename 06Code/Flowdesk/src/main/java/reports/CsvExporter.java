@@ -40,7 +40,7 @@ public class CsvExporter {
         return field;
     }
 
-    public static String exportOrdersToCsv(List<WorkOrder> ordenes) {
+    public static String exportOrdersToCsv(List<WorkOrder> orders) {
         ensureDirectoryExists();
         String timestamp =
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
@@ -52,10 +52,10 @@ public class CsvExporter {
                                 new FileOutputStream(fileName), StandardCharsets.UTF_8))) {
             writer.println("ID,Fecha,Cliente,Estado,Total,Pagado,Saldo");
 
-            if (ordenes != null) {
-                int contador = 1;
-                for (WorkOrder orden : ordenes) {
-                    String id = escapeCsvField("ORD-" + (contador++));
+            if (orders != null) {
+                int counter = 1;
+                for (WorkOrder order : orders) {
+                    String id = escapeCsvField("ORD-" + (counter++));
                     String fecha =
                             escapeCsvField(
                                     LocalDateTime.now()
@@ -64,14 +64,14 @@ public class CsvExporter {
                                                             "dd/MM/yyyy HH:mm")));
                     String cliente =
                             escapeCsvField(
-                                    orden.getCustomer() != null
-                                            ? orden.getCustomer().getName()
+                                    order.getCustomer() != null
+                                            ? order.getCustomer().getName()
                                             : "N/A");
                     String estado =
                             escapeCsvField(
-                                    orden.getStatus() != null ? orden.getStatus().name() : "");
-                    double total = orden.getTotal();
-                    double saldo = orden.getBalance();
+                                    order.getStatus() != null ? order.getStatus().name() : "");
+                    double total = order.getTotal();
+                    double saldo = order.getBalance();
                     double pagado = total - saldo;
 
                     writer.printf(
@@ -86,7 +86,7 @@ public class CsvExporter {
         }
     }
 
-    public static String exportMovementsToCsv(List<CashMovement> movimientos) {
+    public static String exportMovementsToCsv(List<CashMovement> movements) {
         ensureDirectoryExists();
         String timestamp =
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
@@ -98,24 +98,24 @@ public class CsvExporter {
                                 new FileOutputStream(fileName), StandardCharsets.UTF_8))) {
             writer.println("ID,Fecha,Tipo,Motivo,metodoPago,Monto");
 
-            if (movimientos != null) {
-                int contador = 1;
-                for (CashMovement mov : movimientos) {
-                    String id = escapeCsvField("MOV-" + (contador++));
+            if (movements != null) {
+                int counter = 1;
+                for (CashMovement movement : movements) {
+                    String id = escapeCsvField("MOV-" + (counter++));
                     String fecha =
                             escapeCsvField(
                                     LocalDateTime.now()
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "dd/MM/yyyy HH:mm")));
-                    String tipo = escapeCsvField(mov.getType() != null ? mov.getType().name() : "");
-                    String motivo = escapeCsvField(mov.getReason());
+                    String tipo = escapeCsvField(movement.getType() != null ? movement.getType().name() : "");
+                    String motivo = escapeCsvField(movement.getReason());
                     String metodoPago =
                             escapeCsvField(
-                                    mov.getPaymentMethod() != null
-                                            ? mov.getPaymentMethod().name()
+                                    movement.getPaymentMethod() != null
+                                            ? movement.getPaymentMethod().name()
                                             : "EFECTIVO");
-                    double monto = mov.getAmount();
+                    double monto = movement.getAmount();
 
                     writer.printf(
                             "%s,%s,%s,%s,%s,%.2f\n", id, fecha, tipo, motivo, metodoPago, monto);

@@ -10,5 +10,17 @@
     "username": "julian",
     "password": "123",
     "role": "MANAGER"
+  },
+  {
+    "userId": "U_CASHIER",
+    "username": "cristopher",
+    "password": "777555333",
+    "role": "CASHIER"
+  },
+  {
+    "userId": "U_EMPLOYEE_1793247778831",
+    "username": "U_EMPLOYEE",
+    "password": "joquin loza",
+    "role": "EMPLOYEE"
   }
 ]

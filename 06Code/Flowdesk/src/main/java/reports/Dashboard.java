@@ -5,18 +5,18 @@ import models.WorkOrder;
 import java.util.List;
 
 public class Dashboard {
-    private List<WorkOrder> ordenesDelReporte;
+    private List<WorkOrder> reportOrders;
 
     public Dashboard() {
-        ordenesDelReporte = null;
+        reportOrders = null;
     }
 
     public List<WorkOrder> getOrders() {
-        return ordenesDelReporte;
+        return reportOrders;
     }
 
-    public void setOrders(List<WorkOrder> ordenes) {
-        this.ordenesDelReporte = ordenes;
+    public void setOrders(List<WorkOrder> orders) {
+        this.reportOrders = orders;
     }
 
     public void showDashboard() {
@@ -24,16 +24,16 @@ public class Dashboard {
         System.out.println("       DASHBOARD DE ORDENES (US003)          ");
         System.out.println("=============================================");
 
-        if (ordenesDelReporte == null || ordenesDelReporte.isEmpty()) {
+        if (reportOrders == null || reportOrders.isEmpty()) {
             System.out.println("La lista de ordenes esta vacia.");
             System.out.println("=============================================\n");
             return;
         }
 
-        System.out.println("Total de ordenes en el sistema: " + ordenesDelReporte.size());
+        System.out.println("Total de ordenes en el sistema: " + reportOrders.size());
 
         int[] counts = new int[5];
-        for (WorkOrder o : ordenesDelReporte) {
+        for (WorkOrder o : reportOrders) {
             if (o.getStatus() != null) {
                 counts[o.getStatus().ordinal()]++;
             }
@@ -46,7 +46,7 @@ public class Dashboard {
         System.out.println("Entregada: " + counts[OrderStatus.DELIVERED.ordinal()] + " orden(es)");
 
         System.out.println("\n--- ORDENES PENDIENTES ---");
-        for (WorkOrder o : ordenesDelReporte) {
+        for (WorkOrder o : reportOrders) {
             String customerName =
                     o.getCustomer() != null ? o.getCustomer().getName() : "Sin cliente";
             System.out.println(

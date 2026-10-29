@@ -43,14 +43,14 @@ public class Report {
         var orders = WorkOrder.getAll();
         System.out.println("Total de ordenes: " + orders.size());
 
-        long completed =
+        long completedCount =
                 orders.stream()
                         .filter(
                                 o ->
                                         o.getStatus() == OrderStatus.COMPLETED
                                                 || o.getStatus() == OrderStatus.DELIVERED)
                         .count();
-        long pending =
+        long pendingCount =
                 orders.stream()
                         .filter(
                                 o ->
@@ -59,8 +59,8 @@ public class Report {
                                                 || o.getStatus() == OrderStatus.IN_PROGRESS)
                         .count();
 
-        System.out.println("Ordenes terminadas: " + completed);
-        System.out.println("Ordenes pendientes: " + pending);
+        System.out.println("Ordenes terminadas: " + completedCount);
+        System.out.println("Ordenes pendientes: " + pendingCount);
 
         double outstanding = orders.stream().mapToDouble(WorkOrder::getBalance).sum();
         System.out.printf("Dinero por cobrar (Saldos): $%.1f\n", outstanding);
